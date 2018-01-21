@@ -9,7 +9,7 @@ public class Node : MonoBehaviour {
     //Object fields, don't touch
     [Space(10)]
     public GameObject currentUnitGO;
-    //public Unit currentUnit;
+    public Unit currentUnit;
     [HideInInspector]
     public int nodeID;
     [HideInInspector]
@@ -19,7 +19,8 @@ public class Node : MonoBehaviour {
     [HideInInspector]
     public Material material;
 
-    public List<Node> neighbors  = new List<Node>();
+    public List<Node> neighbours  = new List<Node>();
+
 
     public void SetupFields(int ID, int gridX, int gridY)
     {
@@ -28,6 +29,7 @@ public class Node : MonoBehaviour {
 
         myRenderer = GetComponent<Renderer>();
         material = myRenderer.material;
+        List<Node> neighbours = new List<Node>();
     }
 
     public void SpawnUnit(GameObject unitGO)
@@ -39,6 +41,7 @@ public class Node : MonoBehaviour {
         }
         currentUnitGO = Instantiate(unitGO, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
         Unit unitComponent = currentUnitGO.GetComponent<Unit>();
+        currentUnit = unitComponent;
         unitComponent.XY = nodeXY;
         unitComponent.currentNodeID = nodeID;
     }
