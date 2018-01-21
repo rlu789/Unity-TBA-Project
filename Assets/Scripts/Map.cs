@@ -83,40 +83,51 @@ public class Map : MonoBehaviour
         {
             for (int y = 0; y < mapSizeY; y++)
             {
-                if (x == 0 & y == 0) // For the tiles in the corners of map. NEED TODO OTHER 3 CORNERS
+                if (x == 0 & y == 0) // For the tiles in the corners of map. REDO THIS LATER
                 {
                     nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x + 1, nodes[x, y].XY.y]);
                     nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x + 1, nodes[x, y].XY.y + 1]);
                     nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x, nodes[x, y].XY.y + 1]);
 
                 }
-                else if (y == 0) // For tiles just in top row
-                {
-                    nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x - 1, nodes[x, y].XY.y]);
-                    nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x, nodes[x, y].XY.y + 1]);
-                    if (x != mapSizeX - 1)
-                    {
-                        nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x + 1, nodes[x, y].XY.y + 1]);
-                        nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x + 1, nodes[x, y].XY.y]);
-                    }
-                }
                 else
                 {
                     if (x != mapSizeX - 1)
                     {
                         nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x + 1, nodes[x, y].XY.y]);
-                        if (y != mapSizeY - 1)
-                            nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x, nodes[x, y].XY.y + 1]);
-                        if (y > 0)
-                            nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x, nodes[x, y].XY.y - 1]);
+                        if (y % 2 == 1)
+                        {
+                            if (y != mapSizeY - 1)
+                                nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x, nodes[x, y].XY.y + 1]);
+                            if (y > 0)
+                                nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x, nodes[x, y].XY.y - 1]);
+                        }
+                        else
+                        {
+                            if (y != mapSizeY - 1)
+                                nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x + 1, nodes[x, y].XY.y + 1]);
+                            if (y > 0)
+                                nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x + 1, nodes[x, y].XY.y - 1]);
+                        }
                     }
                     if (x > 0)
                     {
                         nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x - 1, nodes[x, y].XY.y]);
-                        if (y > 0)
-                            nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x - 1, nodes[x, y].XY.y - 1]);
-                        if (y != mapSizeY - 1)
-                            nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x - 1, nodes[x, y].XY.y + 1]);
+                        if (y % 2 == 1)
+                        {
+                            if (y > 0)
+                                nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x - 1, nodes[x, y].XY.y - 1]);
+                            if (y != mapSizeY - 1)
+                                nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x - 1, nodes[x, y].XY.y + 1]);
+                        }
+                        else
+                        {
+                            if (y > 0)
+                                nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x, nodes[x, y].XY.y - 1]);
+                            if (y != mapSizeY - 1)
+                                nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x, nodes[x, y].XY.y + 1]);
+
+                        }
                     }
                 }
 
