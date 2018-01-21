@@ -1,63 +1,45 @@
-﻿using System.Collections;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CameraController : MonoBehaviour {
+public class CameraController : MonoBehaviour
+{
+    public bool doMovement = true;
 
-    public float dragSpeed = 2;
-    private Vector3 dragOrigin;
-    private Vector3 offset;
-    public enum State
-    {
-        None,
-        Dragging
-    }
+    public float panSpeed = 30f;
+    public float panBorderThickness = 10f;
 
-    // Use this for initialization
-    void Start ()
-    {
-        offset = transform.position - GameObject.FindGameObjectWithTag("Map").transform.position;
+    public float scrollSpeed = 5f;
+    public float minY = 10f;
+    public float maxY = 80f;
 
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        if (_State == State.None && Input.GetMouseButtonDown(0)) InitDrag();
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
 
-        if (_State == State.Dragging && Input.GetMouseButton(0)) MoveCamera();
+        Vector3 pos = transform.position;
 
-        if (_State == State.Dragging && Input.GetMouseButtonUp(0)) FinishDrag();
-    }
+        pos.y -= scroll * 1000 * scrollSpeed * Time.deltaTime;
+        pos.y = Mathf.Clamp(pos.y, minY, maxY);
+        transform.position = pos;
 
-    #region Calculations
-    public State _State = State.None;
+        //if (Input.GetKeyDown(KeyCode.Backspace)) doMovement = !doMovement; //for disabling/enabling movement
 
-    private void InitDrag()
-    {
-        dragOrigin = Input.mousePosition;
+        if (!doMovement) return;
 
-        _State = State.Dragging;
-    }
-
-    private void MoveCamera()
-    {
-
-        Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - dragOrigin);
-        Vector3 move = new Vector3(-pos.x * dragSpeed, -pos.y * dragSpeed, 0);
-
-        transform.Translate(move, Space.World);
-    }
-
-    private void FinishDrag()
-    {
-        _State = State.None;
-    }
-    #endregion
-
-    public void MoveCameraTo(Vector3 unitPosition)
-    {
-        transform.position = unitPosition + offset;
+        if (Input.GetKey("w")/* || Input.mousePosition.y >= Screen.height - panBorderThickness*/)
+        {
+            transform.Translate(Vector3.forward * panSpeed * Time.deltaTime, Space.World);
+        }
+        if (Input.GetKey("s")/* || Input.mousePosition.y <= panBorderThickness */)
+        {
+            transform.Translate(Vector3.back * panSpeed * Time.deltaTime, Space.World);
+        }
+        if (Input.GetKey("d")/* || Input.mousePosition.x >= Screen.width - panBorderThickness */)
+        {
+            transform.Translate(Vector3.right * panSpeed * Time.deltaTime, Space.World);
+        }
+        if (Input.GetKey("a")/* || Input.mousePosition.x <= panBorderThickness */)
+        {
+            transform.Translate(Vector3.left * panSpeed * Time.deltaTime, Space.World);
+        }
     }
 }

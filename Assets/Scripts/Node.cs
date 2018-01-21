@@ -1,29 +1,60 @@
-﻿using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
 
+public class Node : MonoBehaviour {
 
-public class Node
-{
-    public List<Node> neighbours;
-    public int x;
-    public int y;
+    public Material hoverMaterial;
+    public Material selectedMaterial;
 
-    public Node()
+    //Object fields, don't touch
+    [Space(10)]
+    public GameObject currentUnitGO;
+    //public Unit currentUnit;
+    [HideInInspector]
+    public int nodeID;
+    [HideInInspector]
+    public Vector2Int nodeXY;
+    [HideInInspector]
+    public Renderer myRenderer;
+    [HideInInspector]
+    public Material material;
+
+    public List<Node> neighbors  = new List<Node>();
+
+    public void SetupFields(int ID, int gridX, int gridY)
     {
-        neighbours = new List<Node>();
+        nodeID = ID;
+        nodeXY = new Vector2Int(gridX, gridY);
+
+        myRenderer = GetComponent<Renderer>();
+        material = myRenderer.material;
     }
 
-    public float DistanceTo(Node n)
+    public void SpawnUnit(GameObject unitGO)
     {
-        if (n == null)
+        if (currentUnitGO != null)
         {
-            Debug.LogError("WTF?");
+            Debug.Log("Node (" + nodeID + ") already has a unit!");
+            return;
         }
+        currentUnitGO = Instantiate(unitGO, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
+        Unit unitComponent = currentUnitGO.GetComponent<Unit>();
+        unitComponent.XY = nodeXY;
+        unitComponent.currentNodeID = nodeID;
+    }
 
-        return Vector2.Distance(
-                new Vector2(x, y),
-                new Vector2(n.x, n.y)
-            );
+    private void OnMouseUp()
+    {
+        NodeManager.Instance.SelectNode(this);
+    }
+
+    private void OnMouseEnter()
+    {
+        if (NodeManager.Instance.selectedNode != this) myRenderer.material = hoverMaterial;
+    }
+
+    private void OnMouseExit()
+    {
+        if (NodeManager.Instance.selectedNode != this) myRenderer.material = material;
     }
 }
