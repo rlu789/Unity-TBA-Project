@@ -284,6 +284,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   XY: {x: 0, y: 0}
   currentNodeID: -1
+  currentPath: []
+  __testObject: {fileID: 1798533339409000, guid: bb8f408335feb8743b3450a994bb8690,
+    type: 2}
 --- !u!135 &135336063579494900
 SphereCollider:
   m_ObjectHideFlags: 1

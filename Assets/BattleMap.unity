@@ -144,12 +144,15 @@ MonoBehaviour:
   - name: Ground
     nodePrefab: {fileID: 1326710624061332, guid: 2b3bf6dc1c3df88458a7e5ce1ea0a8c8,
       type: 2}
+    moveCost: 1
   - name: Wall
-    nodePrefab: {fileID: 1326710624061332, guid: 097b316bf4c01e84ab8b865e88f6a854,
+    nodePrefab: {fileID: 1326710624061332, guid: 97e6373aee1e0b246b7dae9649622e91,
       type: 2}
+    moveCost: 1
   - name: Water
-    nodePrefab: {fileID: 1326710624061332, guid: e824cdcf1b804f04c9266721e6b990ee,
+    nodePrefab: {fileID: 1326710624061332, guid: d8d064dfcc0a2184586b5c004efe7f5d,
       type: 2}
+    moveCost: 2
   mapSizeX: 10
   mapSizeY: 8
   nodeSize: 2
@@ -290,7 +293,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:

@@ -65,8 +65,8 @@ public class Map : MonoBehaviour
         {
             for (int x = 0; x < nodeData.GetLength(0); ++x)
             {
-                if (y % 2 == 0) node = Instantiate(nodeTypes[(int)nodeData[x, y]].nodePrefab, new Vector3(x * nodeSize, 0, -y * nodeSize), Quaternion.identity);
-                else node = Instantiate(nodeTypes[(int)nodeData[x, y]].nodePrefab, new Vector3((x * nodeSize) - nodeSize / 2, 0, -y * nodeSize), Quaternion.identity);
+                if (y % 2 == 0) node = Instantiate(nodeTypes[(int)nodeData[x, y]].nodePrefab, new Vector3(x * (Mathf.Sqrt(3) / 2 * nodeSize), 0, -y * nodeSize * 0.75f), Quaternion.identity);
+                else node = Instantiate(nodeTypes[(int)nodeData[x, y]].nodePrefab, new Vector3((x * (Mathf.Sqrt(3) / 2 * nodeSize)) - ((Mathf.Sqrt(3) / 2 * nodeSize) / 2), 0, -y * nodeSize * 0.75f), Quaternion.identity);
 
                 nodesGO[x, y] = node;
                 nodes[x, y] = node.GetComponent<Node>();
@@ -85,19 +85,19 @@ public class Map : MonoBehaviour
             {
                 if (x != mapSizeX - 1)
                 {
-                    nodes[x, y].neighbours.Add(nodes[nodes[x, y].nodeXY.x + 1, nodes[x, y].nodeXY.y]);
+                    nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x + 1, nodes[x, y].XY.y]);
                     if (y != mapSizeY - 1)
-                        nodes[x, y].neighbours.Add(nodes[nodes[x, y].nodeXY.x + 1, nodes[x, y].nodeXY.y + 1]);
+                        nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x + 1, nodes[x, y].XY.y + 1]);
                     if (y > 0)
-                        nodes[x, y].neighbours.Add(nodes[nodes[x, y].nodeXY.x + 1, nodes[x, y].nodeXY.y - 1]);
+                        nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x + 1, nodes[x, y].XY.y - 1]);
                 }
                 if (x > 0)
                 {
-                    nodes[x, y].neighbours.Add(nodes[nodes[x, y].nodeXY.x - 1, nodes[x, y].nodeXY.y]);
+                    nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x - 1, nodes[x, y].XY.y]);
                     if (y > 0)
-                        nodes[x, y].neighbours.Add(nodes[nodes[x, y].nodeXY.x - 1, nodes[x, y].nodeXY.y - 1]);
+                        nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x - 1, nodes[x, y].XY.y - 1]);
                     if (y != mapSizeY - 1)
-                        nodes[x, y].neighbours.Add(nodes[nodes[x, y].nodeXY.x - 1, nodes[x, y].nodeXY.y + 1]);
+                        nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x - 1, nodes[x, y].XY.y + 1]);
                 }
             }
         }
@@ -131,8 +131,8 @@ public class Map : MonoBehaviour
                             ];
 
         Node target = nodes[
-                            destNode.nodeXY.x,
-                            destNode.nodeXY.y
+                            destNode.XY.x,
+                            destNode.XY.y
                             ];
 
         dist[source] = 0;
@@ -178,7 +178,7 @@ public class Map : MonoBehaviour
                 //float alt = dist[u] + u.DistanceTo(v);
                 Debug.Log(dist[v]);
                 Debug.Log(u);
-                float alt = dist[u] + CostToEnterTile(u.nodeXY.x, u.nodeXY.y, v.nodeXY.x, v.nodeXY.y);
+                float alt = dist[u] + CostToEnterTile(u.XY.x, u.XY.y, v.XY.x, v.XY.y);
                 if (alt < dist[v])
                 {
                     dist[v] = alt;

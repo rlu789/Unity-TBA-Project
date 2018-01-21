@@ -17,9 +17,21 @@ public class CameraController : MonoBehaviour
 
         Vector3 pos = transform.position;
 
+        /* //perspective zoom
         pos.y -= scroll * 1000 * scrollSpeed * Time.deltaTime;
         pos.y = Mathf.Clamp(pos.y, minY, maxY);
         transform.position = pos;
+        */
+
+        //orthographic zoom
+        if (scroll != 0)
+        {
+            if (scroll < 0) scroll = 1;
+            else scroll = -1;
+            scroll = Mathf.Clamp(GetComponent<Camera>().orthographicSize + scroll, 1, 10);
+
+            GetComponent<Camera>().orthographicSize = scroll;
+        }
 
         //if (Input.GetKeyDown(KeyCode.Backspace)) doMovement = !doMovement; //for disabling/enabling movement
 

@@ -47,16 +47,12 @@ public class NodeManager : MonoBehaviour {
 
     void Select(Node node)
     {
-        Debug.Log("Selected node at (" + node.nodeXY.x + "," + node.nodeXY.y + "), ID: " + node.nodeID);
-
         node.myRenderer.material = node.selectedMaterial;
         selectedNode = node;
     }
 
     void Deselect(bool hovering = false)
     {
-        Debug.Log("Deselected node at (" + selectedNode.nodeXY.x + "," + selectedNode.nodeXY.y + "), ID: " + selectedNode.nodeID);
-
         if (!hovering) selectedNode.myRenderer.material = selectedNode.material;
         else selectedNode.myRenderer.material = selectedNode.hoverMaterial; //if you are still hovering over this node, return to hovering material
 
