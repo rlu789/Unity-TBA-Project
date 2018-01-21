@@ -5,7 +5,8 @@ public class NodeManager : MonoBehaviour {
     public static NodeManager Instance;
 
     public Node selectedNode;
-    
+
+    public Node destNode, initNode;
 
     private void Awake()
     {
@@ -59,19 +60,25 @@ public class NodeManager : MonoBehaviour {
         selectedNode = null;
     }
 
-    void AssignPath(Node initNode, Node destNode)
+    void AssignPath(Node init, Node dest)
     {
-        Unit unit = initNode.currentUnit;
-        Map.Instance.AStarLite(unit, destNode);
+        Unit unit = init.currentUnit;
+        Map.Instance.AStarLite(unit, dest);
+        initNode = init; destNode = dest;
+    }
 
-        ////set values on initial and destination nodes
-        //destNode.currentUnitGO = initNode.currentUnitGO;
-        //initNode.currentUnitGO = null;
+    public void MoveUnit()
+    {
+        //set values on initial and destination nodes
+        destNode.currentUnitGO = initNode.currentUnitGO;
+        destNode.currentUnit = initNode.currentUnit;
+        initNode.currentUnitGO = null;
+        initNode.currentUnit = null;
 
-        //destNode.currentUnitGO.transform.position = destNode.transform.position;    //TODO: lerp/animate the the tile instead
-        ////set units new node values
-        //Unit unitComponent = destNode.currentUnitGO.GetComponent<Unit>();
-        //unitComponent.XY = destNode.nodeXY;
-        //unitComponent.currentNodeID = destNode.nodeID;
+        destNode.currentUnitGO.transform.position = destNode.transform.position;    //TODO: lerp/animate the the tile instead
+        //set units new node values
+        Unit unitComponent = destNode.currentUnitGO.GetComponent<Unit>();
+        unitComponent.XY = destNode.XY;
+        unitComponent.currentNodeID = destNode.nodeID;
     }
 }

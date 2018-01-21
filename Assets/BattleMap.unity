@@ -148,7 +148,7 @@ MonoBehaviour:
   - name: Wall
     nodePrefab: {fileID: 1326710624061332, guid: 97e6373aee1e0b246b7dae9649622e91,
       type: 2}
-    moveCost: 1
+    moveCost: 100
   - name: Water
     nodePrefab: {fileID: 1326710624061332, guid: d8d064dfcc0a2184586b5c004efe7f5d,
       type: 2}

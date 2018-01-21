@@ -9,7 +9,7 @@ public class Unit : MonoBehaviour {
 
     void Update()
     {
-        CheckMovement();    //yo richard the path or the neighbours aren't correct you can see with the balls i believe
+        CheckMovement();  
     }
 
     void CheckMovement()
