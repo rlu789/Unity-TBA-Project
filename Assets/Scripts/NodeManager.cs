@@ -9,6 +9,8 @@ public class NodeManager : MonoBehaviour {
 
     public Node destNode, initNode;
 
+    public Node potentialUnitNode;
+
     private void Awake()
     {
         if (Instance != null)
@@ -18,11 +20,15 @@ public class NodeManager : MonoBehaviour {
             return;
         }
         Instance = this;
+
     }
 
     public void SelectNode(Node node)
     {
-        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN){
+        //if (potentialUnitNode == null)
+        //    potentialUnitNode = node;
+        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN)
+        {
             if (selectedNode == null)   //selecting a node with no other nodes selected
             {
                 Select(node);
@@ -40,13 +46,21 @@ public class NodeManager : MonoBehaviour {
                 //check if trying to move unit
                 if (selectedNode.currentUnitGO != null)
                 {
-                    AssignPath(selectedNode, node);
+                    if (node.potientalUnit == null && node.currentUnit == null)
+                    {
+                        //potentialUnitNode.potientalUnit = null; // delete potential unit for previously selectednode
+                        AssignPath(selectedNode, node);
+                        //potentialUnitNode = node; // assign new potential unit node
+                        //potentialUnitNode.potientalUnit = selectedNode.currentUnitGO.GetComponent<Unit>(); // set potential unit variable of the potential unit node
+                    }
                 }
                 Deselect();
                 Select(node);
                 return;
             }
         }
+        else
+            Debug.Log("Theres a unit here lol");
     }
 
     void Select(Node node)

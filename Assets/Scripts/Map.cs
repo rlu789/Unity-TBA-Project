@@ -23,6 +23,7 @@ public class Map : MonoBehaviour
     public List<GameObject> unitDudeFriends = new List<GameObject>();
     public List<GameObject> unitDudeEnemies = new List<GameObject>();
 
+    public GameObject map;
     private void Awake()
     {
         if (Instance != null)
@@ -73,7 +74,7 @@ public class Map : MonoBehaviour
             {
                 if (y % 2 == 0) node = Instantiate(nodeTypes[(int)nodeData[x, y]].nodePrefab, new Vector3(x * (Mathf.Sqrt(3) / 2 * nodeSize), 0, -y * nodeSize * 0.75f), Quaternion.identity);
                 else node = Instantiate(nodeTypes[(int)nodeData[x, y]].nodePrefab, new Vector3((x * (Mathf.Sqrt(3) / 2 * nodeSize)) - ((Mathf.Sqrt(3) / 2 * nodeSize) / 2), 0, -y * nodeSize * 0.75f), Quaternion.identity);
-
+                node.transform.parent = map.transform;
                 nodesGO[x, y] = node;
                 nodes[x, y] = node.GetComponent<Node>();
                 nodes[x, y].SetupFields(indexOfID++, x, y, nodeTypes[(int)nodeData[x, y]].moveCost);
@@ -141,14 +142,18 @@ public class Map : MonoBehaviour
         }
     }
 
-    public float CostToEnterTile(int sourceX, int sourceY, int targetX, int targetY)
+    public float CostToEnterTile(Node u, Node v)
     {
+        // WTF IS NODE U FOR?
+        if (v.currentUnit == null && v.potientalUnit == null)
+        {
+            int sourceX = u.XY.x, sourceY = u.XY.y, targetX = v.XY.x, targetY = v.XY.y;
+            NodeType tt = nodeTypes[(int)nodeMap[targetX, targetY]];
 
-        NodeType tt = nodeTypes[(int)nodeMap[targetX, targetY]];
-
-        float cost = tt.moveCost;
-
-        return cost;
+            return tt.moveCost;
+        }
+        else
+            return 100;
 
     }
 
@@ -209,12 +214,13 @@ public class Map : MonoBehaviour
                 break;  // Exit the while loop!
             }
 
+
             unvisited.Remove(u);
 
             foreach (Node v in u.neighbours)
             {
                 //float alt = dist[u] + u.DistanceTo(v);
-                float alt = dist[u] + CostToEnterTile(u.XY.x, u.XY.y, v.XY.x, v.XY.y);
+                float alt = dist[u] + CostToEnterTile(u, v);
                 if (alt < dist[v])
                 {
                     dist[v] = alt;
@@ -233,6 +239,7 @@ public class Map : MonoBehaviour
         }
 
         List<Node> currentPath = new List<Node>();
+        List<Node> currentPath2 = new List<Node>();
 
         Node curr = target;
 
@@ -248,6 +255,14 @@ public class Map : MonoBehaviour
 
         currentPath.Reverse();
 
-        unit.currentPath = currentPath;
+        //CUT THE PATH
+        for (int i = 0; i <= unit.moveSpeed; i++)
+        {
+            currentPath2.Add(currentPath[i]);
+            if (i == unit.moveSpeed)
+                currentPath[i].potientalUnit = unit;
+        }
+
+        unit.currentPath = currentPath2;
     }
 }

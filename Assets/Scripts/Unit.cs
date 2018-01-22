@@ -64,7 +64,6 @@ public class Unit : MonoBehaviour {
             currentNode++;
             pathToFollow.Add(currentPath[currentNode]);
         }
-
         currentPath.RemoveRange(0, currentNode);  //remove the path we are taking from the planned path
 
         movePath.AddRange(pathToFollow);    //adds the path to the path that we will animate through
@@ -108,6 +107,7 @@ public class Unit : MonoBehaviour {
             //set values on initial and destination nodes
             _destNode.currentUnitGO = gameObject;
             _destNode.currentUnit = this;
+            _destNode.potientalUnit = null;
             Map.Instance.nodes[XY.x, XY.y].currentUnitGO = null;
             Map.Instance.nodes[XY.x, XY.y].currentUnit = null;
 

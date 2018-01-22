@@ -13,6 +13,7 @@ public class Node : MonoBehaviour {
     [Space(10)]
     public GameObject currentUnitGO;
     public Unit currentUnit;
+    public Unit potientalUnit; // If a unit of going to move here at end of turn
     [HideInInspector]
     public int nodeID;
     [HideInInspector]

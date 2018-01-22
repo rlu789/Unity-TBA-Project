@@ -159,6 +159,9 @@ MonoBehaviour:
   unitDudeTypes:
   - {fileID: 1329816491546904, guid: 93c4d8213f03ca540a32a1062450a27c, type: 2}
   - {fileID: 1626122313977446, guid: e8677f963bc601940bf23937d77ef762, type: 2}
+  unitDudeFriends: []
+  unitDudeEnemies: []
+  map: {fileID: 1116316388}
 --- !u!4 &457948780
 Transform:
   m_ObjectHideFlags: 0
@@ -244,7 +247,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTurnCount: 0
-  state: 0
+  currentState: 0
+  previousState: 0
+  friendCount: 0
+  enemyCount: 0
+  friendBool: 
+  enemyBool: 
+--- !u!1 &1116316388
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1116316389}
+  m_Layer: 0
+  m_Name: Map
+  m_TagString: Map
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1116316389
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1116316388}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.7320508, y: 1.25, z: 0.026250005}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1351090665
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,6 +480,7 @@ MonoBehaviour:
   selectedNode: {fileID: 0}
   destNode: {fileID: 0}
   initNode: {fileID: 0}
+  potentialUnitNode: {fileID: 0}
 --- !u!1 &1494429423
 GameObject:
   m_ObjectHideFlags: 0
