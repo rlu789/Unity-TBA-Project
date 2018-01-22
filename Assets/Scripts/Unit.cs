@@ -18,6 +18,7 @@ public class Unit : MonoBehaviour {
     //fresh fIelds
     List<Node> movePath = new List<Node>();
     int currMoveIndex = 0;
+    public Node currentNode;
 
     void Update()
     {
@@ -96,27 +97,54 @@ public class Unit : MonoBehaviour {
 
     public void MoveUnit()    //moves unit on selected tile
     {
-        List<Node> pathToFollow = GetPath();   //get the path to follow, based on the max distance the unit can move this turn
-        if (pathToFollow == null) return;
-        if (pathToFollow.Count == 0) return;
+        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN)
+        {
+            List<Node> pathToFollow = GetPath();   //get the path to follow, based on the max distance the unit can move this turn
+            if (pathToFollow == null) return;
+            if (pathToFollow.Count == 0) return;
 
-        Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
+            Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
 
-        //set values on initial and destination nodes
-        _destNode.currentUnitGO = gameObject;
-        _destNode.currentUnit = this;
-        Map.Instance.nodes[XY.x, XY.y].currentUnitGO = null;
-        Map.Instance.nodes[XY.x, XY.y].currentUnit = null;
+            //set values on initial and destination nodes
+            _destNode.currentUnitGO = gameObject;
+            _destNode.currentUnit = this;
+            Map.Instance.nodes[XY.x, XY.y].currentUnitGO = null;
+            Map.Instance.nodes[XY.x, XY.y].currentUnit = null;
 
-        //set units new node values
-        Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
-        unitComponent.XY = _destNode.XY;
-        unitComponent.currentNodeID = _destNode.nodeID;
+            //set units new node values
+            Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
+            unitComponent.XY = _destNode.XY;
+            unitComponent.currentNodeID = _destNode.nodeID;
+            currentNode = _destNode;
 
-        //NodeManager.Instance.Deselect();
-        //Select(_destNode);
-        //initNode = _destNode;
+            //NodeManager.Instance.Deselect();
+            //Select(_destNode);
+            //initNode = _destNode;
+        }
+    }
 
+    public void MoveEnemyUnit()    //moves unit on selected tile
+    {
+            List<Node> pathToFollow = GetPath();   //get the path to follow, based on the max distance the unit can move this turn
+            if (pathToFollow == null) return;
+            if (pathToFollow.Count == 0) return;
 
+            Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
+
+            //set values on initial and destination nodes
+            _destNode.currentUnitGO = gameObject;
+            _destNode.currentUnit = this;
+            Map.Instance.nodes[XY.x, XY.y].currentUnitGO = null;
+            Map.Instance.nodes[XY.x, XY.y].currentUnit = null;
+
+            //set units new node values
+            Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
+            unitComponent.XY = _destNode.XY;
+            unitComponent.currentNodeID = _destNode.nodeID;
+            currentNode = _destNode;
+
+            //NodeManager.Instance.Deselect();
+            //Select(_destNode);
+            //initNode = _destNode;
     }
 }

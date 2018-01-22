@@ -20,7 +20,8 @@ public class Map : MonoBehaviour
     public int nodeSize = 2;
     [Space(10)]
     public GameObject[] unitDudeTypes;
-    public List<GameObject> unitDudes = new List<GameObject>();
+    public List<GameObject> unitDudeFriends = new List<GameObject>();
+    public List<GameObject> unitDudeEnemies = new List<GameObject>();
 
     private void Awake()
     {

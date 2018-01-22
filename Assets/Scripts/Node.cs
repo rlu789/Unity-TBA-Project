@@ -45,12 +45,16 @@ public class Node : MonoBehaviour {
             return;
         }
         currentUnitGO = Instantiate(unitGO, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
-        Map.Instance.unitDudes.Add(currentUnitGO);
+        if (isEnemy)
+            Map.Instance.unitDudeEnemies.Add(currentUnitGO);
+        else
+            Map.Instance.unitDudeFriends.Add(currentUnitGO);
         Unit unitComponent = currentUnitGO.GetComponent<Unit>();
         currentUnit = unitComponent;
         unitComponent.XY = XY;
         unitComponent.currentNodeID = nodeID;
         unitComponent.isEnemy = isEnemy;
+        unitComponent.currentNode = this;
     }
 
     private void OnMouseUp()

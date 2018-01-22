@@ -22,28 +22,30 @@ public class NodeManager : MonoBehaviour {
 
     public void SelectNode(Node node)
     {
-        if (selectedNode == null)   //selecting a node with no other nodes selected
-        {
-            Select(node);
-            return;
-        }
-
-        if (selectedNode == node)   //selecting a node that is already selected
-        {
-            Deselect(true);
-            return;
-        }
-
-        if (selectedNode != null)   //selecting a node with another node selected
-        {
-            //check if trying to move unit
-            if (selectedNode.currentUnitGO != null)
+        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN){
+            if (selectedNode == null)   //selecting a node with no other nodes selected
             {
-                AssignPath(selectedNode, node);
+                Select(node);
+                return;
             }
-            Deselect();
-            Select(node);
-            return;
+
+            if (selectedNode == node)   //selecting a node that is already selected
+            {
+                Deselect(true);
+                return;
+            }
+
+            if (selectedNode != null)   //selecting a node with another node selected
+            {
+                //check if trying to move unit
+                if (selectedNode.currentUnitGO != null)
+                {
+                    AssignPath(selectedNode, node);
+                }
+                Deselect();
+                Select(node);
+                return;
+            }
         }
     }
 
@@ -61,12 +63,10 @@ public class NodeManager : MonoBehaviour {
         selectedNode = null;
     }
 
-    void AssignPath(Node init, Node dest)
+    public void AssignPath(Node init, Node dest)
     {
         Unit unit = init.currentUnit;
         Map.Instance.AStarLite(unit, dest);
         initNode = init; destNode = dest;
     }
-
-    
 }
