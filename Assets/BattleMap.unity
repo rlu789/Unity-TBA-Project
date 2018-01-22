@@ -156,7 +156,9 @@ MonoBehaviour:
   mapSizeX: 15
   mapSizeY: 15
   nodeSize: 2
-  unitDude: {fileID: 1329816491546904, guid: 93c4d8213f03ca540a32a1062450a27c, type: 2}
+  unitDudeTypes:
+  - {fileID: 1329816491546904, guid: 93c4d8213f03ca540a32a1062450a27c, type: 2}
+  - {fileID: 1626122313977446, guid: e8677f963bc601940bf23937d77ef762, type: 2}
 --- !u!4 &457948780
 Transform:
   m_ObjectHideFlags: 0
@@ -197,9 +199,52 @@ Transform:
   m_Children:
   - {fileID: 457948780}
   - {fileID: 1440865572}
+  - {fileID: 734221840}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &734221839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 734221840}
+  - component: {fileID: 734221841}
+  m_Layer: 0
+  m_Name: TurnHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &734221840
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 734221839}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 607362359}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &734221841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 734221839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ce7667048f5eba4ba6ac9270affa9ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitTurnCount: 0
+  state: 0
 --- !u!1 &1351090665
 GameObject:
   m_ObjectHideFlags: 0
@@ -549,8 +594,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1440865573}
-        m_MethodName: MoveUnit
+      - m_Target: {fileID: 734221841}
+        m_MethodName: MoveButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

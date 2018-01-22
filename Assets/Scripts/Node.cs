@@ -37,7 +37,7 @@ public class Node : MonoBehaviour {
         List<Node> neighbours = new List<Node>();
     }
 
-    public void SpawnUnit(GameObject unitGO)
+    public void SpawnUnit(GameObject unitGO, bool isEnemy)
     {
         if (currentUnitGO != null)
         {
@@ -45,10 +45,12 @@ public class Node : MonoBehaviour {
             return;
         }
         currentUnitGO = Instantiate(unitGO, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
+        Map.Instance.unitDudes.Add(currentUnitGO);
         Unit unitComponent = currentUnitGO.GetComponent<Unit>();
         currentUnit = unitComponent;
         unitComponent.XY = XY;
         unitComponent.currentNodeID = nodeID;
+        unitComponent.isEnemy = isEnemy;
     }
 
     private void OnMouseUp()

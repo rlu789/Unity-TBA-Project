@@ -12,14 +12,15 @@ public class Map : MonoBehaviour
     NodeTerrain[,] nodeMap; //maps each spot on the map to an int for generation
 
     GameObject[,] nodesGO;  //the GameObject for each hex on the map
-    Node[,] nodes;  //the node component of each hex on the map
+    public Node[,] nodes;  //the node component of each hex on the map
 
     [Space(10)]
     public int mapSizeX = 10;
     public int mapSizeY = 8;
     public int nodeSize = 2;
     [Space(10)]
-    public GameObject unitDude;
+    public GameObject[] unitDudeTypes;
+    public List<GameObject> unitDudes = new List<GameObject>();
 
     private void Awake()
     {
@@ -55,12 +56,16 @@ public class Map : MonoBehaviour
 
         GenerateNodes(nodeMap); //generate a grid of nodes based on the data in nodeMap
         //PopulateNeighbors();
-        nodes[0, 0].SpawnUnit(unitDude);    //generate a guy at 0,0
+        nodes[0, 0].SpawnUnit(unitDudeTypes[0], false);   //generate a guy at 0,0
+        nodes[1, 0].SpawnUnit(unitDudeTypes[0], false);   //generate a guy at 0,0
+        nodes[10, 10].SpawnUnit(unitDudeTypes[1], true);   //generate a guy at 
+        nodes[10, 11].SpawnUnit(unitDudeTypes[1], true);   //generate a guy at 
+        TurnHandler.Instance.Setup(); // after all units are spawned, setup turn handler
     }
 
     void GenerateNodes(NodeTerrain[,] nodeData)
     {
-        GameObject node;
+        GameObject node; 
         for (int y = 0; y < nodeData.GetLength(1); ++y)
         {
             for (int x = 0; x < nodeData.GetLength(0); ++x)

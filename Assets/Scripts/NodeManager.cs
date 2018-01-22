@@ -40,7 +40,6 @@ public class NodeManager : MonoBehaviour {
             if (selectedNode.currentUnitGO != null)
             {
                 AssignPath(selectedNode, node);
-                return;
             }
             Deselect();
             Select(node);
@@ -54,7 +53,7 @@ public class NodeManager : MonoBehaviour {
         selectedNode = node;
     }
 
-    void Deselect(bool hovering = false)
+    public void Deselect(bool hovering = false)
     {
         if (!hovering) selectedNode.myRenderer.material = selectedNode.material;
         else selectedNode.myRenderer.material = selectedNode.hoverMaterial; //if you are still hovering over this node, return to hovering material
@@ -69,29 +68,5 @@ public class NodeManager : MonoBehaviour {
         initNode = init; destNode = dest;
     }
 
-    public void MoveUnit()    //moves unit on selected tile
-    {
-        List<Node> pathToFollow = initNode.currentUnit.GetPath();   //get the path to follow, based on the max distance the unit can move this turn
-        if (pathToFollow == null) return;
-        if (pathToFollow.Count == 0) return;
-
-        Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
-
-        //set values on initial and destination nodes
-        _destNode.currentUnitGO = initNode.currentUnitGO;
-        _destNode.currentUnit = initNode.currentUnit;
-        initNode.currentUnitGO = null;
-        initNode.currentUnit = null;
-
-        //set units new node values
-        Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
-        unitComponent.XY = _destNode.XY;
-        unitComponent.currentNodeID = _destNode.nodeID;
-
-        Deselect();
-        Select(_destNode);
-        initNode = _destNode;
-        
-
-    }
+    
 }
