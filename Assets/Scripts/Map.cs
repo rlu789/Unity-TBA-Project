@@ -70,7 +70,7 @@ public class Map : MonoBehaviour
 
                 nodesGO[x, y] = node;
                 nodes[x, y] = node.GetComponent<Node>();
-                nodes[x, y].SetupFields(indexOfID++, x, y);
+                nodes[x, y].SetupFields(indexOfID++, x, y, nodeTypes[(int)nodeData[x, y]].moveCost);
             }
         }
 

@@ -27,11 +27,11 @@ public class Node : MonoBehaviour {
     public List<Node> neighbours  = new List<Node>();
 
 
-    public void SetupFields(int ID, int gridX, int gridY)
+    public void SetupFields(int ID, int gridX, int gridY, int _moveCost)
     {
         nodeID = ID;
         XY = new Vector2Int(gridX, gridY);
-
+        moveCost = _moveCost;
         myRenderer = GetComponent<Renderer>();
         material = myRenderer.material;
         List<Node> neighbours = new List<Node>();

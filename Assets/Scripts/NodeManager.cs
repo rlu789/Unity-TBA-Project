@@ -40,6 +40,7 @@ public class NodeManager : MonoBehaviour {
             if (selectedNode.currentUnitGO != null)
             {
                 AssignPath(selectedNode, node);
+                return;
             }
             Deselect();
             Select(node);
@@ -82,7 +83,11 @@ public class NodeManager : MonoBehaviour {
         initNode.currentUnitGO = null;
         initNode.currentUnit = null;
 
-        _destNode.currentUnitGO.transform.position = _destNode.transform.position;    //TODO: lerp/animate the the tile instead
+        _destNode.currentUnitGO.transform.LookAt(_destNode.transform);
+
+
+       //_destNode.currentUnitGO.transform.position = pathToFollow[i].transform.position;
+                //TODO: lerp/animate the the tile instead
 
         //set units new node values
         Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
@@ -92,5 +97,7 @@ public class NodeManager : MonoBehaviour {
         Deselect();
         Select(_destNode);
         initNode = _destNode;
+        
+
     }
 }
