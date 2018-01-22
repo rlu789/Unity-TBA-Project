@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class NodeManager : MonoBehaviour {
 
@@ -67,18 +68,29 @@ public class NodeManager : MonoBehaviour {
         initNode = init; destNode = dest;
     }
 
-    public void MoveUnit()
+    public void MoveUnit()    //moves unit on selected tile
     {
+        List<Node> pathToFollow = initNode.currentUnit.GetPath();   //get the path to follow, based on the max distance the unit can move this turn
+        if (pathToFollow == null) return;
+        if (pathToFollow.Count == 0) return;
+
+        Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
+
         //set values on initial and destination nodes
-        destNode.currentUnitGO = initNode.currentUnitGO;
-        destNode.currentUnit = initNode.currentUnit;
+        _destNode.currentUnitGO = initNode.currentUnitGO;
+        _destNode.currentUnit = initNode.currentUnit;
         initNode.currentUnitGO = null;
         initNode.currentUnit = null;
 
-        destNode.currentUnitGO.transform.position = destNode.transform.position;    //TODO: lerp/animate the the tile instead
+        _destNode.currentUnitGO.transform.position = _destNode.transform.position;    //TODO: lerp/animate the the tile instead
+
         //set units new node values
-        Unit unitComponent = destNode.currentUnitGO.GetComponent<Unit>();
-        unitComponent.XY = destNode.XY;
-        unitComponent.currentNodeID = destNode.nodeID;
+        Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
+        unitComponent.XY = _destNode.XY;
+        unitComponent.currentNodeID = _destNode.nodeID;
+
+        Deselect();
+        Select(_destNode);
+        initNode = _destNode;
     }
 }

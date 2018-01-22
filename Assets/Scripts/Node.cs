@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
 public class Node : MonoBehaviour {
@@ -20,6 +21,8 @@ public class Node : MonoBehaviour {
     public Renderer myRenderer;
     [HideInInspector]
     public Material material;
+    [HideInInspector]
+    public int moveCost;
 
     public List<Node> neighbours  = new List<Node>();
 
@@ -50,6 +53,7 @@ public class Node : MonoBehaviour {
 
     private void OnMouseUp()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
         NodeManager.Instance.SelectNode(this);
     }
 

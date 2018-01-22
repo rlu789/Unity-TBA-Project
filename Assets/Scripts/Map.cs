@@ -208,8 +208,6 @@ public class Map : MonoBehaviour
             foreach (Node v in u.neighbours)
             {
                 //float alt = dist[u] + u.DistanceTo(v);
-                Debug.Log(dist[v]);
-                Debug.Log(u);
                 float alt = dist[u] + CostToEnterTile(u.XY.x, u.XY.y, v.XY.x, v.XY.y);
                 if (alt < dist[v])
                 {
