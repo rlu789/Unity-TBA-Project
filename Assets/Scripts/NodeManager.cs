@@ -83,12 +83,6 @@ public class NodeManager : MonoBehaviour {
         initNode.currentUnitGO = null;
         initNode.currentUnit = null;
 
-        _destNode.currentUnitGO.transform.LookAt(_destNode.transform);
-
-
-       //_destNode.currentUnitGO.transform.position = pathToFollow[i].transform.position;
-                //TODO: lerp/animate the the tile instead
-
         //set units new node values
         Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
         unitComponent.XY = _destNode.XY;

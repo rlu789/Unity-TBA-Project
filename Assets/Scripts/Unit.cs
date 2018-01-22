@@ -20,11 +20,11 @@ public class Unit : MonoBehaviour {
 
     void Update()
     {
+        DrawPath();
         if (movePath.Count != 0)
         {
             MoveStep();
         }
-        DrawPath();
     }
 
     void DrawPath()
@@ -32,18 +32,22 @@ public class Unit : MonoBehaviour {
         if (currentPath != null)
         {
             int currNode = 0;
+            int movementRemaining = moveSpeed;
             while (currNode < currentPath.Count - 1)
             {
                 Vector3 start = new Vector3(currentPath[currNode].transform.position.x, 1f, currentPath[currNode].transform.position.z);
                 Vector3 end = new Vector3(currentPath[currNode + 1].transform.position.x, 1f, currentPath[currNode + 1].transform.position.z);
 
-                Debug.DrawLine(start, end, Color.red);
+                movementRemaining -= currentPath[currNode + 1].moveCost;
                 currNode++;
+
+                if (movementRemaining >= 0) Debug.DrawLine(start, end, Color.blue);
+                else Debug.DrawLine(start, end, Color.red);
             }
         }
     }
 
-    public List<Node> GetPath()
+    public List<Node> GetPath() //moves as far along the set path as its movement can go
     {
         int movementRemaining = moveSpeed;
         int currentNode = 0;
@@ -51,8 +55,7 @@ public class Unit : MonoBehaviour {
 
         while (currentNode < currentPath.Count - 1 && movementRemaining > 0)
         {
-            //currentPath[currentNode].moveCost;   //add the cost from the nodeType to the node
-            movementRemaining -= currentPath[currentNode+1].moveCost;    //make this minus the move cost
+            movementRemaining -= currentPath[currentNode+1].moveCost;    //reduce our remaning movement by the cost
 
             if (movementRemaining < 0) break;   //if you can't make it to the node, stop adding to the path
 
@@ -60,20 +63,19 @@ public class Unit : MonoBehaviour {
             pathToFollow.Add(currentPath[currentNode]);
         }
 
-        currentPath.RemoveRange(0, currentPath.Count - 1);  //empty the path once we've moved all we can this turn
+        currentPath.RemoveRange(0, currentNode);  //remove the path we are taking from the planned path
 
-        movePath = pathToFollow;
-        currMoveIndex = 0;
+        movePath.AddRange(pathToFollow);    //adds the path to the path that we will animate through
         return pathToFollow;
     }
 
     void MoveStep()
     {
-        Debug.Log("oi");
-        Debug.Log(movePath[0]);
-        Vector3 dir = movePath[currMoveIndex].transform.position - transform.position;
-        transform.Translate(dir.normalized * Time.deltaTime*moveSpeed*2, Space.World);
-        if ( Vector3.Distance(transform.position, movePath[currMoveIndex].transform.position) <= 0.2f)
+        Vector3 dir = movePath[currMoveIndex].transform.position - transform.position;      //sets our target direction to the next node along the path
+        transform.Translate(dir.normalized * Time.deltaTime * (moveSpeed), Space.World);    //moves towards our target
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), (moveSpeed * 2) * Time.deltaTime); //rotates in the direction we are going
+
+        if ( Vector3.Distance(transform.position, movePath[currMoveIndex].transform.position) <= 0.1f)  //if we are close to the node, we can start moving towards the next node
         {
             GetNextStep();
         }
@@ -81,11 +83,13 @@ public class Unit : MonoBehaviour {
 
     void GetNextStep()
     {
-        if (currMoveIndex == movePath.Count )
+        currMoveIndex++;
+        if (currMoveIndex == movePath.Count)
         {
-            movePath.RemoveRange(0, movePath.Count - 1);
+            transform.position = movePath[currMoveIndex - 1].transform.position;    //make sure we are right on the node when we are finished
+            movePath.RemoveRange(0, movePath.Count);                                //clear out the list of nodes to move to
+            currMoveIndex = 0;                                                      //reset our move index when finished
             return;
         }
-        currMoveIndex++;
     }
 }
