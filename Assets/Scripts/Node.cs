@@ -72,7 +72,7 @@ public class Node : MonoBehaviour {
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
         if (NodeManager.Instance.selectedNode != this) myRenderer.material = hoverMaterial;
-        if (NodeManager.Instance.selectedNode !=  null) NodeManager.Instance.AssignPath(NodeManager.Instance.selectedNode, this);
+        if (NodeManager.Instance.selectedNode !=  null) NodeManager.Instance.ShowPath(NodeManager.Instance.selectedNode, this);
     }
 
     private void OnMouseExit()

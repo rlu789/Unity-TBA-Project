@@ -64,11 +64,6 @@ public class NodeManager : MonoBehaviour {
                 return;
             }
         }
-        else
-        {
-            Debug.Log("Theres a unit here lol");
-            Debug.Log("mate can you take this seriously, we need to debug so write more descriptive messages");
-        }
 
     }
 
@@ -93,20 +88,21 @@ public class NodeManager : MonoBehaviour {
 
         Path<Node> path = Pathfindingv2.FindPath(init, dest);
         if (path == null) return;
-
+        
         unit.SetUnitPath(path.ToList());
+        PathHelper.Instance.DeleteCurrentPath();
         initNode = init; destNode = dest;
     }
 
     public void ShowPath(Node init, Node dest)
     {
+
         Unit unit = init.currentUnit;
         if (unit == null) return;
 
         Path<Node> path = Pathfindingv2.FindPath(init, dest);
         if (path == null) return;
 
-        unit.SetUnitPath(path.ToList());
-        initNode = init; destNode = dest;
+        PathHelper.Instance.DrawCurrentPath(path.ToList(), unit.moveSpeed);
     }
 }

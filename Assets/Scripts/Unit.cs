@@ -18,11 +18,11 @@ public class Unit : MonoBehaviour {
     public GameObject __testObject;
     //fresh fIelds
     List<Node> movePath = new List<Node>();
+    List<GameObject> pathVisual = new List<GameObject>();
     int currMoveIndex = 0;
     public Node currentNode;
 
     bool pathHasChanged = false;
-    List<GameObject> pathVisual = new List<GameObject>();
 
     GameObject[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,] loadBearingArray;
 
@@ -34,87 +34,12 @@ public class Unit : MonoBehaviour {
 
     void Update()
     {
-        DrawPath();
         if (movePath.Count != 0)
         {
             MoveStep();
         }
     }
-
-    void DrawPath()
-    {
-        if (currentPath != null && pathHasChanged)
-        {
-            foreach (GameObject objectIns in pathVisual)
-            {
-                if (objectIns != null) Destroy(objectIns);
-            }
-
-            pathHasChanged = false;
-
-            pathVisual = new List<GameObject>();
-
-            int currNode = 0;
-            int movementRemaining = moveSpeed;
-            while (currNode < currentPath.Count - 1)
-            {
-                //Vector3 start = new Vector3(currentPath[currNode].transform.position.x, 1f, currentPath[currNode].transform.position.z);
-                //Vector3 end = new Vector3(currentPath[currNode + 1].transform.position.x, 1f, currentPath[currNode + 1].transform.position.z);
-
-                movementRemaining -= currentPath[currNode + 1].moveCost;
-                currNode++;
-
-                DrawLines(movementRemaining, currNode - 1, NodeManager.Instance.movementUIObjectLine);
-                //set direction for line
-                Vector3 dir = currentPath[currNode - 1].transform.position - currentPath[currNode].transform.position;
-                pathVisual[currNode - 1].transform.rotation = Quaternion.LookRotation(dir);
-                //final node
-                if (currNode == currentPath.Count - 1)
-                {
-                    DrawLines(movementRemaining, currNode, NodeManager.Instance.movementUIObjectTarget);
-                }
-            }
-        }
-    }
-
-    void DrawLines(int movement, int current, GameObject GO)
-    {
-        if (movement >= 0)
-        {
-            pathVisual.Add(Instantiate(GO, currentPath[current].transform.position, Quaternion.identity));
-        }
-        else
-        {
-            pathVisual.Add(Instantiate(GO, currentPath[current].transform.position, Quaternion.identity));
-
-            Renderer[] rends = pathVisual[current].GetComponentsInChildren<Renderer>();
-            foreach (Renderer rendo in rends)
-            {
-                rendo.material = NodeManager.Instance.moveBad;
-            }
-        }
-    }
-
-    public List<Node> GetPath() //moves as far along the set path as its movement can go
-    {
-        int movementRemaining = moveSpeed;
-        int currentNode = 0;
-        List<Node> pathToFollow = new List<Node>();
-
-        while (currentNode < currentPath.Count - 1 && movementRemaining > 0)
-        {
-            movementRemaining -= currentPath[currentNode+1].moveCost;    //reduce our remaning movement by the cost
-
-            if (movementRemaining < 0) break;   //if you can't make it to the node, stop adding to the path
-
-            currentNode++;
-            pathToFollow.Add(currentPath[currentNode]);
-        }
-        currentPath.RemoveRange(0, currentNode);  //remove the path we are taking from the planned path
-
-        movePath.AddRange(pathToFollow);    //adds the path to the path that we will animate through
-        return pathToFollow;
-    }
+    
 
     void MoveStep()
     {
@@ -144,9 +69,27 @@ public class Unit : MonoBehaviour {
     {
         if ((TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN && !isEnemy) || (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYTURN && isEnemy))
         {
-            List<Node> pathToFollow = GetPath();   //get the path to follow, based on the max distance the unit can move this turn
-            if (pathToFollow == null) return;
-            if (pathToFollow.Count == 0) return;
+            //Debug.Log(currentPath[0]);
+
+            List<Node> pathToFollow = currentPath;   //get the path to follow, based on the max distance the unit can move this turn
+            for (int i = 0; i < currentPath.Count; ++i)
+            {
+                if (currentPath[i] != null)
+                {
+                    Debug.Log(currentPath[i] + " at index: " + i);
+                }
+                else
+                    Debug.Log("Nothing here");
+            }
+            movePath = currentPath;
+            //currentPath.Clear();
+            foreach (GameObject haha in pathVisual)
+                Destroy(haha);
+            pathVisual.Clear();
+            if (pathToFollow == null)
+                return;
+            if (pathToFollow.Count == 0)
+                return;
 
             Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
 
@@ -162,8 +105,7 @@ public class Unit : MonoBehaviour {
             unitComponent.XY = _destNode.XY;
             unitComponent.currentNodeID = _destNode.nodeID;
             currentNode = _destNode;
-
-            pathHasChanged = true;
+            
             //NodeManager.Instance.Deselect();
             //Select(_destNode);
             //initNode = _destNode;
@@ -172,17 +114,29 @@ public class Unit : MonoBehaviour {
 
     public void SetUnitPath(List<Node> path)
     {
-        pathHasChanged = true;
-        currentPath = path;
-    }
-
-    public void TogglePathVisual(bool toggle)
-    {
-        if (pathVisual.Count == 0) return;
-
-        foreach (GameObject GO in pathVisual)
+        int movementRemaining = moveSpeed;
+        int currentNodeInt = 0;
+        currentPath.Add(currentNode);
+        while (currentNodeInt < path.Count - 1 && movementRemaining > 0)
         {
-            GO.SetActive(toggle);
+            Debug.Log(currentNodeInt);
+            movementRemaining -= path[currentNodeInt + 1].moveCost;    //reduce our remaning movement by the cost
+
+            if (movementRemaining < 0) break;   //if you can't make it to the node, stop adding to the path
+
+            currentNodeInt++;
+            currentPath.Add(path[currentNodeInt]);
         }
+        pathVisual = PathHelper.Instance.DrawActualPath(currentPath);
     }
+
+    //public void TogglePathVisual(bool toggle)
+    //{
+    //    if (pathVisual.Count == 0) return;
+
+    //    foreach (GameObject GO in pathVisual)
+    //    {
+    //        GO.SetActive(toggle);
+    //    }
+    //}
 }
