@@ -130,6 +130,7 @@ public class Unit : MonoBehaviour {
         }
         pathVisual = PathHelper.Instance.DrawActualPath(_currentPath);
         currentPath = _currentPath; // FIX FOR PATH BUG
+        currentPath[currentPath.Count - 1].potientalUnit = this;
     }
 
     //public void TogglePathVisual(bool toggle)

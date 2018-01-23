@@ -33,7 +33,9 @@ public class Pathfindingv2 : MonoBehaviour
 
     static double Distance(Node nodeA, Node nodeB)  //distance to the next node is the cost it takes to move there
     {
-        return nodeB.moveCost;
+        if (nodeB.potientalUnit == null && nodeB.currentUnit == null)
+            return nodeB.moveCost;
+        else return Mathf.Infinity;
     }
 
     static double Estimate(Node node, Node destNode)    //minimum grid movements to make it to the destination node (assuming a direct path)

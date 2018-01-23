@@ -46,21 +46,18 @@ public class NodeManager : MonoBehaviour {
                 return;
             }
 
-            if (selectedNode != null)   //selecting a node with another node selected
+            if (selectedNode != null && node.potientalUnit == null && node.currentUnit == null)   //selecting a node with another node selected
             {
                 //check if trying to move unit
                 if (selectedNode.currentUnitGO != null)
                 {
-                    if (node.potientalUnit == null && node.currentUnit == null)
-                    {
-                        //potentialUnitNode.potientalUnit = null; // delete potential unit for previously selectednode
-                        AssignPath(selectedNode, node);
-                        //potentialUnitNode = node; // assign new potential unit node
-                        //potentialUnitNode.potientalUnit = selectedNode.currentUnitGO.GetComponent<Unit>(); // set potential unit variable of the potential unit node
-                    }
+                    //potentialUnitNode.potientalUnit = null; // delete potential unit for previously selectednode
+                    AssignPath(selectedNode, node);
+                    //potentialUnitNode = node; // assign new potential unit node
+                    //potentialUnitNode.potientalUnit = selectedNode.currentUnitGO.GetComponent<Unit>(); // set potential unit variable of the potential unit node
                 }
                 Deselect();
-                Select(node);
+                //Select(node);
                 return;
             }
         }
