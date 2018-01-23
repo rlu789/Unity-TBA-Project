@@ -16,6 +16,7 @@ public class Node : MonoBehaviour {
     public GameObject currentUnitGO;
     public Unit currentUnit;
     public Unit potientalUnit; // If a unit of going to move here at end of turn
+
     [HideInInspector]
     public int nodeID;
     [HideInInspector]
@@ -26,18 +27,7 @@ public class Node : MonoBehaviour {
     public Material material;
     [HideInInspector]
     public int moveCost;
-
-    //Pathfinding stuff
-    [HideInInspector]
-    public int gCost = 0;
-    [HideInInspector]
-    public int hCost = 0;
-    [HideInInspector]
-    public int fCost = 0;
-    [HideInInspector]
-    public Node parent;
     public bool passable = true;
-    //end of pathfinding
 
     public List<Node> neighbours  = new List<Node>();
 
@@ -82,7 +72,7 @@ public class Node : MonoBehaviour {
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
         if (NodeManager.Instance.selectedNode != this) myRenderer.material = hoverMaterial;
-        if (NodeManager.Instance.selectedNode !=  null) NodeManager.Instance.AssignPath(NodeManager.Instance.selectedNode, this);   //temporary for testing
+        if (NodeManager.Instance.selectedNode !=  null) NodeManager.Instance.AssignPath(NodeManager.Instance.selectedNode, this);
     }
 
     private void OnMouseExit()

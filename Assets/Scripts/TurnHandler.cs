@@ -99,7 +99,7 @@ public class TurnHandler : MonoBehaviour
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
             NodeManager.Instance.AssignPath(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().currentNode, Map.Instance.unitDudeFriends[0].GetComponent<Unit>().currentNode);
-            Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().MoveEnemyUnit();
+            Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().MoveUnit();
         }
         currentState = TurnHandlerStates.PLAYERTURN;
     }

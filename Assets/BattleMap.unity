@@ -145,14 +145,17 @@ MonoBehaviour:
     nodePrefab: {fileID: 1326710624061332, guid: 2b3bf6dc1c3df88458a7e5ce1ea0a8c8,
       type: 2}
     moveCost: 1
+    passable: 1
   - name: Wall
     nodePrefab: {fileID: 1326710624061332, guid: 97e6373aee1e0b246b7dae9649622e91,
       type: 2}
     moveCost: 420
+    passable: 1
   - name: Water
     nodePrefab: {fileID: 1326710624061332, guid: d8d064dfcc0a2184586b5c004efe7f5d,
       type: 2}
     moveCost: 2
+    passable: 1
   mapSizeX: 15
   mapSizeY: 15
   nodeSize: 2
@@ -204,7 +207,7 @@ Transform:
   - {fileID: 1440865572}
   - {fileID: 734221840}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &734221839
 GameObject:
@@ -253,6 +256,34 @@ MonoBehaviour:
   enemyCount: 0
   friendBool: 
   enemyBool: 
+--- !u!1 &837811192
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100000, guid: 73579df660711444bb11e1d2e30b7e86, type: 3}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 837811193}
+  m_Layer: 0
+  m_Name: Arrow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &837811193
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400000, guid: 73579df660711444bb11e1d2e30b7e86, type: 3}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 837811192}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1116316388
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,7 +310,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1351090665
 GameObject:
@@ -341,7 +372,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1372305466
 GameObject:
@@ -430,7 +461,7 @@ RectTransform:
   m_Children:
   - {fileID: 1621955277}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -477,6 +508,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d777f15d1c31c5479939abb51a9dd70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementUIObjectLine: {fileID: 1711957229834070, guid: 35306f8bc31169043b7683ef6d390688,
+    type: 2}
+  movementUIObjectTarget: {fileID: 1711957229834070, guid: a41fc97458240384b92665b6fbc18acd,
+    type: 2}
+  moveGood: {fileID: 2100000, guid: f8944122a8a0360458e333f8a9c354d8, type: 2}
+  moveBad: {fileID: 2100000, guid: fb79900a37a180a42a531ffa8d7d528a, type: 2}
   selectedNode: {fileID: 0}
   destNode: {fileID: 0}
   initNode: {fileID: 0}
@@ -858,7 +895,7 @@ Transform:
   m_LocalScale: {x: 1000, y: 1, z: 1000}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2092677647
 GameObject:
@@ -923,5 +960,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}

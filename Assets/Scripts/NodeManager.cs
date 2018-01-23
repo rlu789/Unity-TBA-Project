@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 public class NodeManager : MonoBehaviour {
 
     public static NodeManager Instance;
 
+    public GameObject movementUIObjectLine;
+    public GameObject movementUIObjectTarget;
+    public Material moveGood;
+    public Material moveBad;
+    [Space(10)]
+    [Header("Don't change these v")]
     public Node selectedNode;
 
     public Node destNode, initNode;
@@ -60,7 +65,11 @@ public class NodeManager : MonoBehaviour {
             }
         }
         else
+        {
             Debug.Log("Theres a unit here lol");
+            Debug.Log("mate can you take this seriously, we need to debug so write more descriptive messages");
+        }
+
     }
 
     void Select(Node node)
@@ -81,9 +90,23 @@ public class NodeManager : MonoBehaviour {
     {
         Unit unit = init.currentUnit;
         if (unit == null) return;
+
         Path<Node> path = Pathfindingv2.FindPath(init, dest);
         if (path == null) return;
-        unit.currentPath = path.ToList();
+
+        unit.SetUnitPath(path.ToList());
+        initNode = init; destNode = dest;
+    }
+
+    public void ShowPath(Node init, Node dest)
+    {
+        Unit unit = init.currentUnit;
+        if (unit == null) return;
+
+        Path<Node> path = Pathfindingv2.FindPath(init, dest);
+        if (path == null) return;
+
+        unit.SetUnitPath(path.ToList());
         initNode = init; destNode = dest;
     }
 }
