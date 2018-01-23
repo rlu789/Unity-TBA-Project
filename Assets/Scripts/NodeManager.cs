@@ -14,7 +14,6 @@ public class NodeManager : MonoBehaviour {
     public Node selectedNode;
 
     public Node destNode, initNode;
-    public Node potentialUnitNode;
 
     public List<Unit> unitsWithAssignedPaths;
 
@@ -32,8 +31,6 @@ public class NodeManager : MonoBehaviour {
 
     public void SelectNode(Node node)
     {
-        //if (potentialUnitNode == null)
-        //    potentialUnitNode = node;
         if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN)
         {
             if (selectedNode == null)   //selecting a node with no other nodes selected
@@ -48,19 +45,25 @@ public class NodeManager : MonoBehaviour {
                 return;
             }
 
-            if (selectedNode != null && node.potientalUnit == null && node.currentUnit == null)   //selecting a node with another node selected
+            if (selectedNode != null)   //selecting a node with another node selected
             {
                 //check if trying to move unit
                 if (selectedNode.currentUnitGO != null)
                 {
-                    //potentialUnitNode.potientalUnit = null; // delete potential unit for previously selectednode
+                    if (node.potentialUnit != null)
+                    {
+                        Debug.Log("Node has a potential unit! Unit: " + node.potentialUnit);    //put some message here
+                        return;
+                    }
+                    if (node.currentUnit != null)
+                    {
+                        Debug.Log("Node has a unit! Unit: " + node.currentUnit);
+                        return;
+                    }
                     AssignPath(selectedNode, node);
-                    //potentialUnitNode = node; // assign new potential unit node
-                    //potentialUnitNode.potientalUnit = selectedNode.currentUnitGO.GetComponent<Unit>(); // set potential unit variable of the potential unit node
                 }
                 Deselect();
-                //Select(node);
-                return;
+                Select(node);
             }
         }
 

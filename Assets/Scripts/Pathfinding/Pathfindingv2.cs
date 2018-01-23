@@ -33,7 +33,7 @@ public class Pathfindingv2 : MonoBehaviour
 
     static double Distance(Node nodeA, Node nodeB)  //distance to the next node is the cost it takes to move there
     {
-        if (nodeB.potientalUnit == null && nodeB.currentUnit == null)
+        if (nodeB.potentialUnit == null && nodeB.currentUnit == null)
             return nodeB.moveCost;
         else return Mathf.Infinity;
     }

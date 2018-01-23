@@ -85,7 +85,7 @@ public class Unit : MonoBehaviour {
             //set values on initial and destination nodes
             _destNode.currentUnitGO = gameObject;
             _destNode.currentUnit = this;
-            _destNode.potientalUnit = null;
+            _destNode.potentialUnit = null;
             Map.Instance.nodes[XY.x, XY.y].currentUnitGO = null;
             Map.Instance.nodes[XY.x, XY.y].currentUnit = null;
 
@@ -123,7 +123,7 @@ public class Unit : MonoBehaviour {
 
         pathVisual = PathHelper.Instance.DrawActualPath(_currentPath);
         currentPath = _currentPath; // FIX FOR PATH BUG
-        currentPath[currentPath.Count - 1].potientalUnit = this;
+        currentPath[currentPath.Count - 1].potentialUnit = this;
     }
 
     public void DeleteUnitPath()
@@ -132,7 +132,7 @@ public class Unit : MonoBehaviour {
             Destroy(haha);
         pathVisual.Clear();
 
-        currentPath[currentPath.Count - 1].potientalUnit = null;
+        currentPath[currentPath.Count - 1].potentialUnit = null;
         currentPath.Clear();
     }
     //public void TogglePathVisual(bool toggle)

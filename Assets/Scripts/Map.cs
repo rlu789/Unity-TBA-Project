@@ -145,7 +145,7 @@ public class Map : MonoBehaviour
     public float CostToEnterTile(Node u, Node v)
     {
         // WTF IS NODE U FOR?
-        if (v.currentUnit == null && v.potientalUnit == null)
+        if (v.currentUnit == null && v.potentialUnit == null)
         {
             int sourceX = u.XY.x, sourceY = u.XY.y, targetX = v.XY.x, targetY = v.XY.y;
             NodeType tt = nodeTypes[(int)nodeMap[targetX, targetY]];
