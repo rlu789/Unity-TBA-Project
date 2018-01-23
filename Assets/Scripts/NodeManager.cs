@@ -80,7 +80,10 @@ public class NodeManager : MonoBehaviour {
     public void AssignPath(Node init, Node dest)
     {
         Unit unit = init.currentUnit;
-        Map.Instance.AStarLite(unit, dest);
+        if (unit == null) return;
+        Path<Node> path = Pathfindingv2.FindPath(init, dest);
+        if (path == null) return;
+        unit.currentPath = path.ToList();
         initNode = init; destNode = dest;
     }
 }

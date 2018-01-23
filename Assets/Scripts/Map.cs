@@ -156,7 +156,8 @@ public class Map : MonoBehaviour
             return 100;
 
     }
-
+    #region Old pathfinding
+    /*
     public void AStarLite(Unit unit, Node destNode)
     {
         // Clear out our unit's old path.
@@ -265,4 +266,6 @@ public class Map : MonoBehaviour
 
         unit.currentPath = currentPath2;
     }
+    */
+    #endregion
 }

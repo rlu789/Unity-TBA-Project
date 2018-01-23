@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
 
 public class Node : MonoBehaviour {
 
@@ -24,6 +26,18 @@ public class Node : MonoBehaviour {
     public Material material;
     [HideInInspector]
     public int moveCost;
+
+    //Pathfinding stuff
+    [HideInInspector]
+    public int gCost = 0;
+    [HideInInspector]
+    public int hCost = 0;
+    [HideInInspector]
+    public int fCost = 0;
+    [HideInInspector]
+    public Node parent;
+    public bool passable = true;
+    //end of pathfinding
 
     public List<Node> neighbours  = new List<Node>();
 
@@ -66,7 +80,9 @@ public class Node : MonoBehaviour {
 
     private void OnMouseEnter()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
         if (NodeManager.Instance.selectedNode != this) myRenderer.material = hoverMaterial;
+        if (NodeManager.Instance.selectedNode !=  null) NodeManager.Instance.AssignPath(NodeManager.Instance.selectedNode, this);   //temporary for testing
     }
 
     private void OnMouseExit()
