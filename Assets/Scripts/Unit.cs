@@ -114,9 +114,10 @@ public class Unit : MonoBehaviour {
 
     public void SetUnitPath(List<Node> path)
     {
+        List<Node> _currentPath = new List<Node>(); // FIX FOR PATH BUG
         int movementRemaining = moveSpeed;
         int currentNodeInt = 0;
-        currentPath.Add(currentNode);
+        _currentPath.Add(currentNode);
         while (currentNodeInt < path.Count - 1 && movementRemaining > 0)
         {
             Debug.Log(currentNodeInt);
@@ -125,9 +126,10 @@ public class Unit : MonoBehaviour {
             if (movementRemaining < 0) break;   //if you can't make it to the node, stop adding to the path
 
             currentNodeInt++;
-            currentPath.Add(path[currentNodeInt]);
+            _currentPath.Add(path[currentNodeInt]);
         }
-        pathVisual = PathHelper.Instance.DrawActualPath(currentPath);
+        pathVisual = PathHelper.Instance.DrawActualPath(_currentPath);
+        currentPath = _currentPath; // FIX FOR PATH BUG
     }
 
     //public void TogglePathVisual(bool toggle)
