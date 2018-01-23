@@ -22,8 +22,6 @@ public class Unit : MonoBehaviour {
     int currMoveIndex = 0;
     public Node currentNode;
 
-    bool pathHasChanged = false;
-
     GameObject[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,] loadBearingArray;
 
     private void Start()
@@ -128,6 +126,10 @@ public class Unit : MonoBehaviour {
             currentNodeInt++;
             _currentPath.Add(path[currentNodeInt]);
         }
+        foreach (GameObject haha in pathVisual)
+            Destroy(haha);
+        pathVisual.Clear();
+
         pathVisual = PathHelper.Instance.DrawActualPath(_currentPath);
         currentPath = _currentPath; // FIX FOR PATH BUG
         currentPath[currentPath.Count - 1].potientalUnit = this;
