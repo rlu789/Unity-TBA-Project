@@ -53,5 +53,13 @@ public class CameraController : MonoBehaviour
         {
             transform.Translate(Vector3.left * panSpeed * Time.deltaTime, Space.World);
         }
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            if (NodeManager.Instance.unitsWithAssignedPaths.Count > 0)
+            {
+                NodeManager.Instance.unitsWithAssignedPaths[NodeManager.Instance.unitsWithAssignedPaths.Count - 1].DeleteUnitPath();
+                NodeManager.Instance.unitsWithAssignedPaths.RemoveAt(NodeManager.Instance.unitsWithAssignedPaths.Count - 1);
+            }
+        }
     }
 }

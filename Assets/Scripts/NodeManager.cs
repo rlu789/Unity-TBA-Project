@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class NodeManager : MonoBehaviour {
 
@@ -13,8 +14,9 @@ public class NodeManager : MonoBehaviour {
     public Node selectedNode;
 
     public Node destNode, initNode;
-
     public Node potentialUnitNode;
+
+    public List<Unit> unitsWithAssignedPaths;
 
     private void Awake()
     {
@@ -89,6 +91,7 @@ public class NodeManager : MonoBehaviour {
         unit.SetUnitPath(path.ToList());
         PathHelper.Instance.DeleteCurrentPath();
         initNode = init; destNode = dest;
+        unitsWithAssignedPaths.Add(unit);
     }
 
     public void ShowPath(Node init, Node dest)

@@ -70,15 +70,6 @@ public class Unit : MonoBehaviour {
             //Debug.Log(currentPath[0]);
 
             List<Node> pathToFollow = currentPath;   //get the path to follow, based on the max distance the unit can move this turn
-            for (int i = 0; i < currentPath.Count; ++i)
-            {
-                if (currentPath[i] != null)
-                {
-                    Debug.Log(currentPath[i] + " at index: " + i);
-                }
-                else
-                    Debug.Log("Nothing here");
-            }
             movePath = currentPath;
             //currentPath.Clear();
             foreach (GameObject haha in pathVisual)
@@ -135,6 +126,15 @@ public class Unit : MonoBehaviour {
         currentPath[currentPath.Count - 1].potientalUnit = this;
     }
 
+    public void DeleteUnitPath()
+    {
+        foreach (GameObject haha in pathVisual)
+            Destroy(haha);
+        pathVisual.Clear();
+
+        currentPath[currentPath.Count - 1].potientalUnit = null;
+        currentPath.Clear();
+    }
     //public void TogglePathVisual(bool toggle)
     //{
     //    if (pathVisual.Count == 0) return;
