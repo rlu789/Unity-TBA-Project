@@ -257,11 +257,18 @@ public class Map : MonoBehaviour
         currentPath.Reverse();
 
         //CUT THE PATH
-        for (int i = 0; i <= unit.moveSpeed; i++)
+        try
         {
-            currentPath2.Add(currentPath[i]);
-            if (i == unit.moveSpeed)
-                currentPath[i].potientalUnit = unit;
+            for (int i = 0; i <= unit.moveSpeed; i++)
+            {
+                currentPath2.Add(currentPath[i]);
+                if (i == unit.moveSpeed)
+                    currentPath[i].potientalUnit = unit;
+            }
+        }
+        catch(System.ArgumentOutOfRangeException)
+        {
+
         }
 
         unit.currentPath = currentPath2;
