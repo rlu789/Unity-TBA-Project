@@ -4,22 +4,9 @@ using System.Collections.Generic;
 public enum Class { Dude, VERYSmart, HealthyBoy }
 
 public class Unit : MonoBehaviour {
-
     [Header("Stats")]
-    public int maxHealth = 20;
-    public int moveSpeed = 2;
-    public string displayName = "";
-    public Class _class = Class.Dude;
-    public int maxMana = 3;
-    public int armor = 0;
+    public UnitStats stats;
     public bool isEnemy;
-
-    [HideInInspector]
-    public int currentHealth;
-    [HideInInspector]
-    public int currentMana;
-    [HideInInspector]
-    public int currentMovement;
 
     //Setup fields
     [Header("For unity and debug, don't change")]
@@ -37,10 +24,10 @@ public class Unit : MonoBehaviour {
 
     private void Start()
     {
-        currentHealth = maxHealth;
-        currentMovement = moveSpeed;
-        currentMana = maxMana;
-        if (displayName == "") displayName = GenerateRandomNameOfPower();
+        stats.currentHealth = stats.maxHealth;
+        stats.currentMovement = stats.moveSpeed;
+        stats.currentMana = stats.maxMana;
+        if (stats.displayName == "") stats.displayName = GenerateRandomNameOfPower();
     }
 
     void Update()
@@ -55,8 +42,8 @@ public class Unit : MonoBehaviour {
     void MoveStep()
     {
         Vector3 dir = movePath[currMoveIndex].transform.position - transform.position;      //sets our target direction to the next node along the path
-        transform.Translate(dir.normalized * Time.deltaTime * (moveSpeed), Space.World);    //moves towards our target
-        if (dir != Vector3.zero) transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), (moveSpeed * 2) * Time.deltaTime); //rotates in the direction we are going
+        transform.Translate(dir.normalized * Time.deltaTime * (stats.moveSpeed), Space.World);    //moves towards our target
+        if (dir != Vector3.zero) transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), (stats.moveSpeed * 2) * Time.deltaTime); //rotates in the direction we are going
 
         if ( Vector3.Distance(transform.position, movePath[currMoveIndex].transform.position) <= 0.1f)  //if we are close to the node, we can start moving towards the next node
         {
@@ -116,7 +103,7 @@ public class Unit : MonoBehaviour {
 
     public void SetUnitPath(List<Node> path)
     {
-        currentMovement = moveSpeed;    //reset movement when assigning a new path
+        stats.currentMovement = stats.moveSpeed;    //reset movement when assigning a new path
         List<Node> _currentPath = GetValidPath(path, true);
         foreach (GameObject haha in pathVisual)
             Destroy(haha);
@@ -137,7 +124,8 @@ public class Unit : MonoBehaviour {
 
         currentPath[currentPath.Count - 1].potentialUnit = null;
         currentPath.Clear();
-        currentMovement = moveSpeed;
+        stats.currentMovement = stats.moveSpeed;
+        UIHelper.Instance.SetStatistics(this);
     }
 
     public bool IsPathValid(List<Node> path)
@@ -157,7 +145,7 @@ public class Unit : MonoBehaviour {
     public List<Node> GetValidPath(List<Node> path, bool moving = false)    //optional arguement to update units movement when getting valid path
     {
         List<Node> _currentPath = new List<Node>();
-        int movementRemaining = moveSpeed;
+        int movementRemaining = stats.moveSpeed;
         int currentNodeInt = 0;
 
         _currentPath.Add(currentNode);
@@ -170,7 +158,7 @@ public class Unit : MonoBehaviour {
             currentNodeInt++;
             _currentPath.Add(path[currentNodeInt]);
         }
-        if (moving) currentMovement = movementRemaining;
+        if (moving) stats.currentMovement = movementRemaining;
         return _currentPath;
     }
 

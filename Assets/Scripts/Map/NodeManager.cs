@@ -102,7 +102,7 @@ public class NodeManager : MonoBehaviour {
         Path<Node> path = CheckPath(init, dest, unit);
         if (path == null)
             return;
-        PathHelper.Instance.DrawCurrentPath(path.ToList(), unit.moveSpeed);
+        PathHelper.Instance.DrawCurrentPath(path.ToList(), unit.stats.moveSpeed);
     }
 
     Path<Node> CheckPath(Node init, Node dest, Unit unit)

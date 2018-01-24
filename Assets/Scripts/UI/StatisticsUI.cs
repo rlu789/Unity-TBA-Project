@@ -12,11 +12,11 @@ public class StatisticsUI : MonoBehaviour {
 
     public void SetValues(Unit unit)
     {
-        _name.text = "Name: " + unit.displayName;
-        _class.text = "Class: " + unit._class;
-        health.text = "Health: " + unit.currentHealth + "/" + unit.maxHealth;
-        mana.text = "Mana: " + unit.currentMana + "/" + unit.maxMana;
-        movement.text = "Movement: " + unit.currentMovement + "/" + unit.moveSpeed; ;
-        armor.text = "Armor: " + unit.armor;
+        _name.text = "Name: " + unit.stats.displayName;
+        _class.text = "Class: " + unit.stats._class;
+        health.text = "Health: " + unit.stats.currentHealth + "/" + unit.stats.maxHealth;
+        mana.text = "Mana: " + unit.stats.currentMana + "/" + unit.stats.maxMana;
+        movement.text = "Movement: " + unit.stats.currentMovement + "/" + unit.stats.moveSpeed; ;
+        armor.text = "Armor: " + unit.stats.armor;
     }
 }
