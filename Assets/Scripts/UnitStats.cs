@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+public enum Class { Dude, VERYSmart, HealthyBoy }
+
 [System.Serializable]
 public class UnitStats{
     public int maxHealth = 20;

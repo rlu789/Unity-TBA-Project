@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public enum Class { Dude, VERYSmart, HealthyBoy }
-
 public class Unit : MonoBehaviour {
     [Header("Stats")]
     public UnitStats stats;
