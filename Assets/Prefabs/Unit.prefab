@@ -295,13 +295,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578219b46a0aaf64b90d5b9b91e78261, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  moveSpeed: 2
+  maxHealth: 20
+  moveSpeed: 3
+  displayName: Richaelon
+  _class: 0
+  maxMana: 3
+  armor: 0
+  isEnemy: 0
+  currentHealth: 0
+  currentMana: 0
+  currentMovement: 0
   XY: {x: 0, y: 0}
   currentNodeID: -1
   currentPath: []
   __testObject: {fileID: 1798533339409000, guid: bb8f408335feb8743b3450a994bb8690,
     type: 2}
+  currentNode: {fileID: 0}
 --- !u!135 &135336063579494900
 SphereCollider:
   m_ObjectHideFlags: 1

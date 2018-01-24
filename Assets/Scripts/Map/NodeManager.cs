@@ -75,6 +75,7 @@ public class NodeManager : MonoBehaviour {
 
     public void Deselect(bool hovering = false)
     {
+        UIHelper.Instance.ToggleVisible(UIType.Statistics, false);
         if (!hovering) selectedNode.myRenderer.material = selectedNode.material;
         else selectedNode.myRenderer.material = selectedNode.hoverMaterial; //if you are still hovering over this node, return to hovering material
 

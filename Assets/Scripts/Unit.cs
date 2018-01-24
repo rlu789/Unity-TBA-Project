@@ -1,14 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+public enum Class { Dude, VERYSmart, HealthyBoy }
+
 public class Unit : MonoBehaviour {
 
     [Header("Stats")]
-    public int maxHealth = 100;
-    int currentHealth;
+    public int maxHealth = 20;
     public int moveSpeed = 2;
-    int currentMovement;
+    public string displayName = "Richaelon";
+    public Class _class = Class.Dude;
+    public int maxMana = 3;
+    public int armor = 0;
     public bool isEnemy;
+
+    [HideInInspector]
+    public int currentHealth;
+    [HideInInspector]
+    public int currentMana;
+    [HideInInspector]
+    public int currentMovement;
 
     //Setup fields
     [Header("For unity and debug, don't change")]
@@ -28,6 +39,7 @@ public class Unit : MonoBehaviour {
     {
         currentHealth = maxHealth;
         currentMovement = moveSpeed;
+        currentMana = maxMana;
     }
 
     void Update()
@@ -103,7 +115,8 @@ public class Unit : MonoBehaviour {
 
     public void SetUnitPath(List<Node> path)
     {
-        List<Node> _currentPath = GetValidPath(path);
+        currentMovement = moveSpeed;    //reset movement when assigning a new path
+        List<Node> _currentPath = GetValidPath(path, true);
         foreach (GameObject haha in pathVisual)
             Destroy(haha);
         pathVisual.Clear();
@@ -139,7 +152,7 @@ public class Unit : MonoBehaviour {
         return true;
     }
 
-    public List<Node> GetValidPath(List<Node> path)
+    public List<Node> GetValidPath(List<Node> path, bool moving = false)    //optional arguement to update units movement when getting valid path
     {
         List<Node> _currentPath = new List<Node>();
         int movementRemaining = moveSpeed;
@@ -155,6 +168,7 @@ public class Unit : MonoBehaviour {
             currentNodeInt++;
             _currentPath.Add(path[currentNodeInt]);
         }
+        if (moving) currentMovement = movementRemaining;
         return _currentPath;
     }
     //public void TogglePathVisual(bool toggle)

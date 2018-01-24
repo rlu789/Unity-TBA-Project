@@ -73,10 +73,13 @@ public class Node : MonoBehaviour {
         if (EventSystem.current.IsPointerOverGameObject()) return;
         if (NodeManager.Instance.selectedNode != this) myRenderer.material = hoverMaterial;
         if (NodeManager.Instance.selectedNode !=  null) NodeManager.Instance.ShowPath(NodeManager.Instance.selectedNode, this);
+        if (currentUnit != null) UIHelper.Instance.SetStatistics(currentUnit);
     }
 
     private void OnMouseExit()
     {
         if (NodeManager.Instance.selectedNode != this) myRenderer.material = material;
+        if (NodeManager.Instance.selectedNode != null) UIHelper.Instance.SetStatistics(NodeManager.Instance.selectedNode);  //set the stats window back to the selected unit
+        else UIHelper.Instance.ToggleVisible(UIType.Statistics, false); //if there is no selected node, turn off the stats window
     }
 }
