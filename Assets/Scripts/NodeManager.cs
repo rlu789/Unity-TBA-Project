@@ -13,8 +13,6 @@ public class NodeManager : MonoBehaviour {
     [Header("Don't change these v")]
     public Node selectedNode;
 
-    public Node destNode, initNode;
-
     public List<Unit> unitsWithAssignedPaths;
 
     private void Awake()
@@ -88,9 +86,28 @@ public class NodeManager : MonoBehaviour {
         Unit unit = init.currentUnit;
         if (unit == null) return;
 
+        Path<Node> path = CheckPath(init, dest, unit);
+
+        unit.SetUnitPath(path.ToList());
+        PathHelper.Instance.DeleteCurrentPath();
+        if (!unitsWithAssignedPaths.Contains(unit))
+            unitsWithAssignedPaths.Add(unit);
+    }
+
+    public void ShowPath(Node init, Node dest)
+    {
+        Unit unit = init.currentUnit;
+        if (unit == null) return;
+        Path<Node> path = CheckPath(init, dest, unit);
+        if (path == null)
+            return;
+        PathHelper.Instance.DrawCurrentPath(path.ToList(), unit.moveSpeed);
+    }
+
+    Path<Node> CheckPath(Node init, Node dest, Unit unit)
+    {
         Path<Node> path = null;
         List<Node> BLACKLISTNEVERENTERTHESENODESEVER = new List<Node>();
-
         do
         {
             if (path != null)
@@ -100,26 +117,9 @@ public class NodeManager : MonoBehaviour {
             }
 
             path = Pathfindingv2.FindPath(init, dest, BLACKLISTNEVERENTERTHESENODESEVER);
-            if (path == null) return;   //couldn't path there
+            if (path == null) return null;   //couldn't path there
         }
         while (!unit.IsPathValid(path.ToList()));
-
-        unit.SetUnitPath(path.ToList());
-        PathHelper.Instance.DeleteCurrentPath();
-        initNode = init; destNode = dest;
-        if (!unitsWithAssignedPaths.Contains(unit))
-            unitsWithAssignedPaths.Add(unit);
-    }
-
-    public void ShowPath(Node init, Node dest)
-    {
-
-        Unit unit = init.currentUnit;
-        if (unit == null) return;
-
-        Path<Node> path = Pathfindingv2.FindPath(init, dest);
-        if (path == null) return;
-
-        PathHelper.Instance.DrawCurrentPath(path.ToList(), unit.moveSpeed);
+        return path;
     }
 }

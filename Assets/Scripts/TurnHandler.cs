@@ -78,6 +78,18 @@ public class TurnHandler : MonoBehaviour
                     Map.Instance.unitDudeEnemies[i].GetComponent<UnitStateMachine>().SetState(States.MOVE);
                 }
             }
+            else if (currentState == TurnHandlerStates.PLAYERTURN)
+            {
+                previousState = TurnHandlerStates.PLAYERTURN;
+                for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
+                {
+                    Map.Instance.unitDudeFriends[i].GetComponent<UnitStateMachine>().SetState(States.MOVE);
+                }
+                for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
+                {
+                    Map.Instance.unitDudeEnemies[i].GetComponent<UnitStateMachine>().SetState(States.END);
+                }
+            }
         }
         if (currentState == TurnHandlerStates.ENEMYTURN)
             HandleEnemyTurn();
