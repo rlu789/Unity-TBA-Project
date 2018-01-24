@@ -107,7 +107,8 @@ public class NodeManager : MonoBehaviour {
         unit.SetUnitPath(path.ToList());
         PathHelper.Instance.DeleteCurrentPath();
         initNode = init; destNode = dest;
-        unitsWithAssignedPaths.Add(unit);
+        if (!unitsWithAssignedPaths.Contains(unit))
+            unitsWithAssignedPaths.Add(unit);
     }
 
     public void ShowPath(Node init, Node dest)
