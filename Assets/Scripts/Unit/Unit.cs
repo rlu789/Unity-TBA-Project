@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class Unit : MonoBehaviour {
     [Header("Stats")]
     public UnitStats stats;
+    public UnitAction[] actions;
     public bool isEnemy;
 
     //Setup fields

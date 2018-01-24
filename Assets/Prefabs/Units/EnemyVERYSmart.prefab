@@ -305,6 +305,23 @@ MonoBehaviour:
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
+  actions:
+  - name: Magic Attack
+    manaCost: 0
+    healthCost: 0
+    range: 4
+    damage: 1
+    aoe: 0
+    cooldown: 0
+    currentCooldown: 0
+  - name: Fireball
+    manaCost: 2
+    healthCost: 0
+    range: 4
+    damage: 8
+    aoe: 1
+    cooldown: 1
+    currentCooldown: 0
   isEnemy: 1
   XY: {x: 0, y: 0}
   currentNodeID: -1

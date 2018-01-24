@@ -293,7 +293,20 @@ MonoBehaviour:
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
-  isEnemy: 0
+  actions:
+  - name: Melee Attack
+    manaCost: 0
+    healthCost: 0
+    range: 1
+    damage: 4
+    aoe: 0
+  - name: Throw Rock
+    manaCost: 0
+    healthCost: 0
+    range: 2
+    damage: 2
+    aoe: 0
+  isEnemy: 1
   XY: {x: 0, y: 0}
   currentNodeID: -1
   currentPath: []

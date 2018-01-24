@@ -305,6 +305,31 @@ MonoBehaviour:
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
+  actions:
+  - name: Melee Attack
+    manaCost: 0
+    healthCost: 0
+    range: 1
+    damage: 4
+    aoe: 0
+    cooldown: 0
+    currentCooldown: 0
+  - name: Powerful Attack
+    manaCost: 0
+    healthCost: 4
+    range: 1
+    damage: 8
+    aoe: 0
+    cooldown: 0
+    currentCooldown: 0
+  - name: Rest
+    manaCost: 0
+    healthCost: 0
+    range: 0
+    damage: -4
+    aoe: 0
+    cooldown: 1
+    currentCooldown: 0
   isEnemy: 0
   XY: {x: 0, y: 0}
   currentNodeID: -1

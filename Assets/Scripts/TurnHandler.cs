@@ -29,7 +29,6 @@ public class TurnHandler : MonoBehaviour
         Instance = this;
     }
 
-    // Use this for initialization
     public void Setup()
     {
         currentState = TurnHandlerStates.PLAYERMOVE;
@@ -64,8 +63,7 @@ public class TurnHandler : MonoBehaviour
         enemyBool = new bool[enemyCount];
     }
 
-    // Update is called once per frame
-    void Update () {
+    void Update () {    //just have a function that goes to next turn state
         if (currentState != previousState)
         {
             if (currentState == TurnHandlerStates.ENEMYMOVE)
@@ -108,6 +106,7 @@ public class TurnHandler : MonoBehaviour
         }
         currentState = TurnHandlerStates.ENEMYMOVE;
     }
+
     void HandleEnemyTurn()
     {
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)

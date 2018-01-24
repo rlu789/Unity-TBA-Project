@@ -16,7 +16,7 @@ public class StatisticsUI : MonoBehaviour {
         _class.text = "Class: " + unit.stats._class;
         health.text = "Health: " + unit.stats.currentHealth + "/" + unit.stats.maxHealth;
         mana.text = "Mana: " + unit.stats.currentMana + "/" + unit.stats.maxMana;
-        movement.text = "Movement: " + unit.stats.currentMovement + "/" + unit.stats.moveSpeed; ;
+        movement.text = "Movement: " + unit.stats.currentMovement + "/" + unit.stats.moveSpeed;
         armor.text = "Armor: " + unit.stats.armor;
     }
 }

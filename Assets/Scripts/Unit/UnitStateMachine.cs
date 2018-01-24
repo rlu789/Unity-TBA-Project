@@ -3,6 +3,7 @@
 public enum States
 {
     MOVE,
+    ACT,
     END
 }
 public class UnitStateMachine : MonoBehaviour {
