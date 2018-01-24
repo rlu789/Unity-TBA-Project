@@ -89,8 +89,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1558556153736036}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.25, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 1.5187, z: 0}
+  m_LocalScale: {x: 0.5, y: 1.0374804, z: 0.50000024}
   m_Children:
   - {fileID: 4413385350185366}
   - {fileID: 4697163398729668}
@@ -130,7 +130,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1329816491546904}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.93197393, y: 0.5, z: -5.1037974}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4106922300424780}
@@ -295,16 +295,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578219b46a0aaf64b90d5b9b91e78261, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
-  moveSpeed: 3
-  displayName: 
-  _class: 0
-  maxMana: 3
-  armor: 0
+  stats:
+    maxHealth: 24
+    moveSpeed: 2
+    displayName: 
+    _class: 2
+    maxMana: 3
+    armor: 0
+    currentHealth: 0
+    currentMana: 0
+    currentMovement: 0
   isEnemy: 0
-  currentHealth: 0
-  currentMana: 0
-  currentMovement: 0
   XY: {x: 0, y: 0}
   currentNodeID: -1
   currentPath: []

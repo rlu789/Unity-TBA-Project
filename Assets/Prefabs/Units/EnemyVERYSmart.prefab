@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114890445703711720}
   - component: {fileID: 114142422976057040}
   m_Layer: 0
-  m_Name: UnitDude
+  m_Name: EnemyVERYSmart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,7 +89,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1558556153736036}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.25, z: 0}
+  m_LocalPosition: {x: 0, y: 1.642, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4413385350185366}
@@ -104,7 +104,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1617761901986284}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.25, y: 0.25, z: 0.48}
+  m_LocalPosition: {x: 0.25, y: 0.046, z: 0.404}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_Children: []
   m_Father: {fileID: 4106922300424780}
@@ -117,7 +117,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1550765029516270}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.25, y: 0.26800013, z: 0.48}
+  m_LocalPosition: {x: -0.25, y: 0.06400013, z: 0.40400073}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_Children: []
   m_Father: {fileID: 4106922300424780}
@@ -130,7 +130,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1329816491546904}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -2.0830393, y: 0.5, z: -5.420848}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4106922300424780}
@@ -219,7 +219,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: a5ef3bc3608a6e54da4851f008d4c02c, type: 2}
+  - {fileID: 2100000, guid: 6ef6b00fce48ea449a336acb0a4cca06, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -252,7 +252,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1558556153736036}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!33 &33954987024416318
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -296,16 +296,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats:
-    maxHealth: 16
+    maxHealth: 12
     moveSpeed: 3
     displayName: 
-    _class: 0
-    maxMana: 3
+    _class: 1
+    maxMana: 5
     armor: 0
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
-  isEnemy: 0
+  isEnemy: 1
   XY: {x: 0, y: 0}
   currentNodeID: -1
   currentPath: []

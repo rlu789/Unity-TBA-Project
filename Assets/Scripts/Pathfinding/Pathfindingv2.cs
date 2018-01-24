@@ -41,7 +41,7 @@ public class Pathfindingv2 : MonoBehaviour
 
     static double Distance(Node nodeA, Node nodeB)  //distance to the next node is the cost it takes to move there
     {
-        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN)
+        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE)
         {
             if (nodeB.potentialUnit != null && nodeB.potentialUnit.isEnemy || nodeB.currentUnit != null && nodeB.currentUnit.isEnemy)
             {

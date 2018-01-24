@@ -283,16 +283,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578219b46a0aaf64b90d5b9b91e78261, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
-  moveSpeed: 3
-  displayName: 
-  _class: 0
-  maxMana: 3
-  armor: 0
+  stats:
+    maxHealth: 16
+    moveSpeed: 3
+    displayName: 
+    _class: 0
+    maxMana: 3
+    armor: 0
+    currentHealth: 0
+    currentMana: 0
+    currentMovement: 0
   isEnemy: 0
-  currentHealth: 0
-  currentMana: 0
-  currentMovement: 0
   XY: {x: 0, y: 0}
   currentNodeID: -1
   currentPath: []

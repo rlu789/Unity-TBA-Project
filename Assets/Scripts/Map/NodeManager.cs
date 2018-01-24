@@ -29,7 +29,7 @@ public class NodeManager : MonoBehaviour {
 
     public void SelectNode(Node node)
     {
-        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN)
+        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE)
         {
             if (selectedNode == null)   //selecting a node with no other nodes selected
             {

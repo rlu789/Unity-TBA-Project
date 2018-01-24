@@ -63,7 +63,7 @@ public class Unit : MonoBehaviour {
 
     public void MoveUnit()    //moves unit on selected tile
     {
-        if ((TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN && !isEnemy) || (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYTURN && isEnemy))
+        if ((TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE && !isEnemy) || (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYMOVE && isEnemy))
         {
             //Debug.Log(currentPath[0]);
 

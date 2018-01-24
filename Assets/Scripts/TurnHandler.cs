@@ -2,8 +2,10 @@
 
 public enum TurnHandlerStates
 {
-    PLAYERTURN,
-    ENEMYTURN
+    PLAYERMOVE,
+    PLAYERACT,
+    ENEMYMOVE,
+    ENEMYACT
 }
 
 public class TurnHandler : MonoBehaviour
@@ -30,16 +32,16 @@ public class TurnHandler : MonoBehaviour
     // Use this for initialization
     public void Setup()
     {
-        currentState = TurnHandlerStates.PLAYERTURN;
+        currentState = TurnHandlerStates.PLAYERMOVE;
         // Set up states for all units
         for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
         {
-            if (currentState == TurnHandlerStates.PLAYERTURN)
+            if (currentState == TurnHandlerStates.PLAYERMOVE)
             {
                 Map.Instance.unitDudeFriends[i].GetComponent<UnitStateMachine>().SetState(States.MOVE);
                 friendCount++;
             }
-            else if (currentState == TurnHandlerStates.ENEMYTURN)
+            else if (currentState == TurnHandlerStates.ENEMYMOVE)
             {
                 Map.Instance.unitDudeFriends[i].GetComponent<UnitStateMachine>().SetState(States.END);
                 friendCount++;
@@ -47,12 +49,12 @@ public class TurnHandler : MonoBehaviour
         }
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
-            if (currentState == TurnHandlerStates.PLAYERTURN)
+            if (currentState == TurnHandlerStates.PLAYERMOVE)
             {
                 Map.Instance.unitDudeEnemies[i].GetComponent<UnitStateMachine>().SetState(States.END);
                 enemyCount++;
             }
-            else if (currentState == TurnHandlerStates.ENEMYTURN)
+            else if (currentState == TurnHandlerStates.ENEMYMOVE)
             {
                 Map.Instance.unitDudeEnemies[i].GetComponent<UnitStateMachine>().SetState(States.MOVE);
                 enemyCount++;
@@ -66,9 +68,9 @@ public class TurnHandler : MonoBehaviour
     void Update () {
         if (currentState != previousState)
         {
-            if (currentState == TurnHandlerStates.ENEMYTURN)
+            if (currentState == TurnHandlerStates.ENEMYMOVE)
             {
-                previousState = TurnHandlerStates.ENEMYTURN;
+                previousState = TurnHandlerStates.ENEMYMOVE;
                 for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
                 {
                     Map.Instance.unitDudeFriends[i].GetComponent<UnitStateMachine>().SetState(States.END);
@@ -78,9 +80,9 @@ public class TurnHandler : MonoBehaviour
                     Map.Instance.unitDudeEnemies[i].GetComponent<UnitStateMachine>().SetState(States.MOVE);
                 }
             }
-            else if (currentState == TurnHandlerStates.PLAYERTURN)
+            else if (currentState == TurnHandlerStates.PLAYERMOVE)
             {
-                previousState = TurnHandlerStates.PLAYERTURN;
+                previousState = TurnHandlerStates.PLAYERMOVE;
                 for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
                 {
                     Map.Instance.unitDudeFriends[i].GetComponent<UnitStateMachine>().SetState(States.MOVE);
@@ -91,7 +93,7 @@ public class TurnHandler : MonoBehaviour
                 }
             }
         }
-        if (currentState == TurnHandlerStates.ENEMYTURN)
+        if (currentState == TurnHandlerStates.ENEMYMOVE)
             HandleEnemyTurn();
     }
 
@@ -104,7 +106,7 @@ public class TurnHandler : MonoBehaviour
                 Map.Instance.unitDudeFriends[i].GetComponent<Unit>().MoveUnit();
             }
         }
-        currentState = TurnHandlerStates.ENEMYTURN;
+        currentState = TurnHandlerStates.ENEMYMOVE;
     }
     void HandleEnemyTurn()
     {
@@ -113,6 +115,6 @@ public class TurnHandler : MonoBehaviour
             NodeManager.Instance.AssignPath(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().currentNode, Map.Instance.unitDudeFriends[0].GetComponent<Unit>().currentNode);
             Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().MoveUnit();
         }
-        currentState = TurnHandlerStates.PLAYERTURN;
+        currentState = TurnHandlerStates.PLAYERMOVE;
     }
 }

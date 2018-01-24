@@ -277,6 +277,10 @@ MonoBehaviour:
   unitDudeTypes:
   - {fileID: 1329816491546904, guid: 93c4d8213f03ca540a32a1062450a27c, type: 2}
   - {fileID: 1626122313977446, guid: e8677f963bc601940bf23937d77ef762, type: 2}
+  - {fileID: 1329816491546904, guid: bf248d23f20f02346b431c20bb395bc1, type: 2}
+  - {fileID: 1329816491546904, guid: bc02084bb59a8cf4db6580ee5e7423bb, type: 2}
+  - {fileID: 1329816491546904, guid: c1d10f14e43cbf84fb4d85ffdb56da95, type: 2}
+  - {fileID: 1329816491546904, guid: 64b8072ba2a73274babc86d0d812d48c, type: 2}
   unitDudeFriends: []
   unitDudeEnemies: []
   map: {fileID: 1116316388}
