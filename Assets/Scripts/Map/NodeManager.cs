@@ -88,6 +88,8 @@ public class NodeManager : MonoBehaviour {
         if (unit == null) return;
 
         Path<Node> path = CheckPath(init, dest, unit);
+        if (path == null)
+            return;
 
         unit.SetUnitPath(path.ToList());
         PathHelper.Instance.DeleteCurrentPath();
