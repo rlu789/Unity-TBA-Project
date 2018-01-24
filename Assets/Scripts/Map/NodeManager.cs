@@ -123,4 +123,10 @@ public class NodeManager : MonoBehaviour {
         while (!unit.IsPathValid(path.ToList()));
         return path;
     }
+
+    public void UnassignUnitPath()
+    {
+        unitsWithAssignedPaths[unitsWithAssignedPaths.Count - 1].DeleteUnitPath();
+        unitsWithAssignedPaths.RemoveAt(unitsWithAssignedPaths.Count - 1);
+    }
 }

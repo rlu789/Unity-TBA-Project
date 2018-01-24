@@ -60,8 +60,12 @@ public class Map : MonoBehaviour
         //PopulateNeighbors();
         nodes[0, 0].SpawnUnit(unitDudeTypes[0], false);   //generate a guy at 0,0
         nodes[1, 0].SpawnUnit(unitDudeTypes[0], false);   //generate a guy at 0,0
+        nodes[2, 0].SpawnUnit(unitDudeTypes[0], false);   //generate a guy at 0,0
+        nodes[3, 0].SpawnUnit(unitDudeTypes[0], false);   //generate a guy at 0,0
         nodes[10, 10].SpawnUnit(unitDudeTypes[1], true);   //generate a guy at 
         nodes[10, 11].SpawnUnit(unitDudeTypes[1], true);   //generate a guy at 
+        nodes[10, 12].SpawnUnit(unitDudeTypes[1], true);   //generate a guy at 
+        nodes[10, 13].SpawnUnit(unitDudeTypes[1], true);   //generate a guy at 
         TurnHandler.Instance.Setup(); // after all units are spawned, setup turn handler
     }
 

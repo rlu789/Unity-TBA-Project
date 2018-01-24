@@ -8,7 +8,7 @@ public class Unit : MonoBehaviour {
     [Header("Stats")]
     public int maxHealth = 20;
     public int moveSpeed = 2;
-    public string displayName = "Richaelon";
+    public string displayName = "";
     public Class _class = Class.Dude;
     public int maxMana = 3;
     public int armor = 0;
@@ -40,6 +40,7 @@ public class Unit : MonoBehaviour {
         currentHealth = maxHealth;
         currentMovement = moveSpeed;
         currentMana = maxMana;
+        if (displayName == "") displayName = GenerateRandomNameOfPower();
     }
 
     void Update()
@@ -136,6 +137,7 @@ public class Unit : MonoBehaviour {
 
         currentPath[currentPath.Count - 1].potentialUnit = null;
         currentPath.Clear();
+        currentMovement = moveSpeed;
     }
 
     public bool IsPathValid(List<Node> path)
@@ -170,6 +172,22 @@ public class Unit : MonoBehaviour {
         }
         if (moving) currentMovement = movementRemaining;
         return _currentPath;
+    }
+
+    string GenerateRandomNameOfPower()
+    {
+        string name = "";
+        string[] letters = { "mic", "ric", "jo", "hae", "har", "n", "el", "ard", "oj", "ri", "on", "rd", "cha", "ich", "j", "rich", "jon", "mich" };
+        int nameLength = Random.Range(2, 6);
+        int randIndex = 0;
+
+        for (int i = 0; i < nameLength; ++i)
+        {
+            randIndex = Random.Range(0, letters.Length - 1);
+            if (i > 0) name += letters[randIndex];
+            else name += letters[randIndex].ToUpper();
+        }
+        return name;
     }
     //public void TogglePathVisual(bool toggle)
     //{
