@@ -88,9 +88,22 @@ public class NodeManager : MonoBehaviour {
         Unit unit = init.currentUnit;
         if (unit == null) return;
 
-        Path<Node> path = Pathfindingv2.FindPath(init, dest);
-        if (path == null) return;
-        
+        Path<Node> path = null;
+        List<Node> BLACKLISTNEVERENTERTHESENODESEVER = new List<Node>();
+
+        do
+        {
+            if (path != null)
+            {
+                List<Node> pathList = unit.GetValidPath(path.ToList()); //if the path is not null, we got a path that ended on a bad hex. Get that final hex and add it to the blacklist
+                BLACKLISTNEVERENTERTHESENODESEVER.Add(pathList[pathList.Count - 1]);
+            }
+
+            path = Pathfindingv2.FindPath(init, dest, BLACKLISTNEVERENTERTHESENODESEVER);
+            if (path == null) return;   //couldn't path there
+        }
+        while (!unit.IsPathValid(path.ToList()));
+
         unit.SetUnitPath(path.ToList());
         PathHelper.Instance.DeleteCurrentPath();
         initNode = init; destNode = dest;

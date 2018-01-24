@@ -43,7 +43,7 @@ public class Unit : MonoBehaviour {
     {
         Vector3 dir = movePath[currMoveIndex].transform.position - transform.position;      //sets our target direction to the next node along the path
         transform.Translate(dir.normalized * Time.deltaTime * (moveSpeed), Space.World);    //moves towards our target
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), (moveSpeed * 2) * Time.deltaTime); //rotates in the direction we are going
+        if (dir != Vector3.zero) transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), (moveSpeed * 2) * Time.deltaTime); //rotates in the direction we are going
 
         if ( Vector3.Distance(transform.position, movePath[currMoveIndex].transform.position) <= 0.1f)  //if we are close to the node, we can start moving towards the next node
         {
@@ -103,26 +103,15 @@ public class Unit : MonoBehaviour {
 
     public void SetUnitPath(List<Node> path)
     {
-        List<Node> _currentPath = new List<Node>(); // FIX FOR PATH BUG
-        int movementRemaining = moveSpeed;
-        int currentNodeInt = 0;
-        _currentPath.Add(currentNode);
-        while (currentNodeInt < path.Count - 1 && movementRemaining > 0)
-        {
-            Debug.Log(currentNodeInt);
-            movementRemaining -= path[currentNodeInt + 1].moveCost;    //reduce our remaning movement by the cost
-
-            if (movementRemaining < 0) break;   //if you can't make it to the node, stop adding to the path
-
-            currentNodeInt++;
-            _currentPath.Add(path[currentNodeInt]);
-        }
+        List<Node> _currentPath = GetValidPath(path);
         foreach (GameObject haha in pathVisual)
             Destroy(haha);
         pathVisual.Clear();
 
         pathVisual = PathHelper.Instance.DrawActualPath(_currentPath);
-        currentPath = _currentPath; // FIX FOR PATH BUG
+
+        if (currentPath.Count != 0) currentPath[currentPath.Count - 1].potentialUnit = null;
+        currentPath = _currentPath;
         currentPath[currentPath.Count - 1].potentialUnit = this;
     }
 
@@ -134,6 +123,39 @@ public class Unit : MonoBehaviour {
 
         currentPath[currentPath.Count - 1].potentialUnit = null;
         currentPath.Clear();
+    }
+
+    public bool IsPathValid(List<Node> path)
+    {
+        List<Node> _currentPath = GetValidPath(path);
+
+        Node nodeToCheck = _currentPath[_currentPath.Count - 1];
+
+        if (nodeToCheck.potentialUnit != null || nodeToCheck.currentUnit != null)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public List<Node> GetValidPath(List<Node> path)
+    {
+        List<Node> _currentPath = new List<Node>();
+        int movementRemaining = moveSpeed;
+        int currentNodeInt = 0;
+
+        _currentPath.Add(currentNode);
+        while (currentNodeInt < path.Count - 1 && movementRemaining > 0)
+        {
+            movementRemaining -= path[currentNodeInt + 1].moveCost;    //reduce our remaning movement by the cost
+
+            if (movementRemaining < 0) break;   //if you can't make it to the node, stop adding to the path
+
+            currentNodeInt++;
+            _currentPath.Add(path[currentNodeInt]);
+        }
+        return _currentPath;
     }
     //public void TogglePathVisual(bool toggle)
     //{

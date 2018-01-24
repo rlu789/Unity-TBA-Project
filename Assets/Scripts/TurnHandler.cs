@@ -80,7 +80,7 @@ public class TurnHandler : MonoBehaviour
             }
         }
         if (currentState == TurnHandlerStates.ENEMYTURN)
-            handleEnemyTurn();
+            HandleEnemyTurn();
     }
 
     public void MoveButton()
@@ -94,7 +94,7 @@ public class TurnHandler : MonoBehaviour
         }
         currentState = TurnHandlerStates.ENEMYTURN;
     }
-    void handleEnemyTurn()
+    void HandleEnemyTurn()
     {
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
