@@ -183,6 +183,12 @@ MonoBehaviour:
     damage: 1
     aoe: 0
     cooldown: 0
+    spawnEffect: {fileID: 1799131968791612, guid: cbb6f15501cf8334993b7174dac8ba9e,
+      type: 2}
+    spawnEffectLife: 2
+    hitEffect: {fileID: 1751890007448496, guid: 50a9a6654ef12c246bfb0d163808b1b1,
+      type: 2}
+    hitEffectLife: 2
     currentCooldown: 0
   - name: Fireball
     manaCost: 2
@@ -191,6 +197,10 @@ MonoBehaviour:
     damage: 8
     aoe: 1
     cooldown: 1
+    spawnEffect: {fileID: 0}
+    spawnEffectLife: 0
+    hitEffect: {fileID: 0}
+    hitEffectLife: 0
     currentCooldown: 0
   isEnemy: 0
   XY: {x: 0, y: 0}
@@ -199,3 +209,18 @@ MonoBehaviour:
   __testObject: {fileID: 1798533339409000, guid: bb8f408335feb8743b3450a994bb8690,
     type: 2}
   currentNode: {fileID: 0}
+  targetActionNode: {fileID: 0}
+  readyAction:
+    name: 
+    manaCost: 0
+    healthCost: 0
+    range: 0
+    damage: 0
+    aoe: 0
+    cooldown: 0
+    spawnEffect: {fileID: 0}
+    spawnEffectLife: 0
+    hitEffect: {fileID: 0}
+    hitEffectLife: 0
+    currentCooldown: 0
+  unitStateMachine: {fileID: 0}

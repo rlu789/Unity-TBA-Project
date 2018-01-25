@@ -185,8 +185,12 @@ public class Unit : MonoBehaviour {
     {
         int currentIndex = UIHelper.Instance.GetActionIndex();
         if (currentIndex == -1) return null;
+
         readyAction = actions[currentIndex];
         int range = readyAction.range;
+
+        targetActionNode = null;    //changing ability, remove previous target
+        NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.ACT;  //and return to act
 
         List<Node> nodesInRange = new List<Node>();
         List<Node> tempNodes = new List<Node>();
@@ -209,7 +213,6 @@ public class Unit : MonoBehaviour {
         return nodesInRange;
     }
 
-
     public void PerformAction()
     {
         Debug.Log("Using " + readyAction.name);
@@ -222,13 +225,20 @@ public class Unit : MonoBehaviour {
         if (targetActionNode.currentUnit == null)
         {
             Debug.Log("Used action on empty node.");
-            targetActionNode = null;
-            unitStateMachine.state = States.END;
-            return;
         }
-        targetActionNode.currentUnit.stats.currentHealth -= readyAction.damage;
+        readyAction.ActivateAction(targetActionNode, this);
         targetActionNode = null;
         unitStateMachine.state = States.END;
+    }
+
+    public void TakeDamage(int amount)
+    {
+        stats.currentHealth -= amount;
+        if (stats.currentHealth <= 0)
+        {
+            Debug.Log("Unit killed! " + stats.displayName + " is dead now... :(");
+            Destroy(gameObject);
+        }
     }
     //public void TogglePathVisual(bool toggle)
     //{

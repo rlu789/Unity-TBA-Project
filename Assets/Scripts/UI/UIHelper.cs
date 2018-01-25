@@ -115,6 +115,7 @@ public class UIHelper : MonoBehaviour {
 
     public void SetTurnValues(TurnHandlerStates turn)
     {
+        if (turnUI == null) return;
         turnUI.SetValues(turn);
     }
 }
