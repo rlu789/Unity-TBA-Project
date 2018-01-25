@@ -34,6 +34,8 @@ public class UnitActionUI : MonoBehaviour {
         damage.text = "Damage: " + unit.actions[index].damage;
         aoe.text = "AOE: " + unit.actions[index].aoe;
         cooldown.text = "Cooldown: " + unit.actions[index].currentCooldown + " (" + unit.actions[index].cooldown + ")";
+
+        NodeManager.Instance.ShowUnitActionRange(unit.currentNode);
     }
 
     public void NextValue(Unit unit)

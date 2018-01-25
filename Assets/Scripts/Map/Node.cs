@@ -70,30 +70,11 @@ public class Node : MonoBehaviour {
     private void OnMouseEnter()
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
-        if (NodeManager.Instance.selectedNode != this && !NodeManager.Instance.nodesInRange.Contains(this)) myRenderer.material = hoverMaterial;
-        else 
-        {
-            if (NodeManager.Instance.selectedNode.currentUnit.GetComponent<UnitStateMachine>().state == States.ACT)
-            {
-                NodeManager.Instance.movementUIObjectTargetGO.transform.position = transform.position;
-            }
-        }
-        if (NodeManager.Instance.selectedNode != null && TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE) NodeManager.Instance.ShowPath(NodeManager.Instance.selectedNode, this);
-        if (currentUnit != null) {
-            UIHelper.Instance.SetStatistics(currentUnit);
-            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE)
-                UIHelper.Instance.SetUnitActions(currentUnit);
-        }
+        NodeManager.Instance.NodeHoverEnter(this);
     }
 
     private void OnMouseExit()
     {
-        if (NodeManager.Instance.selectedNode != this && !NodeManager.Instance.nodesInRange.Contains(this)) myRenderer.material = material;
-        if (NodeManager.Instance.selectedNode != null)
-        {
-            UIHelper.Instance.SetStatistics(NodeManager.Instance.selectedNode);  //set the windows back to the selected unit
-            UIHelper.Instance.SetUnitActions(NodeManager.Instance.selectedNode);
-        }
-        else UIHelper.Instance.ToggleAllVisible(false); //if there is no selected node, turn off the windows
+        NodeManager.Instance.NodeHoverExit(this);
     }
 }

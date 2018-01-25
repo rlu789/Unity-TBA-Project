@@ -98,4 +98,10 @@ public class UIHelper : MonoBehaviour {
         if (unitActions.currentUnit != null) return unitActions.GetCurrentActionIndex();
         return -1;
     }
+
+    public Unit GetCurrentActingUnit()
+    {
+        if (unitActions.currentUnit != null) return unitActions.currentUnit;
+        return null;
+    }
 }

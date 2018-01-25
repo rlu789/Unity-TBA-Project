@@ -36,13 +36,12 @@ public class NodeManager : MonoBehaviour {
     {
         if (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYMOVE || TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYACT) return;
 
-        if (node.currentUnit != null && node.currentUnit.isEnemy )
+        if (node.currentUnit != null && node.currentUnit.isEnemy)
         {
             return;
         }
         if (selectedNode == null)   //selecting a node with no other nodes selected
         {
-            if (node.currentUnit != null && node.currentUnit.GetComponent<UnitStateMachine>().state == States.END) return; // Cannot select unit if its turn is over
             Select(node);
             return;
         }
@@ -55,40 +54,40 @@ public class NodeManager : MonoBehaviour {
 
         if (selectedNode != null)   //selecting a node with another node selected
         {
-            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE)
+            if (selectedNode.currentUnitGO == null)
             {
-                //check if trying to move unit
-                if (selectedNode.currentUnitGO != null)
-                {
-                    if (node.potentialUnit != null)
-                    {
-                        Debug.Log("Node has a potential unit! Unit: " + node.potentialUnit);    //put some message here
-                        return;
-                    }
-                    if (node.currentUnit != null)
-                    {
-                        Debug.Log("Node has a unit! Unit: " + node.currentUnit);
-                        return;
-                    }
-                    AssignPath(selectedNode, node);
-                    Deselect();
-                    return;
-                }
                 Deselect();
                 Select(node);
+                return;
+            }
+            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE)
+            {
+                if (node.potentialUnit != null)
+                {
+                    Debug.Log("Node has a potential unit! Unit: " + node.potentialUnit);    //put some message here
+                    return;
+                }
+                if (node.currentUnit != null)
+                {
+                    Debug.Log("Node has a unit! Unit: " + node.currentUnit);
+                    return;
+                }
+                AssignPath(selectedNode, node);
+                Deselect();
+                return;
             }
             if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT)
             {
                 if (nodesInRange.Contains(node))
                 {
-                    selectedNode.currentUnit.GetComponent<UnitStateMachine>().state = States.PERFORM;
+                    selectedNode.currentUnit.unitStateMachine.state = States.PERFORM;
                     selectedNode.currentUnit.GetComponent<Unit>().targetActionNode = node;
                 }
                 else
                 {
-                    Deselect();
-                    selectedNode.currentUnit.GetComponent<UnitStateMachine>().state = States.ACT;
+                    selectedNode.currentUnit.unitStateMachine.state = States.ACT;
                     selectedNode.currentUnit.GetComponent<Unit>().targetActionNode = null;
+                    Deselect();
                 }
             }
         }
@@ -96,6 +95,8 @@ public class NodeManager : MonoBehaviour {
 
     void Select(Node node)
     {
+        if (node.currentUnit != null && node.currentUnit.unitStateMachine.state == States.END) return; // Cannot select unit if its turn is over
+
         node.myRenderer.material = node.selectedMaterial;
         selectedNode = node;
 
@@ -107,12 +108,7 @@ public class NodeManager : MonoBehaviour {
             {
                 if (selectedNode.currentUnitGO != null)
                 {
-                    nodesInRange = node.currentUnit.FindRange();
-                    foreach (Node n in nodesInRange)
-                    {
-                        n.myRenderer.material = n.hoverMaterialBad;
-                    }
-                    movementUIObjectTargetGO = Instantiate(movementUIObjectTarget, node.transform.position, Quaternion.identity);
+                    ShowUnitActionRange(node);
                 }
             }
         }
@@ -183,10 +179,52 @@ public class NodeManager : MonoBehaviour {
         unitsWithAssignedPaths[unitsWithAssignedPaths.Count - 1].DeleteUnitPath();
         unitsWithAssignedPaths.RemoveAt(unitsWithAssignedPaths.Count - 1);
     }
-    
+
+    public void NodeHoverEnter(Node node)
+    {
+        if (selectedNode != node && !nodesInRange.Contains(node)) node.myRenderer.material = node.hoverMaterial;    //if node isnt selected and we arent range checking -> show hover material
+
+        if (node.currentUnit != null)
+        {
+            UIHelper.Instance.SetStatistics(node.currentUnit);
+            if (selectedNode != null && selectedNode.currentUnit != null && TurnHandler.Instance.currentState != TurnHandlerStates.PLAYERACT) UIHelper.Instance.SetUnitActions(node.currentUnit);
+            //basically if we have a selected unit that is trying to use an ability, dont switch the action window
+        }
+
+        if (selectedNode != null)
+        {
+            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE) ShowPath(selectedNode, node);    //show path if we are in the move turn
+
+            if (selectedNode.currentUnit != null)
+            {
+                if (selectedNode.currentUnit.unitStateMachine.state == States.ACT)  //if we are in ACT state, move the targetting object to node
+                {
+                    movementUIObjectTargetGO.transform.position = node.transform.position;
+                }
+            }
+        }
+    }
+
+    public void NodeHoverExit(Node node)
+    {
+        if (selectedNode != node && !nodesInRange.Contains(node)) node.myRenderer.material = node.material;
+
+        if (selectedNode != null)
+        {
+            UIHelper.Instance.SetStatistics(selectedNode);  //set the windows back to the selected unit
+            if (selectedNode.currentUnit != UIHelper.Instance.GetCurrentActingUnit()) UIHelper.Instance.SetUnitActions(selectedNode);   //if the unit is the same as the acting one, dont reset its action window (because i made it get new range and so that makes it get new target which puts the target over the untis head and it still works but its not good looking anyway this whole thing needs some refactoring after some serious paint design docs :rage:
+        }
+        else UIHelper.Instance.ToggleAllVisible(false); //if there is no selected node, turn off the windows
+    }
+
     //REDO
     public void PerformButton()
     {
+        if (selectedNode == null || selectedNode.currentUnit == null)
+        {
+            Debug.Log("Need selected node with unit! Cancelling perform.");
+            return;
+        }
         selectedNode.currentUnit.PerformAction();
         Destroy(movementUIObjectTargetGO);
         foreach (Node n in nodesInRange)
@@ -205,5 +243,26 @@ public class NodeManager : MonoBehaviour {
                 TurnHandler.Instance.NextState();
             }
         }
+    }
+
+    public void ShowUnitActionRange(Node node)
+    {
+        if (TurnHandler.Instance.currentState != TurnHandlerStates.PLAYERACT || selectedNode != node) return;   //only show range for selected units while in ACT turn
+
+        if (movementUIObjectTargetGO != null)   //clean any previous AOE
+        {
+            Destroy(movementUIObjectTargetGO);
+            foreach (Node n in nodesInRange)
+            {
+                n.myRenderer.material = n.material;
+            }
+        }
+
+        nodesInRange = node.currentUnit.FindRange();
+        foreach (Node n in nodesInRange)
+        {
+            n.myRenderer.material = n.hoverMaterialBad;
+        }
+        movementUIObjectTargetGO = Instantiate(movementUIObjectTarget, node.transform.position, Quaternion.identity);
     }
 }

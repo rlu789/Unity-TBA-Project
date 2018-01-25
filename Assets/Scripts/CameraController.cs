@@ -63,13 +63,13 @@ public class CameraController : MonoBehaviour
                     NodeManager.Instance.UnassignUnitPath();
                 }
             }
-            else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT && NodeManager.Instance.selectedNode != null && NodeManager.Instance.selectedNode.currentUnit.GetComponent<UnitStateMachine>().state == States.ACT)
+            else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT && NodeManager.Instance.selectedNode != null && NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state == States.ACT)
             {
                 NodeManager.Instance.Deselect();
             }
-            else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT && NodeManager.Instance.selectedNode != null && NodeManager.Instance.selectedNode.currentUnit.GetComponent<UnitStateMachine>().state == States.PERFORM)
+            else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT && NodeManager.Instance.selectedNode != null && NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state == States.PERFORM)
             {
-                NodeManager.Instance.selectedNode.currentUnit.GetComponent<UnitStateMachine>().state = States.ACT;
+                NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.ACT;
             }
         }
         if (Input.GetKeyUp(KeyCode.R))

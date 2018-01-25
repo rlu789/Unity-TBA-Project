@@ -20,6 +20,7 @@ public class Unit : MonoBehaviour {
     public Node currentNode, targetActionNode;
 
     public UnitAction readyAction;
+    public UnitStateMachine unitStateMachine;
 
     GameObject[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,] loadBearingArray;
 
@@ -29,6 +30,7 @@ public class Unit : MonoBehaviour {
         stats.currentMovement = stats.moveSpeed;
         stats.currentMana = stats.maxMana;
         if (stats.displayName == "") stats.displayName = GenerateRandomNameOfPower();
+        unitStateMachine = GetComponent<UnitStateMachine>();
     }
 
     void Update()
@@ -210,11 +212,23 @@ public class Unit : MonoBehaviour {
 
     public void PerformAction()
     {
-        Debug.Log("action");
-        if (targetActionNode.currentUnit == null) return;
+        Debug.Log("Using " + readyAction.name);
+        if (targetActionNode == null)
+        {
+            Debug.Log("No node selected, targetting self.");
+            targetActionNode = currentNode;
+        }
+
+        if (targetActionNode.currentUnit == null)
+        {
+            Debug.Log("Used action on empty node.");
+            targetActionNode = null;
+            unitStateMachine.state = States.END;
+            return;
+        }
         targetActionNode.currentUnit.stats.currentHealth -= readyAction.damage;
         targetActionNode = null;
-        GetComponent<UnitStateMachine>().state = States.END;
+        unitStateMachine.state = States.END;
     }
     //public void TogglePathVisual(bool toggle)
     //{
