@@ -29,42 +29,42 @@ public class NodeManager : MonoBehaviour {
 
     public void SelectNode(Node node)
     {
-        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE)
+        if (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYMOVE || TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYACT) return;
+
+        if (selectedNode == null)   //selecting a node with no other nodes selected
         {
-            if (selectedNode == null)   //selecting a node with no other nodes selected
-            {
-                Select(node);
-                return;
-            }
-
-            if (selectedNode == node)   //selecting a node that is already selected
-            {
-                Deselect(true);
-                return;
-            }
-
-            if (selectedNode != null)   //selecting a node with another node selected
-            {
-                //check if trying to move unit
-                if (selectedNode.currentUnitGO != null)
-                {
-                    if (node.potentialUnit != null)
-                    {
-                        Debug.Log("Node has a potential unit! Unit: " + node.potentialUnit);    //put some message here
-                        return;
-                    }
-                    if (node.currentUnit != null)
-                    {
-                        Debug.Log("Node has a unit! Unit: " + node.currentUnit);
-                        return;
-                    }
-                    AssignPath(selectedNode, node);
-                }
-                Deselect();
-                Select(node);
-            }
+            Select(node);
+            return;
         }
 
+        if (selectedNode == node)   //selecting a node that is already selected
+        {
+            Deselect(true);
+            return;
+        }
+
+        if (selectedNode != null)   //selecting a node with another node selected
+        {
+            //check if trying to move unit
+            if (selectedNode.currentUnitGO != null)
+            {
+                if (node.potentialUnit != null)
+                {
+                    Debug.Log("Node has a potential unit! Unit: " + node.potentialUnit);    //put some message here
+                    return;
+                }
+                if (node.currentUnit != null)
+                {
+                    Debug.Log("Node has a unit! Unit: " + node.currentUnit);
+                    return;
+                }
+                AssignPath(selectedNode, node);
+                Deselect();
+                return;
+            }
+            Deselect();
+            Select(node);
+        }
     }
 
     void Select(Node node)
@@ -84,7 +84,7 @@ public class NodeManager : MonoBehaviour {
         UIHelper.Instance.ToggleAllVisible(false);
         if (!hovering) selectedNode.myRenderer.material = selectedNode.material;
         else selectedNode.myRenderer.material = selectedNode.hoverMaterial; //if you are still hovering over this node, return to hovering material
-
+        PathHelper.Instance.DeleteCurrentPath();
         selectedNode = null;
     }
 

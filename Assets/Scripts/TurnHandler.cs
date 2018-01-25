@@ -12,11 +12,7 @@ public class TurnHandler : MonoBehaviour
 {
     public static TurnHandler Instance;
     public int unitTurnCount;
-    public TurnHandlerStates currentState, previousState;
-
-    // REMOVE THESE
-    public int friendCount, enemyCount;
-    public bool[] friendBool, enemyBool;
+    public TurnHandlerStates currentState;
 
     private void Awake()
     {
@@ -31,68 +27,62 @@ public class TurnHandler : MonoBehaviour
 
     public void Setup()
     {
-        currentState = TurnHandlerStates.PLAYERMOVE;
-        // Set up states for all units
+        SwitchState(TurnHandlerStates.PLAYERMOVE);
+    }
+
+    public void NextState()
+    {
+        switch (currentState)
+        {
+            case TurnHandlerStates.PLAYERMOVE:
+                SwitchState(TurnHandlerStates.PLAYERACT);
+                break;
+            case TurnHandlerStates.PLAYERACT:
+                SwitchState(TurnHandlerStates.ENEMYMOVE);
+                break;
+            case TurnHandlerStates.ENEMYMOVE:
+                SwitchState(TurnHandlerStates.ENEMYACT);
+                break;
+            case TurnHandlerStates.ENEMYACT:
+                SwitchState(TurnHandlerStates.PLAYERMOVE);
+                break;
+        }
+    }
+
+    void SwitchState(TurnHandlerStates state)
+    {
+        switch (state)
+        {
+            case TurnHandlerStates.PLAYERMOVE:
+                SetAllStates(States.MOVE, States.END);
+                currentState = TurnHandlerStates.PLAYERMOVE;
+                break;
+            case TurnHandlerStates.PLAYERACT:
+                SetAllStates(States.ACT, States.END);
+                currentState = TurnHandlerStates.PLAYERACT;
+                break;
+            case TurnHandlerStates.ENEMYMOVE:
+                SetAllStates(States.END, States.MOVE);
+                currentState = TurnHandlerStates.ENEMYMOVE;
+                HandleEnemyTurn();
+                break;
+            case TurnHandlerStates.ENEMYACT:
+                SetAllStates(States.END, States.ACT);
+                currentState = TurnHandlerStates.ENEMYACT;
+                break;
+        }
+    }
+
+    void SetAllStates(States playerState, States enemyState)
+    {
         for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
         {
-            if (currentState == TurnHandlerStates.PLAYERMOVE)
-            {
-                Map.Instance.unitDudeFriends[i].GetComponent<UnitStateMachine>().SetState(States.MOVE);
-                friendCount++;
-            }
-            else if (currentState == TurnHandlerStates.ENEMYMOVE)
-            {
-                Map.Instance.unitDudeFriends[i].GetComponent<UnitStateMachine>().SetState(States.END);
-                friendCount++;
-            }
+            Map.Instance.unitDudeFriends[i].GetComponent<UnitStateMachine>().SetState(playerState);
         }
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
-            if (currentState == TurnHandlerStates.PLAYERMOVE)
-            {
-                Map.Instance.unitDudeEnemies[i].GetComponent<UnitStateMachine>().SetState(States.END);
-                enemyCount++;
-            }
-            else if (currentState == TurnHandlerStates.ENEMYMOVE)
-            {
-                Map.Instance.unitDudeEnemies[i].GetComponent<UnitStateMachine>().SetState(States.MOVE);
-                enemyCount++;
-            }
+            Map.Instance.unitDudeEnemies[i].GetComponent<UnitStateMachine>().SetState(enemyState);
         }
-        friendBool = new bool[friendCount];
-        enemyBool = new bool[enemyCount];
-    }
-
-    void Update () {    //just have a function that goes to next turn state
-        if (currentState != previousState)
-        {
-            if (currentState == TurnHandlerStates.ENEMYMOVE)
-            {
-                previousState = TurnHandlerStates.ENEMYMOVE;
-                for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
-                {
-                    Map.Instance.unitDudeFriends[i].GetComponent<UnitStateMachine>().SetState(States.END);
-                }
-                for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
-                {
-                    Map.Instance.unitDudeEnemies[i].GetComponent<UnitStateMachine>().SetState(States.MOVE);
-                }
-            }
-            else if (currentState == TurnHandlerStates.PLAYERMOVE)
-            {
-                previousState = TurnHandlerStates.PLAYERMOVE;
-                for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
-                {
-                    Map.Instance.unitDudeFriends[i].GetComponent<UnitStateMachine>().SetState(States.MOVE);
-                }
-                for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
-                {
-                    Map.Instance.unitDudeEnemies[i].GetComponent<UnitStateMachine>().SetState(States.END);
-                }
-            }
-        }
-        if (currentState == TurnHandlerStates.ENEMYMOVE)
-            HandleEnemyTurn();
     }
 
     public void MoveButton()
@@ -104,8 +94,17 @@ public class TurnHandler : MonoBehaviour
                 Map.Instance.unitDudeFriends[i].GetComponent<Unit>().MoveUnit();
             }
         }
+        NextState();
+    }
+
+    /*
+    public void ActionButton()
+    {
+
+
         currentState = TurnHandlerStates.ENEMYMOVE;
     }
+    */
 
     void HandleEnemyTurn()
     {
@@ -114,6 +113,6 @@ public class TurnHandler : MonoBehaviour
             NodeManager.Instance.AssignPath(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().currentNode, Map.Instance.unitDudeFriends[0].GetComponent<Unit>().currentNode);
             Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().MoveUnit();
         }
-        currentState = TurnHandlerStates.PLAYERMOVE;
+        NextState();
     }
 }
