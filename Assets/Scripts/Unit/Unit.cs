@@ -17,7 +17,9 @@ public class Unit : MonoBehaviour {
     List<Node> movePath = new List<Node>();
     List<GameObject> pathVisual = new List<GameObject>();
     int currMoveIndex = 0;
-    public Node currentNode;
+    public Node currentNode, targetActionNode;
+
+    public UnitAction readyAction;
 
     GameObject[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,] loadBearingArray;
 
@@ -175,6 +177,44 @@ public class Unit : MonoBehaviour {
             else name += letters[randIndex].ToUpper();
         }
         return name;
+    }
+
+    public List<Node> FindRange()
+    {
+        int currentIndex = UIHelper.Instance.GetActionIndex();
+        if (currentIndex == -1) return null;
+        readyAction = actions[currentIndex];
+        int range = readyAction.range;
+
+        List<Node> nodesInRange = new List<Node>();
+        List<Node> tempNodes = new List<Node>();
+        nodesInRange.Add(currentNode);
+        while (range > 0)
+        {
+            foreach(Node n in nodesInRange)
+            {
+                foreach ( Node m in n.neighbours)
+                    tempNodes.Add(m);
+            }
+            foreach (Node n in tempNodes)
+            {
+                if (!nodesInRange.Contains(n))
+                    nodesInRange.Add(n);
+            }
+            tempNodes.Clear();
+            range--;
+        }
+        return nodesInRange;
+    }
+
+
+    public void PerformAction()
+    {
+        Debug.Log("action");
+        if (targetActionNode.currentUnit == null) return;
+        targetActionNode.currentUnit.stats.currentHealth -= readyAction.damage;
+        targetActionNode = null;
+        GetComponent<UnitStateMachine>().state = States.END;
     }
     //public void TogglePathVisual(bool toggle)
     //{

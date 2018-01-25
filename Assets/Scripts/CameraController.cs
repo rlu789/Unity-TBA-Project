@@ -56,9 +56,20 @@ public class CameraController : MonoBehaviour
         //these shouldnt be in camera, just temporary
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            if (NodeManager.Instance.unitsWithAssignedPaths.Count > 0)
+            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE)
             {
-                NodeManager.Instance.UnassignUnitPath();
+                if (NodeManager.Instance.unitsWithAssignedPaths.Count > 0)
+                {
+                    NodeManager.Instance.UnassignUnitPath();
+                }
+            }
+            else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT && NodeManager.Instance.selectedNode != null && NodeManager.Instance.selectedNode.currentUnit.GetComponent<UnitStateMachine>().state == States.ACT)
+            {
+                NodeManager.Instance.Deselect();
+            }
+            else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT && NodeManager.Instance.selectedNode != null && NodeManager.Instance.selectedNode.currentUnit.GetComponent<UnitStateMachine>().state == States.PERFORM)
+            {
+                NodeManager.Instance.selectedNode.currentUnit.GetComponent<UnitStateMachine>().state = States.ACT;
             }
         }
         if (Input.GetKeyUp(KeyCode.R))

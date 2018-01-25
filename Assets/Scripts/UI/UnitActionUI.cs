@@ -41,4 +41,9 @@ public class UnitActionUI : MonoBehaviour {
         currentActionIndex++;
         SetValues(unit);
     }
+
+    public int GetCurrentActionIndex()
+    {
+        return currentActionIndex;
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class NodeManager : MonoBehaviour {
 
@@ -7,6 +8,7 @@ public class NodeManager : MonoBehaviour {
 
     public GameObject movementUIObjectLine;
     public GameObject movementUIObjectTarget;
+    public GameObject movementUIObjectTargetGO;
     public Material moveGood;
     public Material moveBad;
     [Space(10)]
@@ -14,6 +16,9 @@ public class NodeManager : MonoBehaviour {
     public Node selectedNode;
 
     public List<Unit> unitsWithAssignedPaths;
+
+    public List<Node> nodesInRange = new List<Node>();
+    bool rangeMode = false;
 
     private void Awake()
     {
@@ -31,8 +36,13 @@ public class NodeManager : MonoBehaviour {
     {
         if (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYMOVE || TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYACT) return;
 
+        if (node.currentUnit != null && node.currentUnit.isEnemy )
+        {
+            return;
+        }
         if (selectedNode == null)   //selecting a node with no other nodes selected
         {
+            if (node.currentUnit != null && node.currentUnit.GetComponent<UnitStateMachine>().state == States.END) return; // Cannot select unit if its turn is over
             Select(node);
             return;
         }
@@ -45,25 +55,42 @@ public class NodeManager : MonoBehaviour {
 
         if (selectedNode != null)   //selecting a node with another node selected
         {
-            //check if trying to move unit
-            if (selectedNode.currentUnitGO != null)
+            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE)
             {
-                if (node.potentialUnit != null)
+                //check if trying to move unit
+                if (selectedNode.currentUnitGO != null)
                 {
-                    Debug.Log("Node has a potential unit! Unit: " + node.potentialUnit);    //put some message here
+                    if (node.potentialUnit != null)
+                    {
+                        Debug.Log("Node has a potential unit! Unit: " + node.potentialUnit);    //put some message here
+                        return;
+                    }
+                    if (node.currentUnit != null)
+                    {
+                        Debug.Log("Node has a unit! Unit: " + node.currentUnit);
+                        return;
+                    }
+                    AssignPath(selectedNode, node);
+                    Deselect();
                     return;
                 }
-                if (node.currentUnit != null)
-                {
-                    Debug.Log("Node has a unit! Unit: " + node.currentUnit);
-                    return;
-                }
-                AssignPath(selectedNode, node);
                 Deselect();
-                return;
+                Select(node);
             }
-            Deselect();
-            Select(node);
+            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT)
+            {
+                if (nodesInRange.Contains(node))
+                {
+                    selectedNode.currentUnit.GetComponent<UnitStateMachine>().state = States.PERFORM;
+                    selectedNode.currentUnit.GetComponent<Unit>().targetActionNode = node;
+                }
+                else
+                {
+                    Deselect();
+                    selectedNode.currentUnit.GetComponent<UnitStateMachine>().state = States.ACT;
+                    selectedNode.currentUnit.GetComponent<Unit>().targetActionNode = null;
+                }
+            }
         }
     }
 
@@ -76,11 +103,29 @@ public class NodeManager : MonoBehaviour {
         {
             UIHelper.Instance.SetStatistics(node.currentUnit);
             UIHelper.Instance.SetUnitActions(node.currentUnit);
+            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT)
+            {
+                if (selectedNode.currentUnitGO != null)
+                {
+                    nodesInRange = node.currentUnit.FindRange();
+                    foreach (Node n in nodesInRange)
+                    {
+                        n.myRenderer.material = n.hoverMaterialBad;
+                    }
+                    movementUIObjectTargetGO = Instantiate(movementUIObjectTarget, node.transform.position, Quaternion.identity);
+                }
+            }
         }
     }
 
     public void Deselect(bool hovering = false)
     {
+        Destroy(movementUIObjectTargetGO);
+        foreach (Node n in nodesInRange)
+        {
+            n.myRenderer.material = n.material;
+        }
+        nodesInRange.Clear();
         UIHelper.Instance.ToggleAllVisible(false);
         if (!hovering) selectedNode.myRenderer.material = selectedNode.material;
         else selectedNode.myRenderer.material = selectedNode.hoverMaterial; //if you are still hovering over this node, return to hovering material
@@ -99,6 +144,7 @@ public class NodeManager : MonoBehaviour {
 
         unit.SetUnitPath(path.ToList());
         PathHelper.Instance.DeleteCurrentPath();
+        //TODO FIX THIS
         if (!unitsWithAssignedPaths.Contains(unit))
             unitsWithAssignedPaths.Add(unit);
     }
@@ -136,5 +182,28 @@ public class NodeManager : MonoBehaviour {
     {
         unitsWithAssignedPaths[unitsWithAssignedPaths.Count - 1].DeleteUnitPath();
         unitsWithAssignedPaths.RemoveAt(unitsWithAssignedPaths.Count - 1);
+    }
+    
+    //REDO
+    public void PerformButton()
+    {
+        selectedNode.currentUnit.PerformAction();
+        Destroy(movementUIObjectTargetGO);
+        foreach (Node n in nodesInRange)
+        {
+            n.myRenderer.material = n.material;
+        }
+        nodesInRange.Clear();
+        selectedNode = null;
+
+        foreach (GameObject u in Map.Instance.unitDudeFriends)
+        {
+            if (u.GetComponent<UnitStateMachine>().state != States.END)
+                break;
+            if (u.Equals(Map.Instance.unitDudeFriends[Map.Instance.unitDudeFriends.Count - 1]))
+            {
+                TurnHandler.Instance.NextState();
+            }
+        }
     }
 }

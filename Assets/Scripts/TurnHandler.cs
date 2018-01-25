@@ -69,6 +69,7 @@ public class TurnHandler : MonoBehaviour
             case TurnHandlerStates.ENEMYACT:
                 SetAllStates(States.END, States.ACT);
                 currentState = TurnHandlerStates.ENEMYACT;
+                HandleEnemyAct();
                 break;
         }
     }
@@ -95,8 +96,9 @@ public class TurnHandler : MonoBehaviour
             }
         }
         NextState();
+        if (NodeManager.Instance.selectedNode != null)
+            NodeManager.Instance.Deselect(true);
     }
-
     /*
     public void ActionButton()
     {
@@ -107,6 +109,17 @@ public class TurnHandler : MonoBehaviour
     */
 
     void HandleEnemyTurn()
+    {
+        for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
+        {
+            NodeManager.Instance.AssignPath(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().currentNode, Map.Instance.unitDudeFriends[0].GetComponent<Unit>().currentNode);
+            Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().MoveUnit();
+        }
+        NextState();
+    }
+
+    //TODO DO DIS
+    void HandleEnemyAct()
     {
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
