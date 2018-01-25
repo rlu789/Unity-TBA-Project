@@ -20,9 +20,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4817994770153210}
   - component: {fileID: 33998538222253092}
-  - component: {fileID: 65699407480035946}
-  - component: {fileID: 23501479705093834}
   - component: {fileID: 114937619436809900}
+  - component: {fileID: 23501479705093834}
+  - component: {fileID: 64788161845348042}
+  - component: {fileID: 64655768819160966}
   m_Layer: 0
   m_Name: NodeGround
   m_TagString: Untagged
@@ -67,7 +68,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1326710624061332}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.825319, y: 0.5, z: -17.783806}
+  m_LocalPosition: {x: 7.865149, y: 0.5, z: -1.5352306}
   m_LocalScale: {x: 0.4, y: 2, z: 0.4}
   m_Children:
   - {fileID: 4327721289588800}
@@ -156,8 +157,8 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1326710624061332}
   m_Mesh: {fileID: 4300000, guid: b6e75735a1a2ae7449c1ed91f862b372, type: 3}
---- !u!65 &65699407480035946
-BoxCollider:
+--- !u!64 &64655768819160966
+MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -165,9 +166,25 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 1, z: 3}
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300002, guid: b6e75735a1a2ae7449c1ed91f862b372, type: 3}
+--- !u!64 &64788161845348042
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1326710624061332}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: b6e75735a1a2ae7449c1ed91f862b372, type: 3}
 --- !u!114 &114937619436809900
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -185,8 +202,11 @@ MonoBehaviour:
   selectedMaterialBad: {fileID: 2100000, guid: 0c6268faff3778c428883b10b44ffdf1, type: 2}
   currentUnitGO: {fileID: 0}
   currentUnit: {fileID: 0}
+  potentialUnit: {fileID: 0}
   nodeID: 0
-  nodeXY: {x: 0, y: 0}
+  XY: {x: 0, y: 0}
   myRenderer: {fileID: 0}
   material: {fileID: 0}
+  moveCost: 0
+  passable: 1
   neighbours: []

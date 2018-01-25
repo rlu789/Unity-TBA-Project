@@ -331,17 +331,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeTypes:
   - name: Ground
-    nodePrefab: {fileID: 1326710624061332, guid: 2b3bf6dc1c3df88458a7e5ce1ea0a8c8,
+    nodePrefab: {fileID: 1326710624061332, guid: 5f1ca9163c8ff3f4fb96bf0f0e27faa5,
       type: 2}
     moveCost: 1
     passable: 1
   - name: Wall
-    nodePrefab: {fileID: 1326710624061332, guid: 97e6373aee1e0b246b7dae9649622e91,
+    nodePrefab: {fileID: 1326710624061332, guid: fbe0c7d471ad2ab458027190e81793a8,
       type: 2}
     moveCost: 420
     passable: 1
   - name: Water
-    nodePrefab: {fileID: 1326710624061332, guid: d8d064dfcc0a2184586b5c004efe7f5d,
+    nodePrefab: {fileID: 1326710624061332, guid: 3e06980326b7a0f498c339eeb0238943,
       type: 2}
     moveCost: 2
     passable: 1
@@ -719,11 +719,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitTurnCount: 0
   currentState: 0
-  previousState: 0
-  friendCount: 0
-  enemyCount: 0
-  friendBool: 
-  enemyBool: 
 --- !u!1 &937166410
 GameObject:
   m_ObjectHideFlags: 0
