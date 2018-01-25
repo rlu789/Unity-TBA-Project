@@ -36,12 +36,12 @@ public class NodeManager : MonoBehaviour {
     {
         if (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYMOVE || TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYACT) return;
 
-        if (node.currentUnit != null && node.currentUnit.isEnemy)
-        {
-            return;
-        }
         if (selectedNode == null)   //selecting a node with no other nodes selected
         {
+            if (node.currentUnit != null && node.currentUnit.isEnemy)   //cant select an enemy node without a reason
+            {
+                return;
+            }
             Select(node);
             return;
         }
@@ -56,6 +56,10 @@ public class NodeManager : MonoBehaviour {
         {
             if (selectedNode.currentUnitGO == null)
             {
+                if (node.currentUnit != null && node.currentUnit.isEnemy)    //cant switch to an enemy node
+                {
+                    return;
+                }
                 Deselect();
                 Select(node);
                 return;

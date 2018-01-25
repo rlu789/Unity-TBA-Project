@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public enum UIType { Statistics, UnitActions }
+public enum UIType { Statistics, UnitActions, TurnUI }
 
 public class UIHelper : MonoBehaviour {
     public static UIHelper Instance;
@@ -9,6 +9,8 @@ public class UIHelper : MonoBehaviour {
     StatisticsUI statistics;
     public GameObject unitActionsCanvas;
     UnitActionUI unitActions;
+    public GameObject turnCanvas;
+    TurnUI turnUI;
 
     private void Awake()
     {
@@ -25,6 +27,7 @@ public class UIHelper : MonoBehaviour {
     {
         statistics = statisticsCanvas.GetComponent<StatisticsUI>();
         unitActions = unitActionsCanvas.GetComponent<UnitActionUI>();
+        turnUI = turnCanvas.GetComponent<TurnUI>();
     }
 
     public void ToggleVisible(UIType element, bool active)  //toggles the type of UI specified
@@ -38,10 +41,13 @@ public class UIHelper : MonoBehaviour {
                 unitActions.currentUnit = null;
                 unitActionsCanvas.SetActive(active);
                 break;
+            case UIType.TurnUI:
+                turnCanvas.SetActive(active);
+                break;
         }
     }
 
-    public void ToggleAllVisible(bool active)
+    public void ToggleAllVisible(bool active)   //well it toggles all the unit stuff
     {
         ToggleVisible(UIType.Statistics, active);
         ToggleVisible(UIType.UnitActions, active);
@@ -103,5 +109,12 @@ public class UIHelper : MonoBehaviour {
     {
         if (unitActions.currentUnit != null) return unitActions.currentUnit;
         return null;
+    }
+
+    //TurnUI
+
+    public void SetTurnValues(TurnHandlerStates turn)
+    {
+        turnUI.SetValues(turn);
     }
 }

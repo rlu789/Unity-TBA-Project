@@ -72,6 +72,7 @@ public class TurnHandler : MonoBehaviour
                 HandleEnemyAct();
                 break;
         }
+        UIHelper.Instance.SetTurnValues(currentState);
     }
 
     void SetAllStates(States playerState, States enemyState)
