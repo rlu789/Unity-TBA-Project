@@ -91,5 +91,11 @@ public class UIHelper : MonoBehaviour {
     public void NextUnitAction()    //(used for next action button on unitActionUI)
     {
         if (unitActions.currentUnit != null) NextUnitAction(unitActions.currentUnit);
-    }       
+    }
+
+    public int GetActionIndex()
+    {
+        if (unitActions.currentUnit != null) return unitActions.GetCurrentActionIndex();
+        return -1;
+    }
 }

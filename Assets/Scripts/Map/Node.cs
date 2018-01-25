@@ -31,7 +31,6 @@ public class Node : MonoBehaviour {
 
     public List<Node> neighbours  = new List<Node>();
 
-
     public void SetupFields(int ID, int gridX, int gridY, int _moveCost)
     {
         nodeID = ID;
@@ -71,17 +70,25 @@ public class Node : MonoBehaviour {
     private void OnMouseEnter()
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
-        if (NodeManager.Instance.selectedNode != this) myRenderer.material = hoverMaterial;
-        if (NodeManager.Instance.selectedNode != null) NodeManager.Instance.ShowPath(NodeManager.Instance.selectedNode, this);
+        if (NodeManager.Instance.selectedNode != this && !NodeManager.Instance.nodesInRange.Contains(this)) myRenderer.material = hoverMaterial;
+        else 
+        {
+            if (NodeManager.Instance.selectedNode.currentUnit.GetComponent<UnitStateMachine>().state == States.ACT)
+            {
+                NodeManager.Instance.movementUIObjectTargetGO.transform.position = transform.position;
+            }
+        }
+        if (NodeManager.Instance.selectedNode != null && TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE) NodeManager.Instance.ShowPath(NodeManager.Instance.selectedNode, this);
         if (currentUnit != null) {
             UIHelper.Instance.SetStatistics(currentUnit);
-            UIHelper.Instance.SetUnitActions(currentUnit);
+            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE)
+                UIHelper.Instance.SetUnitActions(currentUnit);
         }
     }
 
     private void OnMouseExit()
     {
-        if (NodeManager.Instance.selectedNode != this) myRenderer.material = material;
+        if (NodeManager.Instance.selectedNode != this && !NodeManager.Instance.nodesInRange.Contains(this)) myRenderer.material = material;
         if (NodeManager.Instance.selectedNode != null)
         {
             UIHelper.Instance.SetStatistics(NodeManager.Instance.selectedNode);  //set the windows back to the selected unit

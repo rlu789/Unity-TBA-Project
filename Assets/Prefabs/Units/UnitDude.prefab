@@ -312,12 +312,16 @@ MonoBehaviour:
     range: 1
     damage: 4
     aoe: 0
+    cooldown: 0
+    currentCooldown: 0
   - name: Throw Rock
     manaCost: 0
     healthCost: 0
     range: 2
     damage: 2
     aoe: 0
+    cooldown: 0
+    currentCooldown: 0
   isEnemy: 0
   XY: {x: 0, y: 0}
   currentNodeID: -1
@@ -325,6 +329,15 @@ MonoBehaviour:
   __testObject: {fileID: 1798533339409000, guid: bb8f408335feb8743b3450a994bb8690,
     type: 2}
   currentNode: {fileID: 0}
+  readyAction:
+    name: 
+    manaCost: 0
+    healthCost: 0
+    range: 0
+    damage: 0
+    aoe: 0
+    cooldown: 0
+    currentCooldown: 0
 --- !u!135 &135336063579494900
 SphereCollider:
   m_ObjectHideFlags: 1
