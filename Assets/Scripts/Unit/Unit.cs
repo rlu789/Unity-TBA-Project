@@ -8,6 +8,7 @@ public class Unit : MonoBehaviour {
     public bool isEnemy;
 
     //Setup fields
+    public Transform FirePoint;
     [Header("For unity and debug, don't change")]
     public Vector2Int XY = new Vector2Int(0, 0);
     public int currentNodeID = -1;
@@ -226,7 +227,7 @@ public class Unit : MonoBehaviour {
         {
             Debug.Log("Used action on empty node.");
         }
-        readyAction.ActivateAction(targetActionNode, this);
+        readyAction.UseAction(targetActionNode, this);
         targetActionNode = null;
         unitStateMachine.state = States.END;
     }
@@ -249,4 +250,6 @@ public class Unit : MonoBehaviour {
     //        GO.SetActive(toggle);
     //    }
     //}
+
+    //public void AddAction(UnitAction action) { } //add action to a unit
 }

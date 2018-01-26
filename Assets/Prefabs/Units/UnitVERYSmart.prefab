@@ -60,6 +60,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1882239417578062
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4801566395878812}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &4106922300424780
 Transform:
   m_ObjectHideFlags: 1
@@ -71,6 +86,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4861612703718918}
+  - {fileID: 4801566395878812}
   m_Father: {fileID: 4761940430630074}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -81,12 +97,25 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1329816491546904}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.564445, y: 0.5, z: -21.056538}
+  m_LocalPosition: {x: 5.0597615, y: 0.5, z: 3.0231638}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4106922300424780}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4801566395878812
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1882239417578062}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4106922300424780}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4861612703718918
 Transform:
@@ -176,33 +205,27 @@ MonoBehaviour:
     currentMana: 0
     currentMovement: 0
   actions:
-  - name: Magic Attack
+  - projectile: {fileID: 1583182739588176, guid: 9cc0d0df4084d4544a90c7d973070a77,
+      type: 2}
+    name: Magic Attack
     manaCost: 0
     healthCost: 0
     range: 4
     damage: 1
     aoe: 0
     cooldown: 0
-    spawnEffect: {fileID: 1799131968791612, guid: cbb6f15501cf8334993b7174dac8ba9e,
-      type: 2}
-    spawnEffectLife: 2
-    hitEffect: {fileID: 1751890007448496, guid: 50a9a6654ef12c246bfb0d163808b1b1,
-      type: 2}
-    hitEffectLife: 2
     currentCooldown: 0
-  - name: Fireball
+  - projectile: {fileID: 0}
+    name: Fireball
     manaCost: 2
     healthCost: 0
     range: 4
     damage: 8
     aoe: 1
     cooldown: 1
-    spawnEffect: {fileID: 0}
-    spawnEffectLife: 0
-    hitEffect: {fileID: 0}
-    hitEffectLife: 0
     currentCooldown: 0
   isEnemy: 0
+  FirePoint: {fileID: 4801566395878812}
   XY: {x: 0, y: 0}
   currentNodeID: -1
   currentPath: []
@@ -211,6 +234,7 @@ MonoBehaviour:
   currentNode: {fileID: 0}
   targetActionNode: {fileID: 0}
   readyAction:
+    projectile: {fileID: 0}
     name: 
     manaCost: 0
     healthCost: 0
@@ -218,9 +242,5 @@ MonoBehaviour:
     damage: 0
     aoe: 0
     cooldown: 0
-    spawnEffect: {fileID: 0}
-    spawnEffectLife: 0
-    hitEffect: {fileID: 0}
-    hitEffectLife: 0
     currentCooldown: 0
   unitStateMachine: {fileID: 0}
