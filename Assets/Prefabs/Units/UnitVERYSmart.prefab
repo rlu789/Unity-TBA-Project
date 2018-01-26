@@ -215,7 +215,8 @@ MonoBehaviour:
     aoe: 0
     cooldown: 0
     currentCooldown: 0
-  - projectile: {fileID: 0}
+  - projectile: {fileID: 1583182739588176, guid: db9c44a0c2b7ac54e8ec351b2583ca66,
+      type: 2}
     name: Fireball
     manaCost: 2
     healthCost: 0
