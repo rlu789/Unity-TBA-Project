@@ -238,8 +238,17 @@ public class Unit : MonoBehaviour {
         if (stats.currentHealth <= 0)
         {
             Debug.Log("Unit killed! " + stats.displayName + " is dead now... :(");
-            Destroy(gameObject);
+            Die();
         }
+    }
+
+    void Die()
+    {
+        NodeManager.Instance.unitsWithAssignedPaths.Remove(this);
+        Map.Instance.unitDudeEnemies.Remove(gameObject);
+        Map.Instance.unitDudeFriends.Remove(gameObject);
+
+        Destroy(gameObject);
     }
     //public void TogglePathVisual(bool toggle)
     //{

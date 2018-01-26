@@ -9,7 +9,7 @@ public class Projectile : MonoBehaviour
     public GameObject travelEffect;
     private ParticleSystem travelEffectPS;
     public GameObject spawnEffect;
-    public int spawnEffectLife;
+    public float spawnEffectLife;
     
     UnitAction action;
     Vector3 firePoint;
@@ -33,7 +33,11 @@ public class Projectile : MonoBehaviour
 
     void Update()
     {
-        if (target == null) Destroy(gameObject);
+        if (target == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         Vector3 dir = target.position - transform.position;
         float distanceThisFrame = speed * Time.deltaTime;

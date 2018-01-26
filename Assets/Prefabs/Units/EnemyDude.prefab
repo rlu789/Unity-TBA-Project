@@ -323,7 +323,8 @@ MonoBehaviour:
     currentMana: 0
     currentMovement: 0
   actions:
-  - projectile: {fileID: 0}
+  - projectile: {fileID: 1583182739588176, guid: fc7487470effa884c81503d7686d958f,
+      type: 2}
     name: Melee Attack
     manaCost: 0
     healthCost: 0
@@ -332,7 +333,8 @@ MonoBehaviour:
     aoe: 0
     cooldown: 0
     currentCooldown: 0
-  - projectile: {fileID: 0}
+  - projectile: {fileID: 1583182739588176, guid: 7c3e3267ce375fd49a3fc2f692effc08,
+      type: 2}
     name: Throw Rock
     manaCost: 0
     healthCost: 0

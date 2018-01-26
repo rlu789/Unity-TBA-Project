@@ -213,7 +213,8 @@ MonoBehaviour:
     currentMana: 3
     currentMovement: 2
   actions:
-  - projectile: {fileID: 0}
+  - projectile: {fileID: 1583182739588176, guid: fc7487470effa884c81503d7686d958f,
+      type: 2}
     name: Melee Attack
     manaCost: 0
     healthCost: 0
@@ -222,7 +223,8 @@ MonoBehaviour:
     aoe: 0
     cooldown: 0
     currentCooldown: 0
-  - projectile: {fileID: 0}
+  - projectile: {fileID: 1583182739588176, guid: fa1d1ffa4388d4b4785b57a3f2bd7241,
+      type: 2}
     name: Powerful Attack
     manaCost: 0
     healthCost: 4
@@ -231,7 +233,8 @@ MonoBehaviour:
     aoe: 0
     cooldown: 0
     currentCooldown: 0
-  - projectile: {fileID: 0}
+  - projectile: {fileID: 1583182739588176, guid: 4841421f4287edc44836df5671f25865,
+      type: 2}
     name: Rest
     manaCost: 0
     healthCost: 0

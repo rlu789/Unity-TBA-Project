@@ -204,6 +204,7 @@ public class NodeManager : MonoBehaviour {
                 if (selectedNode.currentUnit.unitStateMachine.state == States.ACT)  //if we are in ACT state, move the targetting object to node
                 {
                     movementUIObjectTargetGO.transform.position = node.transform.position;
+                    selectedNode.currentUnitGO.transform.LookAt(new Vector3(node.transform.position.x, selectedNode.currentUnitGO.transform.position.y, node.transform.position.z));
                 }
             }
         }
