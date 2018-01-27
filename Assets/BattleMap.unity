@@ -753,7 +753,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1440865573}
+      - m_Target: {fileID: 734221841}
         m_MethodName: PerformButton
         m_Mode: 1
         m_Arguments:
@@ -841,6 +841,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitTurnCount: 0
   currentState: 0
+  actionQueue: []
+  actionReady: 0
+  singleActionReady: 0
 --- !u!1 &804334534
 GameObject:
   m_ObjectHideFlags: 0

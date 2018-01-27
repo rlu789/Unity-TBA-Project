@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public enum TurnHandlerStates
 {
@@ -13,6 +14,10 @@ public class TurnHandler : MonoBehaviour
     public static TurnHandler Instance;
     public int unitTurnCount;
     public TurnHandlerStates currentState;
+    public List<Unit> actionQueue = new List<Unit>();
+
+    public bool actionReady = false, singleActionReady = false;
+    int actionIndex = 0;
 
     private void Awake()
     {
@@ -23,6 +28,21 @@ public class TurnHandler : MonoBehaviour
             return;
         }
         Instance = this;
+    }
+
+    public void Update()
+    {
+        if (actionReady && singleActionReady)
+        {
+            if (actionIndex == actionQueue.Count)
+            {
+                actionIndex = 0;
+                actionReady = false;
+            }
+            singleActionReady = false;
+            actionQueue[actionIndex].PerformAction();
+            actionIndex++;
+        }
     }
 
     public void Setup()
@@ -100,14 +120,11 @@ public class TurnHandler : MonoBehaviour
         if (NodeManager.Instance.selectedNode != null)
             NodeManager.Instance.Deselect(true);
     }
-    /*
-    public void ActionButton()
+
+    public void PerformButton()
     {
-
-
-        currentState = TurnHandlerStates.ENEMYMOVE;
+        actionReady = true; singleActionReady = true;
     }
-    */
 
     void HandleEnemyTurn()
     {

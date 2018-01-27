@@ -71,6 +71,12 @@ public class CameraController : MonoBehaviour
             {
                 NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.ACT;
             }
+            else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT && TurnHandler.Instance.actionQueue.Count > 0) // if in playeract and there are actions in action queue
+            {
+                Debug.Log("Removing action for unit: " + TurnHandler.Instance.actionQueue[TurnHandler.Instance.actionQueue.Count - 1]);
+                TurnHandler.Instance.actionQueue[TurnHandler.Instance.actionQueue.Count - 1].unitStateMachine.state = States.ACT;
+                TurnHandler.Instance.actionQueue.RemoveAt(TurnHandler.Instance.actionQueue.Count - 1);
+            }
         }
         if (Input.GetKeyUp(KeyCode.R))
         {

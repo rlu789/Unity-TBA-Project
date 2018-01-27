@@ -38,6 +38,11 @@ public class NodeManager : MonoBehaviour {
 
         if (selectedNode == null)   //selecting a node with no other nodes selected
         {
+            if (node.currentUnit != null && node.currentUnit.unitStateMachine.state == States.PERFORM)
+            {
+                Debug.Log("this unit already has an action queued");
+                return; // cant select unit when its in preform state
+            }
             if (node.currentUnit != null && node.currentUnit.isEnemy)   //cant select an enemy node without a reason
             {
                 return;
@@ -84,8 +89,19 @@ public class NodeManager : MonoBehaviour {
             {
                 if (nodesInRange.Contains(node))
                 {
+
                     selectedNode.currentUnit.unitStateMachine.state = States.PERFORM;
                     selectedNode.currentUnit.GetComponent<Unit>().targetActionNode = node;
+
+                    // Add action to a queue of actions, clear nodes in range and arrow
+                    TurnHandler.Instance.actionQueue.Add(selectedNode.currentUnit);
+                    Destroy(movementUIObjectTargetGO);
+                    foreach (Node n in nodesInRange)
+                    {
+                        n.myRenderer.material = n.material;
+                    }
+                    nodesInRange.Clear();
+                    Deselect();
                 }
                 else
                 {
@@ -144,9 +160,10 @@ public class NodeManager : MonoBehaviour {
 
         unit.SetUnitPath(path.ToList());
         PathHelper.Instance.DeleteCurrentPath();
-        //TODO FIX THIS
-        if (!unitsWithAssignedPaths.Contains(unit))
-            unitsWithAssignedPaths.Add(unit);
+
+        if (unitsWithAssignedPaths.Contains(unit))
+            unitsWithAssignedPaths.Remove(unit);
+        unitsWithAssignedPaths.Add(unit);
     }
 
     public void ShowPath(Node init, Node dest)
@@ -220,34 +237,6 @@ public class NodeManager : MonoBehaviour {
             if (selectedNode.currentUnit != UIHelper.Instance.GetCurrentActingUnit()) UIHelper.Instance.SetUnitActions(selectedNode);   //if the unit is the same as the acting one, dont reset its action window (because i made it get new range and so that makes it get new target which puts the target over the untis head and it still works but its not good looking anyway this whole thing needs some refactoring after some serious paint design docs :rage:
         }
         else UIHelper.Instance.ToggleAllVisible(false); //if there is no selected node, turn off the windows
-    }
-
-    //REDO
-    public void PerformButton()
-    {
-        if (selectedNode == null || selectedNode.currentUnit == null)
-        {
-            Debug.Log("Need selected node with unit! Cancelling perform.");
-            return;
-        }
-        selectedNode.currentUnit.PerformAction();
-        Destroy(movementUIObjectTargetGO);
-        foreach (Node n in nodesInRange)
-        {
-            n.myRenderer.material = n.material;
-        }
-        nodesInRange.Clear();
-        selectedNode = null;
-
-        foreach (GameObject u in Map.Instance.unitDudeFriends)
-        {
-            if (u.GetComponent<UnitStateMachine>().state != States.END)
-                break;
-            if (u.Equals(Map.Instance.unitDudeFriends[Map.Instance.unitDudeFriends.Count - 1]))
-            {
-                TurnHandler.Instance.NextState();
-            }
-        }
     }
 
     public void ShowUnitActionRange(Node node)
