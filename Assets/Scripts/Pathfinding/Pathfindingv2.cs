@@ -59,7 +59,7 @@ public class Pathfindingv2 : MonoBehaviour
         return nodeB.moveCost;
     }
 
-    static double Estimate(Node node, Node destNode)    //minimum grid movements to make it to the destination node (assuming a direct path)
+    public static double Estimate(Node node, Node destNode)    //minimum grid movements to make it to the destination node (assuming a direct path)
     {
         float dx = Mathf.Abs(destNode.XY.x - node.XY.x);
         float dy = Mathf.Abs(destNode.XY.y - node.XY.y);

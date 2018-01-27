@@ -71,11 +71,8 @@ public class Unit : MonoBehaviour {
     {
         if ((TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE && !isEnemy) || (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYMOVE && isEnemy))
         {
-            //Debug.Log(currentPath[0]);
-
             List<Node> pathToFollow = currentPath;   //get the path to follow, based on the max distance the unit can move this turn
             movePath = currentPath;
-            //currentPath.Clear();
             foreach (GameObject haha in pathVisual)
                 Destroy(haha);
             pathVisual.Clear();
@@ -98,10 +95,6 @@ public class Unit : MonoBehaviour {
             unitComponent.XY = _destNode.XY;
             unitComponent.currentNodeID = _destNode.nodeID;
             currentNode = _destNode;
-            
-            //NodeManager.Instance.Deselect();
-            //Select(_destNode);
-            //initNode = _destNode;
         }
     }
 
@@ -169,7 +162,7 @@ public class Unit : MonoBehaviour {
     string GenerateRandomNameOfPower()
     {
         string name = "";
-        string[] letters = { "mic", "ric", "jo", "hae", "har", "n", "el", "ard", "oj", "ri", "on", "rd", "cha", "ich", "j", "rich", "jon", "mich" };
+        string[] letters = { "mic", "ric", "jo", "hae", "har", "n", "el", "ard", "oj", "ri", "on", "rd", "cha", "ich", "j", "rich", "jon", "mich", " The Great, ", " of Power..." };
         int nameLength = Random.Range(2, 6);
         int randIndex = 0;
 
@@ -230,6 +223,11 @@ public class Unit : MonoBehaviour {
         readyAction.UseAction(targetActionNode, this);
         targetActionNode = null;
         unitStateMachine.state = States.END;
+    }
+
+    public void PerformActionDelayed(float delay)
+    {
+        Invoke("PerformAction", delay);
     }
 
     public void TakeDamage(int amount)

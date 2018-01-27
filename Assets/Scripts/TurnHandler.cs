@@ -33,10 +33,11 @@ public class TurnHandler : MonoBehaviour
     {
         if (actionReady && singleActionReady)
         {
-            if (actionQueue.Count <= 1)
+            if (actionQueue.Count == 0)
             {
                 actionReady = false;
                 singleActionReady = false;
+                return;
             }
             singleActionReady = false;
             actionQueue[actionQueue.Count - 1].PerformAction();
@@ -130,19 +131,17 @@ public class TurnHandler : MonoBehaviour
     {
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
-            NodeManager.Instance.AssignPath(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().currentNode, Map.Instance.unitDudeFriends[0].GetComponent<Unit>().currentNode);
+            AIHelper.Instance.AIGetTurn(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
             Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().MoveUnit();
         }
         NextState();
     }
 
-    //TODO DO DIS
     void HandleEnemyAct()
     {
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
-            NodeManager.Instance.AssignPath(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().currentNode, Map.Instance.unitDudeFriends[0].GetComponent<Unit>().currentNode);
-            Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().MoveUnit();
+            Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().PerformActionDelayed(i + 1);
         }
         NextState();
     }

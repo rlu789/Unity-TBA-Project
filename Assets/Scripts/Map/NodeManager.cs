@@ -176,7 +176,7 @@ public class NodeManager : MonoBehaviour {
         PathHelper.Instance.DrawCurrentPath(path.ToList(), unit.stats.moveSpeed);
     }
 
-    Path<Node> CheckPath(Node init, Node dest, Unit unit)
+    public Path<Node> CheckPath(Node init, Node dest, Unit unit)
     {
         Path<Node> path = null;
         List<Node> BLACKLISTNEVERENTERTHESENODESEVER = new List<Node>();
