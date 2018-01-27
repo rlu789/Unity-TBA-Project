@@ -17,7 +17,6 @@ public class TurnHandler : MonoBehaviour
     public List<Unit> actionQueue = new List<Unit>();
 
     public bool actionReady = false, singleActionReady = false;
-    int actionIndex = 0;
 
     private void Awake()
     {
@@ -34,14 +33,14 @@ public class TurnHandler : MonoBehaviour
     {
         if (actionReady && singleActionReady)
         {
-            if (actionIndex == actionQueue.Count)
+            if (actionQueue.Count <= 1)
             {
-                actionIndex = 0;
                 actionReady = false;
+                singleActionReady = false;
             }
             singleActionReady = false;
-            actionQueue[actionIndex].PerformAction();
-            actionIndex++;
+            actionQueue[actionQueue.Count - 1].PerformAction();
+            actionQueue.RemoveAt(actionQueue.Count - 1);
         }
     }
 
@@ -124,6 +123,7 @@ public class TurnHandler : MonoBehaviour
     public void PerformButton()
     {
         actionReady = true; singleActionReady = true;
+        NextState();
     }
 
     void HandleEnemyTurn()

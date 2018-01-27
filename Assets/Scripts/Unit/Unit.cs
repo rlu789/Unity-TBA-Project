@@ -216,7 +216,7 @@ public class Unit : MonoBehaviour {
 
     public void PerformAction()
     {
-        Debug.Log("Using " + readyAction.name);
+        Debug.Log("Using " + readyAction.name + " for unit " + stats._class);
         if (targetActionNode == null)
         {
             Debug.Log("No node selected, targetting self.");
