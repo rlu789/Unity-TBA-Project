@@ -139,9 +139,9 @@ public class TurnHandler : MonoBehaviour
     {
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
-            //Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().PerformActionDelayed(i + 1)
-            actionQueue.Add(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
-            // input enemy action here
+            Unit enemy = Map.Instance.unitDudeEnemies[i].GetComponent<Unit>();
+            AIHelper.Instance.ConfirmBestAction(enemy);
+            if (enemy.readyAction != null && !enemy.readyAction.isEmpty()) actionQueue.Add(enemy);
         }
         NextState();
     }
@@ -163,8 +163,8 @@ public class TurnHandler : MonoBehaviour
         foreach (KeyValuePair<float, Unit> unit in orderedActions)
         {
             Debug.Log("Key: " + unit.Key + ", Value: {1} " + unit.Value + " using action " + unit.Value.readyAction.name);
-            unit.Value.PerformActionDelayed(delay++);
-            yield return new WaitForSeconds(0.25f);
+            unit.Value.PerformAction();
+            yield return new WaitForSeconds(1f);
         }
 
         haveYetToCrossTheBridge = 0.01f; delay = 1;

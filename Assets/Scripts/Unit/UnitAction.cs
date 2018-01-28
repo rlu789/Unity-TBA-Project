@@ -81,5 +81,10 @@ public class UnitAction {
         }
         return nodesInRange;
     }
+
+    public bool isEmpty()
+    {
+        return (name == "") ? true : false;
+    }
 }
     //public void ReduceCooldown() { } //use at the end of each turn

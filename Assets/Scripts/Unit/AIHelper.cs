@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-//currently only moves towards enemies and fires a random ability
-//max range is fixed, but sometimes enemies in range just wont perform any action, this happens with the healthy guy (melee only) a lot
-//need to split action and movement into two for cleaner code
-//do second pass for possible actions to make sure we have the best action unit can do from this node
-    //maybe do healers last so they can find the ideal position based on its allies new nodes
+//IT SEEMS that enemies one range out of their target range wont approach or something, eg. enemyHealthyboy is two range away and wont come into range, but will if he is 3 away
 
 public class PossibleAction
 {
@@ -19,11 +15,40 @@ public class PossibleAction
 
     public void DebugLogMe()
     {
-        Debug.Log("Path is from node (" + path[0].nodeID + ") to node (" + path[path.Count - 1].nodeID + ")");
-        Debug.Log("Target is node (" + target.nodeID + ")");
-        Debug.Log("Action is  (" + action.name + ")");
+        //Debug.Log("Path is from node (" + path[0].nodeID + ") to node (" + path[path.Count - 1].nodeID + ")");
+        //Debug.Log("Target is node (" + target.nodeID + ")");
+        Debug.Log("Action is (" + action.name + ")");
+        Debug.Log("Fitness score is (" + fitness + ")");
     }
 
+    public void DetermineFitness()  //need a way to determine if another unit is already acting on this unit, so they dont overkill too much
+    {
+        if (action == null) {
+            fitness = 0;
+            return;
+        }
+        Unit targetUnit = target.currentUnit;
+        if (targetUnit == null)
+        {
+            fitness = 0;  //for now ignore the fact that there could be AOE etc.
+            Debug.Log("My target node ahs no unit!");
+            return; 
+        }
+
+        if (!targetUnit.isEnemy)
+        {
+            fitness += action.damage;
+            if (targetUnit.stats.currentHealth - action.damage <= 0) fitness += action.damage;  //if it will kill, double fitness
+        }
+        else
+        {
+            fitness -= action.damage;   //negative damage is healing
+            if (targetUnit.stats.currentHealth < (targetUnit.stats.maxHealth / 2)) fitness -= action.damage;    //if under 50% health, double the fitness gain
+        }
+        fitness -= action.healthCost;
+        fitness -= action.manaCost;
+        if (fitness < 0) fitness = 0;
+}
     public List<Node> path;
     public UnitAction action;
     public Node target;
@@ -66,18 +91,12 @@ public class AIHelper : MonoBehaviour {
             }
         }
         maxActionAndMoveRange = maxActionRange + unit.stats.moveSpeed;   //the full distance the unit could move + its max attack range;
-        Debug.Log("Unit " + unit.stats._class + " max range is " + maxActionAndMoveRange);
 
         foreach (GameObject enemyGO in Map.Instance.unitDudeFriends)    //(friends means enemies for the enemies)
         {
             Unit enemy = enemyGO.GetComponent<Unit>();
 
-            Debug.Log("Enemy position: " + enemy.XY + " | unit position: " + unit.XY + ". Range check with an estimate of " + Pathfindingv2.EstimateXY(unit.currentNode, enemy.currentNode)
-                      + ". Range = " + maxActionAndMoveRange);
-
             if (Pathfindingv2.EstimateXY(unit.currentNode, enemy.currentNode) > maxActionAndMoveRange) continue; //out of range, skip this target
-
-            Debug.Log("pass");
 
             possibleTargets.Add(enemy); //enemy within max possible range, going to pathfind towards it
         }
@@ -98,29 +117,15 @@ public class AIHelper : MonoBehaviour {
             AssignActions(unit, enemy, pathList);   //get possible actions for this path
         }
 
-        int index = Random.Range(0, possibleActions.Count);
-
-        if (possibleActions.Count == 0) //just move towards a random enemy
-        {
-            index = Random.Range(0, Map.Instance.unitDudeFriends.Count);
-            NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.unitDudeFriends[index].GetComponent<Unit>().currentNode);
-            return;
-        }
-
-        unit.SetUnitPath(possibleActions[index].path);
-        unit.readyAction = possibleActions[index].action;
-        unit.targetActionNode = possibleActions[index].target;
+        HehIGuessItsTimeIMadeMyChoice(unit);
     }
 
     void AssignActions(Unit unit, Unit target, List<Node> path)
     {
-        //int fitness = 0;
-        //TODO fitness calculation
+        PossibleAction act;
 
         for (int i = 0; i < unit.actions.Length; ++i)
         {
-            Debug.Log("Action " + unit.actions[i].name + " range check with an estimate of " + Pathfindingv2.Estimate(path[path.Count - 1], target.currentNode)
-                      + ". Range = " + unit.actions[i].range);
             if (unit.actions[i].range == 0)
             {
                 possibleActions.Add(new PossibleAction(path, unit.actions[i], path[path.Count - 1], 1));
@@ -129,9 +134,69 @@ public class AIHelper : MonoBehaviour {
             List<Node> nodesInRange = unit.actions[i].GetNodesInRange(path[path.Count - 1]);
             if (!nodesInRange.Contains(target.currentNode)) continue;
 
-            //if (Pathfindingv2.Estimate(path[path.Count - 1], target.currentNode) > unit.actions[i].range) continue;  //out of range
-            Debug.Log("Pass");
-            possibleActions.Add(new PossibleAction(path, unit.actions[i], target.currentNode, 1));
+            act = new PossibleAction(path, unit.actions[i], target.currentNode, 0);
+            act.DetermineFitness();
+            possibleActions.Add(act);
         }
+    }
+
+    public void ConfirmBestAction(Unit unit)    //Call on enemy action turn
+    {
+        possibleActions.Clear();
+
+        List<Unit> possibleTargets = new List<Unit>();
+        int maxActionRange = 0;
+        UnitAction maxAction = new UnitAction();
+        List<Node> start = new List<Node>();
+        start.Add(unit.currentNode);
+
+        foreach (UnitAction act in unit.actions) 
+        {
+            if (act.range > maxActionRange)
+            {
+                maxActionRange = act.range;
+                maxAction = act;
+            }
+        }
+
+        foreach (GameObject enemyGO in Map.Instance.unitDudeFriends)
+        {
+            Unit enemy = enemyGO.GetComponent<Unit>();
+
+            if (Pathfindingv2.EstimateXY(unit.currentNode, enemy.currentNode) > maxActionRange) continue;
+
+            AssignActions(unit, enemy, start);
+        }
+
+        HehIGuessItsTimeIMadeMyChoice(unit, false);
+    }
+
+    void HehIGuessItsTimeIMadeMyChoice(Unit unit, bool move = true)
+    {
+        List<PossibleAction> trueActions = new List<PossibleAction>();
+
+        foreach (PossibleAction act in possibleActions)
+        {
+            for (int i = 0; i < act.fitness; ++i) trueActions.Add(act);
+            act.DebugLogMe();
+        }
+        int index = Random.Range(0, possibleActions.Count);
+
+        if ((possibleActions.Count == 0 || trueActions.Count == 0) && move) //just move towards a random enemy
+        {
+            index = Random.Range(0, Map.Instance.unitDudeFriends.Count);
+            NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.unitDudeFriends[index].GetComponent<Unit>().currentNode);
+            return;
+        }
+        else if ((possibleActions.Count == 0 || trueActions.Count == 0) && !move)
+        {
+            return;
+        }
+
+        index = Random.Range(0, trueActions.Count);
+
+        if (move) unit.SetUnitPath(trueActions[index].path);
+        unit.readyAction = trueActions[index].action;
+        unit.targetActionNode = trueActions[index].target;
     }
 }
