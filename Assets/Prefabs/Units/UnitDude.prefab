@@ -344,6 +344,7 @@ MonoBehaviour:
     damage: 4
     aoe: 0
     cooldown: 0
+    initiative: 3
     currentCooldown: 0
   - projectile: {fileID: 1583182739588176, guid: 7c3e3267ce375fd49a3fc2f692effc08,
       type: 2}
@@ -354,6 +355,7 @@ MonoBehaviour:
     damage: 2
     aoe: 0
     cooldown: 0
+    initiative: 4
     currentCooldown: 0
   isEnemy: 0
   FirePoint: {fileID: 4549278640386806}
@@ -373,6 +375,7 @@ MonoBehaviour:
     damage: 0
     aoe: 0
     cooldown: 0
+    initiative: 0
     currentCooldown: 0
   unitStateMachine: {fileID: 0}
 --- !u!135 &135336063579494900
