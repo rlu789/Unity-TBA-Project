@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Collections;
 
 public enum TurnHandlerStates
 {
@@ -34,23 +34,6 @@ public class TurnHandler : MonoBehaviour
         Instance = this;
     }
 
-    public void Update()
-    {
-        if (actionReady && singleActionReady)
-        {
-            if (actionQueue.Count == 0)
-            {
-                actionReady = false;
-                singleActionReady = false;
-                Invoke("NextState", 2f);
-                return;
-            }
-            singleActionReady = false;
-            actionQueue[actionQueue.Count - 1].PerformAction();
-            actionQueue.RemoveAt(actionQueue.Count - 1);
-        }
-    }
-
     public void Setup()
     {
         SwitchState(TurnHandlerStates.PLAYERMOVE);
@@ -80,7 +63,7 @@ public class TurnHandler : MonoBehaviour
 
     void SwitchState(TurnHandlerStates state)
     {
-        //UIHelper.Instance.SetTurnValues(state);   //seems to break up here for some reason :omegaThinking:
+        UIHelper.Instance.SetTurnValues(state);   //seems to break up here for some reason :omegaThinking:
         switch (state)
         {
             case TurnHandlerStates.PLAYERMOVE:
@@ -104,10 +87,10 @@ public class TurnHandler : MonoBehaviour
             case TurnHandlerStates.BATTLEACT:
                 SetAllStates(States.END, States.END);
                 currentState = TurnHandlerStates.BATTLEACT;
-                BattleAct();
+                StartCoroutine(BattleAct());
                 break;
         }
-        UIHelper.Instance.SetTurnValues(currentState);
+        //UIHelper.Instance.SetTurnValues(currentState);
     }
 
     void SetAllStates(States playerState, States enemyState)
@@ -163,7 +146,7 @@ public class TurnHandler : MonoBehaviour
         NextState();
     }
 
-    void BattleAct()
+    IEnumerator BattleAct()
     {
         foreach(Unit u in actionQueue)
         {
@@ -181,6 +164,7 @@ public class TurnHandler : MonoBehaviour
         {
             Debug.Log("Key: " + unit.Key + ", Value: {1} " + unit.Value + " using action " + unit.Value.readyAction.name);
             unit.Value.PerformActionDelayed(delay++);
+            yield return new WaitForSeconds(0.25f);
         }
 
         haveYetToCrossTheBridge = 0.01f; delay = 1;
