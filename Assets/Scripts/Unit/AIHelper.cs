@@ -31,7 +31,6 @@ public class PossibleAction
         if (targetUnit == null)
         {
             fitness = 0;  //for now ignore the fact that there could be AOE etc.
-            Debug.Log("My target node ahs no unit!");
             return; 
         }
 
@@ -43,10 +42,10 @@ public class PossibleAction
         else
         {
             fitness -= action.damage;   //negative damage is healing
-            if (targetUnit.stats.currentHealth < (targetUnit.stats.maxHealth / 2)) fitness -= action.damage;    //if under 50% health, double the fitness gain
+            if (targetUnit.stats.currentHealth <= (targetUnit.stats.maxHealth / 2)) fitness -= action.damage;    //if under 50% health, double the fitness gain
         }
         fitness -= action.healthCost;
-        fitness -= action.manaCost;
+        fitness -= action.manaCost * 2;
         if (fitness < 0) fitness = 0;
 }
     public List<Node> path;
@@ -77,7 +76,6 @@ public class AIHelper : MonoBehaviour {
         possibleActions.Clear();    //clear previous units actions
 
         List<Unit> possibleTargets = new List<Unit>();
-        List<Node> possibleNodes = new List<Node>();
         int maxActionRange = 0;
         int maxActionAndMoveRange = 0;
         UnitAction maxAction = new UnitAction();
@@ -113,7 +111,6 @@ public class AIHelper : MonoBehaviour {
 
             List<Node> nodesInRange = maxAction.GetNodesInRange(pathList[pathList.Count - 1]);
             if (!nodesInRange.Contains(enemy.currentNode)) continue;    //cant reach enemy with any action from closest node, skip
-
             AssignActions(unit, enemy, pathList);   //get possible actions for this path
         }
 
@@ -128,7 +125,9 @@ public class AIHelper : MonoBehaviour {
         {
             if (unit.actions[i].range == 0)
             {
-                possibleActions.Add(new PossibleAction(path, unit.actions[i], path[path.Count - 1], 1));
+                act = new PossibleAction(path, unit.actions[i], unit.currentNode, 0);
+                act.DetermineFitness();
+                possibleActions.Add(act);
                 continue;
             }
             List<Node> nodesInRange = unit.actions[i].GetNodesInRange(path[path.Count - 1]);
@@ -141,12 +140,10 @@ public class AIHelper : MonoBehaviour {
     }
 
     public void ConfirmBestAction(Unit unit)    //Call on enemy action turn
-    {
+    {                                           //currently only checking enemies, TODO: check allies (healing)
         possibleActions.Clear();
 
-        List<Unit> possibleTargets = new List<Unit>();
         int maxActionRange = 0;
-        UnitAction maxAction = new UnitAction();
         List<Node> start = new List<Node>();
         start.Add(unit.currentNode);
 
@@ -155,7 +152,6 @@ public class AIHelper : MonoBehaviour {
             if (act.range > maxActionRange)
             {
                 maxActionRange = act.range;
-                maxAction = act;
             }
         }
 

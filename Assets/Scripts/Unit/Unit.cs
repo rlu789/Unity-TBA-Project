@@ -132,12 +132,7 @@ public class Unit : MonoBehaviour {
 
         Node nodeToCheck = _currentPath[_currentPath.Count - 1];
 
-        if (nodeToCheck.potentialUnit != null || nodeToCheck.currentUnit != null)
-        {
-            return false;
-        }
-
-        return true;
+        return (nodeToCheck.potentialUnit != null || nodeToCheck.currentUnit != null) ? false : true;
     }
 
     public List<Node> GetValidPath(List<Node> path, bool moving = false)    //optional arguement to update units movement when getting valid path
@@ -216,7 +211,7 @@ public class Unit : MonoBehaviour {
             Debug.Log("No action, returning...");
             return;
         }
-        Debug.Log("Using " + readyAction.name + " for unit " + stats._class);
+        //Debug.Log("Using " + readyAction.name + " for unit " + stats._class);
         if (targetActionNode == null)
         {
             targetActionNode = null;

@@ -18,7 +18,6 @@ public class NodeManager : MonoBehaviour {
     public List<Unit> unitsWithAssignedPaths;
 
     public List<Node> nodesInRange = new List<Node>();
-    bool rangeMode = false;
 
     private void Awake()
     {

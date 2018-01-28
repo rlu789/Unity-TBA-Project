@@ -21,7 +21,6 @@ public class TurnHandler : MonoBehaviour
 
     public bool actionReady = false, singleActionReady = false;
     float haveYetToCrossTheBridge = 0.01f;
-    int delay = 1;
 
     private void Awake()
     {
@@ -146,7 +145,7 @@ public class TurnHandler : MonoBehaviour
         NextState();
     }
 
-    IEnumerator BattleAct()
+    IEnumerator BattleAct() //TODO: need to ignore units that were killed
     {
         foreach(Unit u in actionQueue)
         {
@@ -162,12 +161,12 @@ public class TurnHandler : MonoBehaviour
         //TODO CROSS THIS BRIDGE WHEN WE GET THERE
         foreach (KeyValuePair<float, Unit> unit in orderedActions)
         {
-            Debug.Log("Key: " + unit.Key + ", Value: {1} " + unit.Value + " using action " + unit.Value.readyAction.name);
+            //Debug.Log("Key: " + unit.Key + ", Value: {1} " + unit.Value + " using action " + unit.Value.readyAction.name);
             unit.Value.PerformAction();
             yield return new WaitForSeconds(1f);
         }
 
-        haveYetToCrossTheBridge = 0.01f; delay = 1;
+        haveYetToCrossTheBridge = 0.01f;
         actionQueue.Clear();
         orderedActions.Clear();
         NextState();

@@ -5,7 +5,12 @@ public class Pathfindingv2 : MonoBehaviour
 {
     public static Path<Node> FindPath(Node start, Node destination, List<Node> _closed = null)
     {
-        if (!destination.passable || destination.moveCost >= 100) return null;
+        int infiniteLoopProtectionTchYouWouldSealAwayMyFullStrengthWellINeedItNotPrepareYourselfBoy = 0;    //just incase we get an infinite loop :monkaS:
+        while (!destination.passable || destination.moveCost >= 100 || destination.currentUnit != null || destination.potentialUnit != null)
+        {
+            if (infiniteLoopProtectionTchYouWouldSealAwayMyFullStrengthWellINeedItNotPrepareYourselfBoy++ >= 10) return null;   //we tried ten times just quit already
+            else destination = ClosestNeighbour(start, destination);    //if we could never make it to the node, try its closest neighbour
+        }
         var closed = new HashSet<Node>();
         var queue = new PriorityQueue<double, Path<Node>>();
         queue.Enqueue(0, new Path<Node>(start));
@@ -76,5 +81,29 @@ public class Pathfindingv2 : MonoBehaviour
         float dy = Mathf.Abs(destNode.XY.y - node.XY.y);
 
         return (dx > dy) ? dx : dy;
+    }
+
+    public static Node ClosestNeighbour(Node start, Node dest)  //immediate neighbours only for now.
+    {
+        List<Node> possibleTargets = new List<Node>();
+        Node closestNeighbour = null;
+        double minDist = Mathf.Infinity;
+        double est;
+
+        foreach (Node n in dest.neighbours)
+        {
+            if (n.currentUnit == null && n.potentialUnit == null) possibleTargets.Add(n);
+        }
+
+        foreach (Node n in possibleTargets)
+        {
+            est = Estimate(start, n);
+            if (est < minDist)
+            {
+                minDist = est;
+                closestNeighbour = n;
+            }
+        }
+        return closestNeighbour;
     }
 }

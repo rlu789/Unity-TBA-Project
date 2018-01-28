@@ -61,9 +61,9 @@ public class Map : MonoBehaviour
         nodes[0, 0].SpawnUnit(unitDudeTypes[0], false);   //generate a guy at 0,0
         nodes[1, 0].SpawnUnit(unitDudeTypes[2], false); 
         nodes[2, 0].SpawnUnit(unitDudeTypes[4], false); 
-        nodes[10, 10].SpawnUnit(unitDudeTypes[1], true); 
-        nodes[10, 11].SpawnUnit(unitDudeTypes[3], true); 
-        nodes[10, 12].SpawnUnit(unitDudeTypes[5], true); 
+        nodes[6, 5].SpawnUnit(unitDudeTypes[1], true); 
+        nodes[5, 5].SpawnUnit(unitDudeTypes[3], true); 
+        nodes[7, 4].SpawnUnit(unitDudeTypes[5], true); 
         TurnHandler.Instance.Setup(); // after all units are spawned, setup turn handler
     }
 
