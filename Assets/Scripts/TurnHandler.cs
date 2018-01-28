@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 public enum TurnHandlerStates
 {
     PLAYERMOVE,
-    PLAYERACT,
     ENEMYMOVE,
-    ENEMYACT
+    PLAYERACT,
+    ENEMYACT,
+    BATTLEACT
 }
 
 public class TurnHandler : MonoBehaviour
@@ -15,8 +17,11 @@ public class TurnHandler : MonoBehaviour
     public int unitTurnCount;
     public TurnHandlerStates currentState;
     public List<Unit> actionQueue = new List<Unit>();
+    public SortedDictionary<float, Unit> orderedActions = new SortedDictionary<float, Unit>();
 
     public bool actionReady = false, singleActionReady = false;
+    float haveYetToCrossTheBridge = 0.01f;
+    int delay = 1;
 
     private void Awake()
     {
@@ -56,15 +61,18 @@ public class TurnHandler : MonoBehaviour
         switch (currentState)
         {
             case TurnHandlerStates.PLAYERMOVE:
-                SwitchState(TurnHandlerStates.PLAYERACT);
-                break;
-            case TurnHandlerStates.PLAYERACT:
                 SwitchState(TurnHandlerStates.ENEMYMOVE);
                 break;
             case TurnHandlerStates.ENEMYMOVE:
+                SwitchState(TurnHandlerStates.PLAYERACT);
+                break;
+            case TurnHandlerStates.PLAYERACT:
                 SwitchState(TurnHandlerStates.ENEMYACT);
                 break;
             case TurnHandlerStates.ENEMYACT:
+                SwitchState(TurnHandlerStates.BATTLEACT);
+                break;
+            case TurnHandlerStates.BATTLEACT:
                 SwitchState(TurnHandlerStates.PLAYERMOVE);
                 break;
         }
@@ -78,19 +86,24 @@ public class TurnHandler : MonoBehaviour
                 SetAllStates(States.MOVE, States.END);
                 currentState = TurnHandlerStates.PLAYERMOVE;
                 break;
-            case TurnHandlerStates.PLAYERACT:
-                SetAllStates(States.ACT, States.END);
-                currentState = TurnHandlerStates.PLAYERACT;
-                break;
             case TurnHandlerStates.ENEMYMOVE:
                 SetAllStates(States.END, States.MOVE);
                 currentState = TurnHandlerStates.ENEMYMOVE;
                 HandleEnemyTurn();
                 break;
+            case TurnHandlerStates.PLAYERACT:
+                SetAllStates(States.ACT, States.END);
+                currentState = TurnHandlerStates.PLAYERACT;
+                break;
             case TurnHandlerStates.ENEMYACT:
                 SetAllStates(States.END, States.ACT);
                 currentState = TurnHandlerStates.ENEMYACT;
                 HandleEnemyAct();
+                break;
+            case TurnHandlerStates.BATTLEACT:
+                SetAllStates(States.END, States.END);
+                currentState = TurnHandlerStates.BATTLEACT;
+                BattleAct();
                 break;
         }
         UIHelper.Instance.SetTurnValues(currentState);
@@ -125,6 +138,7 @@ public class TurnHandler : MonoBehaviour
     public void PerformButton()
     {
         actionReady = true; singleActionReady = true;
+        NextState();
     }
 
     void HandleEnemyTurn()
@@ -141,8 +155,35 @@ public class TurnHandler : MonoBehaviour
     {
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
-            Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().PerformActionDelayed(i + 1);
+            //Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().PerformActionDelayed(i + 1)
+            TurnHandler.Instance.actionQueue.Add(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
+            // input enemy action here
         }
+        NextState();
+    }
+
+    void BattleAct()
+    {
+        foreach(Unit u in actionQueue)
+        {
+            if (orderedActions.ContainsKey(u.readyAction.initiative))
+            {
+                orderedActions.Add(u.readyAction.initiative + haveYetToCrossTheBridge, u);
+                haveYetToCrossTheBridge += 0.01f;
+            }
+            else
+                orderedActions.Add(u.readyAction.initiative, u);
+        }
+        //TODO CROSS THIS BRIDGE WHEN WE GET THERE
+        foreach (KeyValuePair<float, Unit> unit in orderedActions)
+        {
+            Debug.Log("Key: " + unit.Key + ", Value: {1} " + unit.Value + " using action " + unit.Value.readyAction.name);
+            unit.Value.PerformActionDelayed(delay++);
+        }
+
+        haveYetToCrossTheBridge = 0.01f; delay = 1;
+        actionQueue.Clear();
+        orderedActions.Clear();
         NextState();
     }
 }
