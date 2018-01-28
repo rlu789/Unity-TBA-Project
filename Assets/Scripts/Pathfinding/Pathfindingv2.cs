@@ -69,4 +69,12 @@ public class Pathfindingv2 : MonoBehaviour
 
         return Mathf.Max(dx, dy, dz);
     }
+
+    public static double EstimateXY(Node node, Node destNode)
+    {
+        float dx = Mathf.Abs(destNode.XY.x - node.XY.x);
+        float dy = Mathf.Abs(destNode.XY.y - node.XY.y);
+
+        return (dx > dy) ? dx : dy;
+    }
 }

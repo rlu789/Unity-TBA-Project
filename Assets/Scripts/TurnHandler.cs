@@ -37,6 +37,7 @@ public class TurnHandler : MonoBehaviour
             {
                 actionReady = false;
                 singleActionReady = false;
+                Invoke("NextState", 2f);
                 return;
             }
             singleActionReady = false;
@@ -124,7 +125,6 @@ public class TurnHandler : MonoBehaviour
     public void PerformButton()
     {
         actionReady = true; singleActionReady = true;
-        NextState();
     }
 
     void HandleEnemyTurn()

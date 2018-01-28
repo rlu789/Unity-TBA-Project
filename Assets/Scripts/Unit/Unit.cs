@@ -80,6 +80,7 @@ public class Unit : MonoBehaviour {
                 return;
             if (pathToFollow.Count == 0)
                 return;
+            if (pathToFollow[0] == currentNode && pathToFollow.Count == 1) return;
 
             Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
 
@@ -209,11 +210,19 @@ public class Unit : MonoBehaviour {
 
     public void PerformAction()
     {
+        if (readyAction == null)
+        {
+            targetActionNode = null;
+            Debug.Log("No action, returning...");
+            return;
+        }
         Debug.Log("Using " + readyAction.name + " for unit " + stats._class);
         if (targetActionNode == null)
         {
-            Debug.Log("No node selected, targetting self.");
-            targetActionNode = currentNode;
+            targetActionNode = null;
+            readyAction = null;
+            Debug.Log("No node selected, returning..");
+            return;
         }
 
         if (targetActionNode.currentUnit == null)
@@ -222,7 +231,7 @@ public class Unit : MonoBehaviour {
         }
         readyAction.UseAction(targetActionNode, this);
         targetActionNode = null;
-        unitStateMachine.state = States.END;
+        readyAction = null;
     }
 
     public void PerformActionDelayed(float delay)
@@ -238,6 +247,7 @@ public class Unit : MonoBehaviour {
             Debug.Log("Unit killed! " + stats.displayName + " is dead now... :(");
             Die();
         }
+        if (stats.currentHealth > stats.maxHealth) stats.currentHealth = stats.maxHealth;
     }
 
     void Die()

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 [System.Serializable]
 public class UnitAction {
 
@@ -54,5 +55,30 @@ public class UnitAction {
         //if (action.cooldown != 0) ;
         //check for current cooldown and decrease it each turn
     }
-    //public void ReduceCooldown() { } //use at the end of each turn
+
+    public List<Node> GetNodesInRange(Node start)
+    {
+        int _range = range;
+
+        List<Node> nodesInRange = new List<Node>();
+        List<Node> tempNodes = new List<Node>();
+        nodesInRange.Add(start);
+        while (_range > 0)
+        {
+            foreach (Node n in nodesInRange)
+            {
+                foreach (Node m in n.neighbours)
+                    tempNodes.Add(m);
+            }
+            foreach (Node n in tempNodes)
+            {
+                if (!nodesInRange.Contains(n))
+                    nodesInRange.Add(n);
+            }
+            tempNodes.Clear();
+            _range--;
+        }
+        return nodesInRange;
+    }
 }
+    //public void ReduceCooldown() { } //use at the end of each turn

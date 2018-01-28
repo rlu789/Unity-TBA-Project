@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 
 //currently only moves towards enemies and fires a random ability
-//something is off because sometimes enemies wont move far enough to fire even though they could possibly do so
-//enemies also cant stay still and use an action atm
-//also enemies hit themselves a lot :thinking:
+//max range is fixed, but sometimes enemies in range just wont perform any action, this happens with the healthy guy (melee only) a lot
+//need to split action and movement into two for cleaner code
+//do second pass for possible actions to make sure we have the best action unit can do from this node
+    //maybe do healers last so tehy can find the ideal position based on its allies new nodes
 
 public class PossibleAction
 {
@@ -54,39 +55,49 @@ public class AIHelper : MonoBehaviour {
         List<Node> possibleNodes = new List<Node>();
         int maxActionRange = 0;
         int maxActionAndMoveRange = 0;
+        UnitAction maxAction = new UnitAction();
 
         foreach (UnitAction act in unit.actions)    //get the max range of all units actions
         {
-            if (act.range > maxActionRange) maxActionRange = act.range;
+            if (act.range > maxActionRange)
+            {
+                maxActionRange = act.range;
+                maxAction = act;
+            }
         }
         maxActionAndMoveRange = maxActionRange + unit.stats.moveSpeed;   //the full distance the unit could move + its max attack range;
+        Debug.Log("Unit " + unit.stats._class + " max range is " + maxActionAndMoveRange);
 
         foreach (GameObject enemyGO in Map.Instance.unitDudeFriends)    //(friends means enemies for the enemies)
         {
             Unit enemy = enemyGO.GetComponent<Unit>();
 
-            if (Pathfindingv2.Estimate(unit.currentNode, enemy.currentNode) > maxActionAndMoveRange) continue; //out of range, skip this target
+            Debug.Log("Enemy position: " + enemy.XY + " | unit position: " + unit.XY + ". Range check with an estimate of " + Pathfindingv2.EstimateXY(unit.currentNode, enemy.currentNode)
+                      + ". Range = " + maxActionAndMoveRange);
+
+            if (Pathfindingv2.EstimateXY(unit.currentNode, enemy.currentNode) > maxActionAndMoveRange) continue; //out of range, skip this target
+
+            Debug.Log("pass");
 
             possibleTargets.Add(enemy); //enemy within max possible range, going to pathfind towards it
         }
 
         foreach (Unit enemy in possibleTargets)
         {
+            List<Node> pathList = new List<Node>();
             Path<Node> path = NodeManager.Instance.CheckPath(unit.currentNode, enemy.currentNode, unit);    //find the closest node to the enemy we can get to
-            if (path == null) continue;                                                              //instead of this, just stay still and try to use action on target
-            List<Node> pathList = unit.GetValidPath(path.ToList());
-            if (pathList == null) continue;
+            if (path == null)
+            {
+                pathList.Add(unit.currentNode);
+            }
+            else pathList = unit.GetValidPath(path.ToList());
 
-            if (Pathfindingv2.Estimate(pathList[pathList.Count - 1], enemy.currentNode) > maxActionRange) continue; //cant reach enemy with any action from closest node, skip
+            List<Node> nodesInRange = maxAction.GetNodesInRange(pathList[pathList.Count - 1]);
+            if (!nodesInRange.Contains(enemy.currentNode)) continue;    //cant reach enemy with any action from closest node, skip
 
-            AssignActions(unit, enemy, pathList);   //get possible actions for each target
+            AssignActions(unit, enemy, pathList);   //get possible actions for this path
         }
-        /*
-        foreach (PossibleAction pa in possibleActions)
-        {
-            pa.DebugLogMe();
-        }
-        */
+
         int index = Random.Range(0, possibleActions.Count);
 
         if (possibleActions.Count == 0) //just move towards a random enemy
@@ -110,8 +121,15 @@ public class AIHelper : MonoBehaviour {
         {
             Debug.Log("Action " + unit.actions[i].name + " range check with an estimate of " + Pathfindingv2.Estimate(path[path.Count - 1], target.currentNode)
                       + ". Range = " + unit.actions[i].range);
+            if (unit.actions[i].range == 0)
+            {
+                possibleActions.Add(new PossibleAction(path, unit.actions[i], path[path.Count - 1], 1));
+                continue;
+            }
+            List<Node> nodesInRange = unit.actions[i].GetNodesInRange(path[path.Count - 1]);
+            if (!nodesInRange.Contains(target.currentNode)) continue;
 
-            if (Pathfindingv2.Estimate(path[path.Count - 1], target.currentNode) > unit.actions[i].range) continue;  //out of range
+            //if (Pathfindingv2.Estimate(path[path.Count - 1], target.currentNode) > unit.actions[i].range) continue;  //out of range
             Debug.Log("Pass");
             possibleActions.Add(new PossibleAction(path, unit.actions[i], target.currentNode, 1));
         }
