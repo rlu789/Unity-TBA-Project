@@ -209,4 +209,7 @@ MonoBehaviour:
   material: {fileID: 0}
   moveCost: 0
   passable: 1
+  hexRim: {fileID: 1609691955481202}
+  rimRenderer: {fileID: 0}
+  rimMaterial: {fileID: 0}
   neighbours: []

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 //max range is fixed, but sometimes enemies in range just wont perform any action, this happens with the healthy guy (melee only) a lot
 //need to split action and movement into two for cleaner code
 //do second pass for possible actions to make sure we have the best action unit can do from this node
-    //maybe do healers last so tehy can find the ideal position based on its allies new nodes
+    //maybe do healers last so they can find the ideal position based on its allies new nodes
 
 public class PossibleAction
 {
@@ -112,7 +112,7 @@ public class AIHelper : MonoBehaviour {
         unit.targetActionNode = possibleActions[index].target;
     }
 
-    public void AssignActions(Unit unit, Unit target, List<Node> path)
+    void AssignActions(Unit unit, Unit target, List<Node> path)
     {
         //int fitness = 0;
         //TODO fitness calculation

@@ -80,6 +80,7 @@ public class TurnHandler : MonoBehaviour
 
     void SwitchState(TurnHandlerStates state)
     {
+        //UIHelper.Instance.SetTurnValues(state);   //seems to break up here for some reason :omegaThinking:
         switch (state)
         {
             case TurnHandlerStates.PLAYERMOVE:
@@ -156,7 +157,7 @@ public class TurnHandler : MonoBehaviour
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
             //Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().PerformActionDelayed(i + 1)
-            TurnHandler.Instance.actionQueue.Add(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
+            actionQueue.Add(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
             // input enemy action here
         }
         NextState();
@@ -166,6 +167,7 @@ public class TurnHandler : MonoBehaviour
     {
         foreach(Unit u in actionQueue)
         {
+            if (u.readyAction == null) continue;
             if (orderedActions.ContainsKey(u.readyAction.initiative))
             {
                 orderedActions.Add(u.readyAction.initiative + haveYetToCrossTheBridge, u);

@@ -29,6 +29,12 @@ public class Node : MonoBehaviour {
     public int moveCost;
     public bool passable = true;
 
+    public GameObject hexRim;
+    [HideInInspector]
+    public Renderer rimRenderer;
+    [HideInInspector]
+    public Material rimMaterial;
+
     public List<Node> neighbours  = new List<Node>();
 
     public void SetupFields(int ID, int gridX, int gridY, int _moveCost)
@@ -38,6 +44,8 @@ public class Node : MonoBehaviour {
         moveCost = _moveCost;
         myRenderer = GetComponent<Renderer>();
         material = myRenderer.material;
+        rimRenderer = hexRim.GetComponent<Renderer>();
+        rimMaterial = rimRenderer.material;
         List<Node> neighbours = new List<Node>();
     }
 

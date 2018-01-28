@@ -17,18 +17,23 @@ public class TurnUI : MonoBehaviour {
                 btnMove.SetActive(true);
                 btnAct.SetActive(false);
                 break;
-            case TurnHandlerStates.PLAYERACT:
-                currentTurnText.text = "Player Action";
-                btnMove.SetActive(false);
-                btnAct.SetActive(true);
-                break;
             case TurnHandlerStates.ENEMYMOVE:
                 currentTurnText.text = "Enemy Move";
                 btnMove.SetActive(false);
                 btnAct.SetActive(false);
                 break;
+            case TurnHandlerStates.PLAYERACT:
+                currentTurnText.text = "Player Action";
+                btnMove.SetActive(false);
+                btnAct.SetActive(true);
+                break;
             case TurnHandlerStates.ENEMYACT:
                 currentTurnText.text = "Enemy Action";
+                btnMove.SetActive(false);
+                btnAct.SetActive(false);
+                break;
+            case TurnHandlerStates.BATTLEACT:
+                currentTurnText.text = "Battle Phase";
                 btnMove.SetActive(false);
                 btnAct.SetActive(false);
                 break;

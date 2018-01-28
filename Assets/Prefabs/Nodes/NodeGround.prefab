@@ -68,7 +68,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1326710624061332}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.865149, y: 0.5, z: -1.5352306}
+  m_LocalPosition: {x: 52.67166, y: 0.5, z: -67.52597}
   m_LocalScale: {x: 0.4, y: 2, z: 0.4}
   m_Children:
   - {fileID: 4327721289588800}
@@ -209,4 +209,7 @@ MonoBehaviour:
   material: {fileID: 0}
   moveCost: 0
   passable: 1
+  hexRim: {fileID: 1609691955481202}
+  rimRenderer: {fileID: 0}
+  rimMaterial: {fileID: 0}
   neighbours: []

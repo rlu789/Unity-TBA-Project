@@ -258,6 +258,11 @@ public class Unit : MonoBehaviour {
 
         Destroy(gameObject);
     }
+
+    public void SetAction(UnitAction _action)
+    {
+
+    }
     //public void TogglePathVisual(bool toggle)
     //{
     //    if (pathVisual.Count == 0) return;
