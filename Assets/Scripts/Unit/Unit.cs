@@ -222,7 +222,7 @@ public class Unit : MonoBehaviour {
         }
         readyAction.UseAction(targetActionNode, this);
         targetActionNode = null;
-        unitStateMachine.state = States.END;
+        //unitStateMachine.state = States.END;
     }
 
     public void PerformActionDelayed(float delay)

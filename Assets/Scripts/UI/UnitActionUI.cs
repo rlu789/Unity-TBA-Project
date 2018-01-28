@@ -10,6 +10,7 @@ public class UnitActionUI : MonoBehaviour {
     public Text damage;
     public Text aoe;
     public Text cooldown;
+    public Text initiative;
 
     [HideInInspector]
     public Unit currentUnit = null;
@@ -34,6 +35,7 @@ public class UnitActionUI : MonoBehaviour {
         damage.text = "Damage: " + unit.actions[index].damage;
         aoe.text = "AOE: " + unit.actions[index].aoe;
         cooldown.text = "Cooldown: " + unit.actions[index].currentCooldown + " (" + unit.actions[index].cooldown + ")";
+        //initiative.text = "Initiative: " + unit.actions[index].initiative;
 
         NodeManager.Instance.ShowUnitActionRange(unit.currentNode);
     }

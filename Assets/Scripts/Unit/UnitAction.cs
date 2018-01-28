@@ -10,6 +10,7 @@ public class UnitAction {
     public int damage = 0;  //minDamage - maxDamage
     public int aoe = 0;
     public int cooldown = 0;
+    public int initiative = 0;
 
     [HideInInspector]
     public int currentCooldown = 0;
