@@ -22,20 +22,20 @@ public class UnitActionUI : MonoBehaviour {
 
         if (index == -1) index = currentActionIndex;    //if we arent passing in an index for direct access, access the index we are up to
 
-        if (currentActionIndex >= unit.actions.Length)  //end of units action list, start from beginning
+        if (currentActionIndex >= unit.availableActions.Count)  //end of units action list, start from beginning
         {
             currentActionIndex = 0;
             index = 0;
         }
 
         actionNo.text = "Action " + (index + 1) + ":";
-        _name.text = "Name: " + unit.actions[index].name;
-        cost.text = "Cost: " + unit.actions[index].manaCost + " Mana / " + unit.actions[index].healthCost + " Health";
-        range.text = "Range: " + unit.actions[index].range;
-        damage.text = "Damage: " + unit.actions[index].damage;
-        aoe.text = "AOE: " + unit.actions[index].aoe;
-        cooldown.text = "Cooldown: " + unit.actions[index].currentCooldown + " (" + unit.actions[index].cooldown + ")";
-        initiative.text = "Initiative: " + unit.actions[index].initiative;
+        _name.text = "Name: " + unit.availableActions[index].name;
+        cost.text = "Cost: " + unit.availableActions[index].manaCost + " Mana / " + unit.availableActions[index].healthCost + " Health";
+        range.text = "Range: " + unit.availableActions[index].range;
+        damage.text = "Damage: " + unit.availableActions[index].damage;
+        aoe.text = "AOE: " + unit.availableActions[index].aoe;
+        cooldown.text = "Cooldown: " + unit.availableActions[index].currentCooldown + " (" + unit.availableActions[index].cooldown + ")";
+        initiative.text = "Initiative: " + unit.availableActions[index].initiative;
 
         NodeManager.Instance.ShowUnitActionRange(unit.currentNode);
     }

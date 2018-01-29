@@ -1,0 +1,5 @@
+1 Melee Attack-MeleeProjectile.prefab: 0 0 1 4 0 0 5
+2 Powerful Attack-MeleePowerfulProjectile.prefab: 0 4 1 8 0 0 3
+3 Throw Rock-RockProjectile.prefab: 0 0 2 2 0 0 4
+4 Magic Attack-MagicProjectile.prefab: 0 0 4 1 0 0 1
+5 Fireball-FireballProjectile.prefab: 2 0 4 8 1 1 2

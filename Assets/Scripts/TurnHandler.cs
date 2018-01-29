@@ -18,8 +18,7 @@ public class TurnHandler : MonoBehaviour
     public TurnHandlerStates currentState;
     public List<Unit> actionQueue = new List<Unit>();
     public SortedDictionary<float, Unit> orderedActions = new SortedDictionary<float, Unit>();
-
-    public bool actionReady = false, singleActionReady = false;
+    
     float haveYetToCrossTheBridge = 0.01f;
 
     private void Awake()
@@ -77,6 +76,7 @@ public class TurnHandler : MonoBehaviour
                 break;
             case TurnHandlerStates.PLAYERACT:
                 SetAllStates(States.ACT, States.END);
+                DrawCards();
                 currentState = TurnHandlerStates.PLAYERACT;
                 break;
             case TurnHandlerStates.ENEMYACT:
@@ -119,9 +119,19 @@ public class TurnHandler : MonoBehaviour
             NodeManager.Instance.Deselect(true);
     }
 
+    void DrawCards()
+    {
+        for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
+        {
+            if (Map.Instance.unitDudeFriends[i].GetComponent<Unit>().isEnemy == false)
+            {
+                Map.Instance.unitDudeFriends[i].GetComponent<Unit>().DrawCards(1);
+            }
+        }
+    }
+
     public void PerformButton()
     {
-        actionReady = true; singleActionReady = true;
         NextState();
     }
 

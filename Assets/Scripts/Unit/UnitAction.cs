@@ -47,8 +47,7 @@ public class UnitAction {
         if (targetNode.currentUnit == null) return;
 
         targetNode.currentUnit.TakeDamage(damage);
-
-        TurnHandler.Instance.singleActionReady = true;
+        
         //if (action.aoe != 0) ;
         //if (action.cooldown != 0) ;
         //check for current cooldown and decrease it each turn

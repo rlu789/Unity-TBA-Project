@@ -23,7 +23,9 @@ public class CardManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        ReadTextFile("Assets/Scripts/VERYSmartClass.txt", (int)Class.VERYSmart);
+        ReadTextFile("Assets/Scripts/ClassVERYSmart.txt", (int)Class.VERYSmart);
+        ReadTextFile("Assets/Scripts/ClassDude.txt", (int)Class.Dude);
+        ReadTextFile("Assets/Scripts/ClassHealthyBoy.txt", (int)Class.HealthyBoy);
 
     }
 

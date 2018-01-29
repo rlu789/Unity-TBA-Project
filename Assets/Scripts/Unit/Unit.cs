@@ -4,7 +4,9 @@ using System.Collections.Generic;
 public class Unit : MonoBehaviour {
     [Header("Stats")]
     public UnitStats stats;
-    public UnitAction[] actions;
+    public List<UnitAction> deck = new List<UnitAction>();
+    public List<UnitAction> availableActions = new List<UnitAction>();
+    public List<UnitAction> discardedActions = new List<UnitAction>();
     public bool isEnemy;
 
     //Setup fields
@@ -34,7 +36,10 @@ public class Unit : MonoBehaviour {
         stats.currentMana = stats.maxMana;
         if (stats.displayName == "") stats.displayName = GenerateRandomNameOfPower();
         unitStateMachine = GetComponent<UnitStateMachine>();
-        actions = CardManager.Instance.decks[(int)stats._class].ToArray();
+
+        deck = CardManager.Instance.decks[(int)stats._class];
+        if (isEnemy) availableActions = deck;
+        else DrawCards(2);
     }
 
     void Update()
@@ -44,7 +49,14 @@ public class Unit : MonoBehaviour {
             MoveStep();
         }
     }
-    
+
+    public void DrawCards(int no)
+    {
+        for (int i = 0; i < no; i++)
+        {
+            availableActions.Add(deck[Random.Range(0, deck.Count)]);
+        }
+    }
 
     void MoveStep()
     {
@@ -179,7 +191,7 @@ public class Unit : MonoBehaviour {
         int currentIndex = UIHelper.Instance.GetActionIndex();
         if (currentIndex == -1) return null;
 
-        readyAction = actions[currentIndex];
+        readyAction = availableActions[currentIndex];
         int range = readyAction.range;
 
         targetActionNode = null;    //changing ability, remove previous target
@@ -210,6 +222,8 @@ public class Unit : MonoBehaviour {
             Debug.Log("Used action on empty node.");
         }
         readyAction.UseAction(targetActionNode, this);
+        availableActions.Remove(readyAction);
+        if (!isEnemy) discardedActions.Add(readyAction);
         targetActionNode = null;
         readyAction = null;
     }
