@@ -19,9 +19,6 @@ public class UnitAction {
     Node targetNode;
     Unit owner;
 
-    //List<Buffs> buffs;  //buffs/debuffs to apply to units
-    //List<Effects> effects;  //effects to apply to the terrain
-
     public void UseAction(Node _targetNode, Unit _owner)
     {
         targetNode = _targetNode;
