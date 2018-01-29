@@ -19,6 +19,8 @@ public class UnitAction {
     Node targetNode;
     Unit owner;
 
+    Status status;
+
     public void UseAction(Node _targetNode, Unit _owner)
     {
         targetNode = _targetNode;

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 public class Unit : MonoBehaviour {
     [Header("Stats")]
     public UnitStats stats;
-    public UnitAction[] actions;
+    public List<Card> availableActions = new List<Card>();
+    public List<Card> deck;
     public bool isEnemy;
 
     //Setup fields
@@ -34,7 +35,7 @@ public class Unit : MonoBehaviour {
         stats.currentMana = stats.maxMana;
         if (stats.displayName == "") stats.displayName = GenerateRandomNameOfPower();
         unitStateMachine = GetComponent<UnitStateMachine>();
-        actions = CardManager.Instance.decks[(int)stats._class].ToArray();
+        deck = CardManager.Instance.decks[(int)stats._class];
     }
 
     void Update()
@@ -44,7 +45,16 @@ public class Unit : MonoBehaviour {
             MoveStep();
         }
     }
-    
+
+
+    public void DrawCard()
+    {
+        int index = Random.Range(0, deck.Count);
+        availableActions[0] = deck[index];
+
+        //deck.RemoveAt(index);
+    }
+
 
     void MoveStep()
     {
@@ -179,7 +189,7 @@ public class Unit : MonoBehaviour {
         int currentIndex = UIHelper.Instance.GetActionIndex();
         if (currentIndex == -1) return null;
 
-        readyAction = actions[currentIndex];
+        readyAction = availableActions[currentIndex];
         int range = readyAction.range;
 
         targetActionNode = null;    //changing ability, remove previous target

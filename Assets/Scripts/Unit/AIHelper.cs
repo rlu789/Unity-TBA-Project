@@ -119,19 +119,19 @@ public class AIHelper : MonoBehaviour {
     {
         PossibleAction act;
 
-        for (int i = 0; i < unit.actions.Length; ++i)
+        for (int i = 0; i < unit.availableActions.Length; ++i)
         {
-            if (unit.actions[i].range == 0)
+            if (unit.availableActions[i].range == 0)
             {
-                act = new PossibleAction(path, unit.actions[i], unit.currentNode, 0);
+                act = new PossibleAction(path, unit.availableActions[i], unit.currentNode, 0);
                 act.DetermineFitness();
                 possibleActions.Add(act);
                 continue;
             }
-            List<Node> nodesInRange = unit.actions[i].GetNodesInRange(path[path.Count - 1]);
+            List<Node> nodesInRange = unit.availableActions[i].GetNodesInRange(path[path.Count - 1]);
             if (!nodesInRange.Contains(target.currentNode)) continue;
 
-            act = new PossibleAction(path, unit.actions[i], target.currentNode, 0);
+            act = new PossibleAction(path, unit.availableActions[i], target.currentNode, 0);
             act.DetermineFitness();
             possibleActions.Add(act);
         }
@@ -189,7 +189,7 @@ public class AIHelper : MonoBehaviour {
 
     UnitAction GetMaxRangeAction(Unit unit, ref int maxActionRange) //returns highest range action of unit, sets maxActionRange to that actions range
     {
-        foreach (UnitAction act in unit.actions)    //get the max range of all units actions
+        foreach (UnitAction act in unit.availableActions)    //get the max range of all units actions
         {
             if (act.range > maxActionRange)
             {

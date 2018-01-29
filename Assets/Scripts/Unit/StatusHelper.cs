@@ -2,7 +2,7 @@
 using UnityEngine;
 
 //The actual things the status can do. Damage over time (each turn), increase movespeed, change action amount, reduce damage done, etc.
-public enum StatusType { DOT, MoveSpeed, Actions, Damage }
+public enum StatusType { DOT, MoveSpeed, Actions, Damage, MoveUnit }
 
 //A status is a collection of StatusType + strength pairs, a duration (rounds) and a visual effect
 //eg. Status Stunned = name: Stunned
