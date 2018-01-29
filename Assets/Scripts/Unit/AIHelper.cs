@@ -43,6 +43,7 @@ public class PossibleAction
         {
             fitness -= action.damage;   //negative damage is healing
             if (targetUnit.stats.currentHealth <= (targetUnit.stats.maxHealth / 2)) fitness -= action.damage;    //if under 50% health, double the fitness gain
+            if (targetUnit.stats.currentHealth - action.damage > targetUnit.stats.maxHealth) fitness -= (targetUnit.stats.currentHealth - action.damage) - targetUnit.stats.maxHealth;  //only fitness for the actual health regained, not overheal
         }
         fitness -= action.healthCost;
         fitness -= action.manaCost * 2;
@@ -79,15 +80,10 @@ public class AIHelper : MonoBehaviour {
         int maxActionRange = 0;
         int maxActionAndMoveRange = 0;
         UnitAction maxAction = new UnitAction();
+        List<Node> start = new List<Node>();    //Sometimes remaining where you are is the best movement
+        start.Add(unit.currentNode);
 
-        foreach (UnitAction act in unit.actions)    //get the max range of all units actions
-        {
-            if (act.range > maxActionRange)
-            {
-                maxActionRange = act.range;
-                maxAction = act;
-            }
-        }
+        maxAction = GetMaxRangeAction(unit, ref maxActionRange);
         maxActionAndMoveRange = maxActionRange + unit.stats.moveSpeed;   //the full distance the unit could move + its max attack range;
 
         foreach (GameObject enemyGO in Map.Instance.unitDudeFriends)    //(friends means enemies for the enemies)
@@ -109,9 +105,11 @@ public class AIHelper : MonoBehaviour {
             }
             else pathList = unit.GetValidPath(path.ToList());
 
-            List<Node> nodesInRange = maxAction.GetNodesInRange(pathList[pathList.Count - 1]);
-            if (!nodesInRange.Contains(enemy.currentNode)) continue;    //cant reach enemy with any action from closest node, skip
-            AssignActions(unit, enemy, pathList);   //get possible actions for this path
+            List<Node> nodesInRange = maxAction.GetNodesInRange(pathList[pathList.Count - 1]);  //is this enemy in range from the closest we can get
+            if (nodesInRange.Contains(enemy.currentNode)) AssignActions(unit, enemy, pathList); //get possible actions for this path
+
+            nodesInRange = maxAction.GetNodesInRange(unit.currentNode);                     //is this enemy in range from the starting position
+            if (nodesInRange.Contains(enemy.currentNode)) AssignActions(unit, enemy, start); //get possible actions for starting node
         }
 
         HehIGuessItsTimeIMadeMyChoice(unit);
@@ -147,13 +145,7 @@ public class AIHelper : MonoBehaviour {
         List<Node> start = new List<Node>();
         start.Add(unit.currentNode);
 
-        foreach (UnitAction act in unit.actions) 
-        {
-            if (act.range > maxActionRange)
-            {
-                maxActionRange = act.range;
-            }
-        }
+        GetMaxRangeAction(unit, ref maxActionRange);
 
         foreach (GameObject enemyGO in Map.Instance.unitDudeFriends)
         {
@@ -174,7 +166,7 @@ public class AIHelper : MonoBehaviour {
         foreach (PossibleAction act in possibleActions)
         {
             for (int i = 0; i < act.fitness; ++i) trueActions.Add(act);
-            act.DebugLogMe();
+            //act.DebugLogMe();
         }
         int index = Random.Range(0, possibleActions.Count);
 
@@ -192,7 +184,19 @@ public class AIHelper : MonoBehaviour {
         index = Random.Range(0, trueActions.Count);
 
         if (move) unit.SetUnitPath(trueActions[index].path);
-        unit.readyAction = trueActions[index].action;
-        unit.targetActionNode = trueActions[index].target;
+        unit.SetAction(trueActions[index].action, trueActions[index].target);
+    }
+
+    UnitAction GetMaxRangeAction(Unit unit, ref int maxActionRange) //returns highest range action of unit, sets maxActionRange to that actions range
+    {
+        foreach (UnitAction act in unit.actions)    //get the max range of all units actions
+        {
+            if (act.range > maxActionRange)
+            {
+                maxActionRange = act.range;
+                return act;
+            }
+        }
+        return null;
     }
 }

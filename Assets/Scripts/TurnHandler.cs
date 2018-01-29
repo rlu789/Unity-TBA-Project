@@ -162,6 +162,7 @@ public class TurnHandler : MonoBehaviour
         foreach (KeyValuePair<float, Unit> unit in orderedActions)
         {
             //Debug.Log("Key: " + unit.Key + ", Value: {1} " + unit.Value + " using action " + unit.Value.readyAction.name);
+            if (unit.Value == null) continue;
             unit.Value.PerformAction();
             yield return new WaitForSeconds(1f);
         }

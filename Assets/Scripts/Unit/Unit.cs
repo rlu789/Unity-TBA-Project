@@ -182,25 +182,7 @@ public class Unit : MonoBehaviour {
         targetActionNode = null;    //changing ability, remove previous target
         NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.ACT;  //and return to act
 
-        List<Node> nodesInRange = new List<Node>();
-        List<Node> tempNodes = new List<Node>();
-        nodesInRange.Add(currentNode);
-        while (range > 0)
-        {
-            foreach(Node n in nodesInRange)
-            {
-                foreach ( Node m in n.neighbours)
-                    tempNodes.Add(m);
-            }
-            foreach (Node n in tempNodes)
-            {
-                if (!nodesInRange.Contains(n))
-                    nodesInRange.Add(n);
-            }
-            tempNodes.Clear();
-            range--;
-        }
-        return nodesInRange;
+        return readyAction.GetNodesInRange(currentNode);
     }
 
     public void PerformAction()
@@ -254,9 +236,10 @@ public class Unit : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    public void SetAction(UnitAction _action)
+    public void SetAction(UnitAction _action, Node _target)
     {
-
+        readyAction = _action;
+        targetActionNode = _target;
     }
     //public void TogglePathVisual(bool toggle)
     //{

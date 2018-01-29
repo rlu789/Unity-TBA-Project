@@ -102,6 +102,7 @@ public class Pathfindingv2 : MonoBehaviour
             {
                 minDist = est;
                 closestNeighbour = n;
+                //TODO: if we cant get a valid neighbour just get the closest neighbour and try again
             }
         }
         return closestNeighbour;

@@ -200,6 +200,7 @@ MonoBehaviour:
   hoverMaterialBad: {fileID: 2100000, guid: 52db73a80aa7a7c46b11a5c01f5f1669, type: 2}
   selectedMaterial: {fileID: 2100000, guid: cd7ba0fc890acb840ae8fd94cdc7b8af, type: 2}
   selectedMaterialBad: {fileID: 2100000, guid: 76fae02f8c000654d8baa6b910aaa8f1, type: 2}
+  rimDanger: {fileID: 2100000, guid: 76fae02f8c000654d8baa6b910aaa8f1, type: 2}
   currentUnitGO: {fileID: 0}
   currentUnit: {fileID: 0}
   potentialUnit: {fileID: 0}

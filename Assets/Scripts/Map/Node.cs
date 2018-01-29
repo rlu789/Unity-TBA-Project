@@ -10,6 +10,7 @@ public class Node : MonoBehaviour {
     public Material hoverMaterialBad;
     public Material selectedMaterial;
     public Material selectedMaterialBad;
+    public Material rimDanger;
 
     //Object fields, don't touch
     [Space(10)]
@@ -67,6 +68,12 @@ public class Node : MonoBehaviour {
         unitComponent.currentNodeID = nodeID;
         unitComponent.isEnemy = isEnemy;
         unitComponent.currentNode = this;
+    }
+
+    public void SetHexRimState(bool highlighted)
+    {
+        if (highlighted) rimRenderer.material = rimDanger;
+        else rimRenderer.material = rimMaterial;
     }
 
     private void OnMouseUp()
