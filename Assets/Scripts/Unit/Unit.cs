@@ -34,6 +34,7 @@ public class Unit : MonoBehaviour {
         stats.currentMana = stats.maxMana;
         if (stats.displayName == "") stats.displayName = GenerateRandomNameOfPower();
         unitStateMachine = GetComponent<UnitStateMachine>();
+        actions = CardManager.Instance.decks[(int)stats._class].ToArray();
     }
 
     void Update()
