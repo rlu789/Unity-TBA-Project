@@ -62,12 +62,13 @@ public class TurnHandler : MonoBehaviour
 
     void SwitchState(TurnHandlerStates state)
     {
-        UIHelper.Instance.SetTurnValues(state);   //seems to break up here for some reason :omegaThinking:
+        UIHelper.Instance.SetTurnValues(state);
         switch (state)
         {
             case TurnHandlerStates.PLAYERMOVE:
                 SetAllStates(States.MOVE, States.END);
                 currentState = TurnHandlerStates.PLAYERMOVE;
+                HandleStatus();
                 break;
             case TurnHandlerStates.ENEMYMOVE:
                 SetAllStates(States.END, States.MOVE);
@@ -171,5 +172,13 @@ public class TurnHandler : MonoBehaviour
         actionQueue.Clear();
         orderedActions.Clear();
         NextState();
+    }
+
+    void HandleStatus()
+    {
+        foreach (GameObject unit in Map.Instance.unitDudeFriends)
+        {
+            StatusHelper.Instance.CheckStatus(unit.GetComponent<Unit>());
+        }
     }
 }

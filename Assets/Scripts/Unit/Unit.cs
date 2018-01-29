@@ -23,6 +23,8 @@ public class Unit : MonoBehaviour {
     public UnitAction readyAction;
     public UnitStateMachine unitStateMachine;
 
+    public List<Status> statuses = new List<Status>();
+
     GameObject[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,] loadBearingArray;
 
     private void Start()
