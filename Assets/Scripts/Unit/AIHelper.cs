@@ -172,7 +172,8 @@ public class AIHelper : MonoBehaviour {
             for (int i = 0; i < act.fitness; ++i) trueActions.Add(act);
             //act.DebugLogMe();
         }
-        int index = Random.Range(0, possibleActions.Count);
+
+        int index = 0;
 
         if ((possibleActions.Count == 0 || trueActions.Count == 0) && move) //just move towards a random enemy
         {

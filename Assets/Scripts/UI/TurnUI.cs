@@ -12,31 +12,36 @@ public class TurnUI : MonoBehaviour {
     {
         switch (turn)
         {
-            //case TurnHandlerStates.PLAYERMOVE:
-            //    currentTurnText.text = "Player Move";
-            //    btnMove.SetActive(true);
-            //    btnAct.SetActive(false);
-            //    break;
-            //case TurnHandlerStates.ENEMYMOVE:
-            //    currentTurnText.text = "Enemy Move";
-            //    btnMove.SetActive(false);
-            //    btnAct.SetActive(false);
-            //    break;
-            //case TurnHandlerStates.PLAYERACT:
-            //    currentTurnText.text = "Player Action";
-            //    btnMove.SetActive(false);
-            //    btnAct.SetActive(true);
-            //    break;
-            //case TurnHandlerStates.ENEMYACT:
-            //    currentTurnText.text = "Enemy Action";
-            //    btnMove.SetActive(false);
-            //    btnAct.SetActive(false);
-            //    break;
-            //case TurnHandlerStates.BATTLEACT:
-            //    currentTurnText.text = "Battle Phase";
-            //    btnMove.SetActive(false);
-            //    btnAct.SetActive(false);
-            //    break;
+            case TurnHandlerStates.ENEMYDRAW:
+                currentTurnText.text = "Enemy Drawing Cards";
+                btnMove.SetActive(false);
+                btnAct.SetActive(false);
+                break;
+            case TurnHandlerStates.PLAYERDRAW:
+                currentTurnText.text = "Player Drawing Cards";
+                btnMove.SetActive(false);
+                btnAct.SetActive(false);
+                break;
+            case TurnHandlerStates.PLAYERSELECT:
+                currentTurnText.text = "Player Selecting Cards";
+                btnMove.SetActive(false);
+                btnAct.SetActive(false);
+                break;
+            case TurnHandlerStates.PLAYERTURN:
+                currentTurnText.text = "Player INDEXOFPLAYER Turn";
+                btnMove.SetActive(true);
+                btnAct.SetActive(true);
+                break;
+            case TurnHandlerStates.ENEMYTURN:
+                currentTurnText.text = "Player INDEXOFENEMY Turn";
+                btnMove.SetActive(false);
+                btnAct.SetActive(false);
+                break;
+            case TurnHandlerStates.END:
+                currentTurnText.text = "THE TURN HAS ENDED";
+                btnMove.SetActive(false);
+                btnAct.SetActive(false);
+                break;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 
 //public enum TurnHandlerStates2
 //{
@@ -44,6 +45,11 @@ public class TurnHandler : MonoBehaviour
 
     public void Setup()
     {
+        Invoke("DelaySwitch", 1f);
+    }
+
+    void DelaySwitch()  //VERY bad code
+    {
         SwitchState(TurnHandlerStates.ENEMYDRAW);
     }
 
@@ -79,40 +85,43 @@ public class TurnHandler : MonoBehaviour
             Debug.Log("Dgf");
             return TurnHandlerStates.END;
         }
-        if (!orderedActions[0].isEnemy)
+        if (!orderedActions[orderedActions.Keys.First()].isEnemy)
         {
-            orderedActions[0].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
-            NodeManager.Instance.SetSelectedNode(orderedActions[0].GetComponent<Unit>().currentNode);
+            orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
+            NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().currentNode);
             return TurnHandlerStates.PLAYERTURN;
         }
         else
         {
-            orderedActions[0].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
+            orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
             return TurnHandlerStates.ENEMYTURN;
         }
     }
 
     void SwitchState(TurnHandlerStates state)
     {
-        //UIHelper.Instance.SetTurnValues(state);
+        UIHelper.Instance.SetTurnValues(state);
         switch (state)
         {
             case TurnHandlerStates.ENEMYDRAW:
                 //function to have enemy draw their cards
                 SetAllStates(States.START, States.DRAW);
                 currentState = TurnHandlerStates.ENEMYDRAW;
+                Debug.Log("heklo im in enemydarwa");
                 //HandleStatus();
                 NextState();
                 break;
             case TurnHandlerStates.PLAYERDRAW:
                 SetAllStates(States.DRAW, States.WAIT);
                 currentState = TurnHandlerStates.PLAYERDRAW;
+                Debug.Log("heklo im in player drawing cards");
                 DrawCards();
                 NextState();
                 break;
             case TurnHandlerStates.PLAYERSELECT:
                 SetAllStates(States.SELECT, States.WAIT);
                 currentState = TurnHandlerStates.PLAYERSELECT;
+                Debug.Log("heklo im in playe rsalaected");
                 //defs not cheating lol
                 LazyTestingCBFFunction();
                 DetermineTurnOrder();
@@ -121,15 +130,19 @@ public class TurnHandler : MonoBehaviour
             case TurnHandlerStates.PLAYERTURN:
                 //SetAllStates(States.END, States.ACT);
                 currentState = TurnHandlerStates.PLAYERTURN;
+                Debug.Log("heklo im in player turn");
                 break;
             case TurnHandlerStates.ENEMYTURN:
                 //SetAllStates(States.END, States.ACT);
                 currentState = TurnHandlerStates.ENEMYTURN;
-                HandleEnemyAct();
+                Debug.Log("heklo im in enemyturn");
+                //HandleEnemyAct();
+                HandleEnemyTurn();
                 break;
             case TurnHandlerStates.END:
                 SetAllStates(States.END, States.END);
                 currentState = TurnHandlerStates.END;
+                Debug.Log("heklo im in end");
                 break;
         }
         //UIHelper.Instance.SetTurnValues(currentState);
@@ -183,8 +196,8 @@ public class TurnHandler : MonoBehaviour
         {
             AIHelper.Instance.AIGetTurn(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
             Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().MoveUnit();
+            if(Map.Instance.unitDudeEnemies.Count != i) NodeManager.Instance.SetSelectedNode(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().currentNode);
         }
-        NextState();
     }
 
     void HandleEnemyAct()
@@ -192,10 +205,9 @@ public class TurnHandler : MonoBehaviour
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
             Unit enemy = Map.Instance.unitDudeEnemies[i].GetComponent<Unit>();
-            AIHelper.Instance.ConfirmBestAction(enemy);
+            //AIHelper.Instance.ConfirmBestAction(enemy);
             if (enemy.readyAction != null && !enemy.readyAction.isEmpty()) actionQueue.Add(enemy);
         }
-        NextState();
     }
 
     //IEnumerator BattleAct() //TODO: need to ignore units that were killed
@@ -238,13 +250,20 @@ public class TurnHandler : MonoBehaviour
     {
         for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
         {
-            orderedActions.Add(i, Map.Instance.unitDudeFriends[i].GetComponent<Unit>());
+            orderedActions.Add(i + 10, Map.Instance.unitDudeFriends[i].GetComponent<Unit>());
         }
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
-            orderedActions.Add(i + 10, Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
+            orderedActions.Add(i, Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
         }
-        Debug.Log(orderedActions.Count);
+        NodeManager.Instance.SetSelectedNode(Map.Instance.unitDudeEnemies[0].GetComponent<Unit>().currentNode);
+    }
+
+    public void yeap()
+    {
+        NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.B_SELECTINGACTION;
+        Node CLONEDNODEgetHAckedNode = NodeManager.Instance.selectedNode;
+        NodeManager.Instance.SetSelectedNode(CLONEDNODEgetHAckedNode);
     }
 
     void LazyTestingCBFFunction()

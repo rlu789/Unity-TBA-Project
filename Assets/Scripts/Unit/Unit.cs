@@ -36,7 +36,7 @@ public class Unit : MonoBehaviour {
         stats.currentMovement = stats.moveSpeed;
         stats.currentMana = stats.maxMana;
         if (stats.displayName == "") stats.displayName = GenerateRandomNameOfPower();
-        //good coding mike, real good understanding of the fundementals
+        //:rage:
         unitStateMachine = GetComponent<UnitStateMachine>();
 
         deck = CardManager.Instance.decks[(int)stats._class];

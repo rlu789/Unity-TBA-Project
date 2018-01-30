@@ -60,8 +60,8 @@ public class NodeManager : MonoBehaviour {
         if (selectedNode == node) return;
         if (selectedNode != node)
         {
-            if (node.currentUnit.unitStateMachine.state == States.B_SELECTING) return; // player still picking cards
-            if (node.currentUnit.unitStateMachine.state == States.B_SELECTINGMOVE) //player has selected a movement card
+            if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTING) return; // player still picking cards
+            if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTINGMOVE) //player has selected a movement card
             {
                 if (node.potentialUnit != null)
                 {
@@ -76,7 +76,7 @@ public class NodeManager : MonoBehaviour {
                 AssignPath(selectedNode, node);
                 return;
             }
-            if (node.currentUnit.unitStateMachine.state == States.B_SELECTINGACTION) //player has selected an action card
+            if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTINGACTION) //player has selected an action card
             {
                 if (nodesInRange.Contains(node))
                 {
@@ -90,6 +90,14 @@ public class NodeManager : MonoBehaviour {
                         n.myRenderer.material = n.material;
                     }
                     nodesInRange.Clear();
+                    if (selectedNode.currentUnit.availableActions.Count <= 1)
+                    {
+                        selectedNode.currentUnit.unitStateMachine.state = States.END;
+                        Unit theU = TurnHandler.Instance.orderedActions[TurnHandler.Instance.orderedActions.Keys.First()];
+                        TurnHandler.Instance.orderedActions.Remove(TurnHandler.Instance.orderedActions.Keys.First());
+                        Debug.Log(TurnHandler.Instance.orderedActions.Count);
+                        TurnHandler.Instance.NextState();
+                    }
                 }
                 else
                 {
