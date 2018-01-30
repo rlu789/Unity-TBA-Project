@@ -180,7 +180,7 @@ public class TurnHandler : MonoBehaviour
         {
             if (Map.Instance.unitDudeFriends[i].GetComponent<Unit>().isEnemy == false)
             {
-                Map.Instance.unitDudeFriends[i].GetComponent<Unit>().DrawCards(1);
+                Map.Instance.unitDudeFriends[i].GetComponent<Unit>().DrawCards(100);
             }
         }
     }
@@ -192,12 +192,13 @@ public class TurnHandler : MonoBehaviour
 
     void HandleEnemyTurn()
     {
-        for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
-        {
-            AIHelper.Instance.AIGetTurn(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
-            Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().MoveUnit();
-            if(Map.Instance.unitDudeEnemies.Count != i) NodeManager.Instance.SetSelectedNode(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().currentNode);
-        }
+        NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].currentNode);
+        AIHelper.Instance.AIGetTurn(orderedActions[orderedActions.Keys.First()]);
+        orderedActions[orderedActions.Keys.First()].MoveUnit();
+        orderedActions[orderedActions.Keys.First()].PerformAction();
+        orderedActions[orderedActions.Keys.First()].unitStateMachine.state = States.END;
+        orderedActions.Remove(orderedActions.Keys.First());
+        NextState();
     }
 
     void HandleEnemyAct()
@@ -206,6 +207,7 @@ public class TurnHandler : MonoBehaviour
         {
             Unit enemy = Map.Instance.unitDudeEnemies[i].GetComponent<Unit>();
             //AIHelper.Instance.ConfirmBestAction(enemy);
+            //checking if action = null
             if (enemy.readyAction != null && !enemy.readyAction.isEmpty()) actionQueue.Add(enemy);
         }
     }
@@ -250,18 +252,27 @@ public class TurnHandler : MonoBehaviour
     {
         for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
         {
-            orderedActions.Add(i + 10, Map.Instance.unitDudeFriends[i].GetComponent<Unit>());
+            orderedActions.Add(i, Map.Instance.unitDudeFriends[i].GetComponent<Unit>());
         }
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
-            orderedActions.Add(i, Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
+            orderedActions.Add(i + 10, Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
         }
         NodeManager.Instance.SetSelectedNode(Map.Instance.unitDudeEnemies[0].GetComponent<Unit>().currentNode);
     }
 
     public void yeap()
     {
-        NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.B_SELECTINGACTION;
+        //TODO WTF IS ALL OF THIS
+        if (NodeManager.Instance.selectedNode.currentUnit.availableActions[UIHelper.Instance.GetActionIndex()].type == ActionType.ACTION)
+            NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.B_SELECTINGACTION;
+        else
+        {
+            //YEAP
+            NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.B_SELECTINGMOVE;
+            NodeManager.Instance.selectedNode.currentUnit.stats.moveSpeed = NodeManager.Instance.selectedNode.currentUnit.availableActions[UIHelper.Instance.GetActionIndex()].range;
+        }
+        //BUT ESPICALLY THIS
         Node CLONEDNODEgetHAckedNode = NodeManager.Instance.selectedNode;
         NodeManager.Instance.SetSelectedNode(CLONEDNODEgetHAckedNode);
     }

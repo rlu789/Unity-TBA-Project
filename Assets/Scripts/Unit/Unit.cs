@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Unit : MonoBehaviour {
     [Header("Stats")]
     public UnitStats stats;
-    public List<UnitAction> deck = new List<UnitAction>();
+    List<UnitAction> deck = new List<UnitAction>();
     public List<UnitAction> availableActions = new List<UnitAction>();
     public List<UnitAction> selectedActions = new List<UnitAction>();
     public List<UnitAction> discardedActions = new List<UnitAction>();
@@ -118,7 +118,11 @@ public class Unit : MonoBehaviour {
             unitComponent.XY = _destNode.XY;
             unitComponent.currentNodeID = _destNode.nodeID;
             currentNode = _destNode;
-       // }
+
+            //BANDAID
+            availableActions.Remove(readyAction);
+            if (!isEnemy) discardedActions.Add(readyAction);
+        // }
     }
 
     public void SetUnitPath(List<Node> path)
@@ -198,6 +202,7 @@ public class Unit : MonoBehaviour {
         int currentIndex = UIHelper.Instance.GetActionIndex();
         if (currentIndex == -1) return null;
 
+        //TODO CHANGE LATER
         readyAction = availableActions[currentIndex];
         int range = readyAction.range;
 
@@ -230,6 +235,7 @@ public class Unit : MonoBehaviour {
             Debug.Log("Used action on empty node.");
         }
         readyAction.UseAction(targetActionNode, this);
+        //BANDAID
         availableActions.Remove(readyAction);
         if (!isEnemy) discardedActions.Add(readyAction);
         targetActionNode = null;

@@ -1,2 +1,2 @@
-Melee Attack-MeleeProjectile.prefab: 0 0 1 4 0 0 5
-Powerful Attack-MeleePowerfulProjectile.prefab: 0 4 1 8 0 0 3
+Melee Attack-MeleeProjectile.prefab: 0 0 1 4 0 0 5 1
+Powerful Attack-MeleePowerfulProjectile.prefab: 0 4 1 8 0 0 3 1

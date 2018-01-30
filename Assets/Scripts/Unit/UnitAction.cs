@@ -1,5 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+
+public enum ActionType
+{
+    MOVE,
+    ACTION
+}
+
 [System.Serializable]
 public class UnitAction {
 
@@ -12,6 +19,7 @@ public class UnitAction {
     public int aoe = 0;
     public int cooldown = 0;
     public int initiative = 0;
+    public ActionType type = ActionType.ACTION;
     public Status status;
 
     [HideInInspector]

@@ -19,6 +19,10 @@ public class NodeManager : MonoBehaviour {
 
     public List<Node> nodesInRange = new List<Node>();
 
+    //BANDAID
+    int selectingCount = 0;
+    //
+
     private void Awake()
     {
         if (Instance != null)
@@ -53,6 +57,23 @@ public class NodeManager : MonoBehaviour {
         }
     }
 
+    //TODO MAKE NEW CLASS FOR DIS ONE FUNCTION
+    //BANDAID
+    void TurnEndHandler()
+    {
+        selectedNode.currentUnit.unitStateMachine.state = States.B_SELECTING;
+        if (selectingCount >= 1) //if the player has played two cards, goto next turn
+        {
+            //BANDAID
+            selectingCount = -1;
+            Debug.Log(selectingCount);
+            TurnHandler.Instance.orderedActions.Remove(TurnHandler.Instance.orderedActions.Keys.First());
+            TurnHandler.Instance.NextState();
+        }
+        selectingCount++;
+
+    }
+
     void SelectPlayerTurn(Node node)
     {
         //assume theres a selectednode
@@ -74,6 +95,13 @@ public class NodeManager : MonoBehaviour {
                     return;
                 }
                 AssignPath(selectedNode, node);
+                //BANDAID
+                selectedNode.currentUnit.availableActions.RemoveAt(UIHelper.Instance.GetActionIndex()); // deletes move card
+                //BADNAID
+                Unit theU = selectedNode.currentUnit;
+                selectedNode.currentUnit.MoveUnit();
+                SetSelectedNode(theU.currentNode);
+                TurnEndHandler();
                 return;
             }
             if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTINGACTION) //player has selected an action card
@@ -90,14 +118,7 @@ public class NodeManager : MonoBehaviour {
                         n.myRenderer.material = n.material;
                     }
                     nodesInRange.Clear();
-                    if (selectedNode.currentUnit.availableActions.Count <= 1)
-                    {
-                        selectedNode.currentUnit.unitStateMachine.state = States.END;
-                        Unit theU = TurnHandler.Instance.orderedActions[TurnHandler.Instance.orderedActions.Keys.First()];
-                        TurnHandler.Instance.orderedActions.Remove(TurnHandler.Instance.orderedActions.Keys.First());
-                        Debug.Log(TurnHandler.Instance.orderedActions.Count);
-                        TurnHandler.Instance.NextState();
-                    }
+                    TurnEndHandler();
                 }
                 else
                 {

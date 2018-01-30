@@ -80,6 +80,7 @@ public class CardManager : MonoBehaviour
                 action.aoe = (int)Char.GetNumericValue(line[i + 10]);
                 action.cooldown = (int)Char.GetNumericValue(line[i + 12]);
                 action.initiative = (int)Char.GetNumericValue(line[i + 14]);
+                action.type = (ActionType)(int)Char.GetNumericValue(line[i + 16]);
                 return action;
             }
         }
