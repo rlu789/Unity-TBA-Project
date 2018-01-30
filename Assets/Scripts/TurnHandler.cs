@@ -11,6 +11,13 @@ public enum TurnHandlerStates
     BATTLEACT
 }
 
+public enum TurnHandlerStates2
+{
+    ENEMYDRAW,
+    PLAYERDRAW,
+    BATTLE
+}
+
 public class TurnHandler : MonoBehaviour
 {
     public static TurnHandler Instance;
@@ -67,7 +74,7 @@ public class TurnHandler : MonoBehaviour
             case TurnHandlerStates.PLAYERMOVE:
                 SetAllStates(States.MOVE, States.END);
                 currentState = TurnHandlerStates.PLAYERMOVE;
-                HandleStatus();
+                //HandleStatus();
                 break;
             case TurnHandlerStates.ENEMYMOVE:
                 SetAllStates(States.END, States.MOVE);

@@ -104,7 +104,11 @@ public class AIHelper : MonoBehaviour {
                 pathList.Add(unit.currentNode);
             }
             else pathList = unit.GetValidPath(path.ToList());
-
+            if (maxAction == null)
+            {
+                Debug.Log("No actions available!");
+                break;
+            }
             List<Node> nodesInRange = maxAction.GetNodesInRange(pathList[pathList.Count - 1]);  //is this enemy in range from the closest we can get
             if (nodesInRange.Contains(enemy.currentNode)) AssignActions(unit, enemy, pathList); //get possible actions for this path
 

@@ -2,28 +2,36 @@
 using UnityEngine;
 
 //The actual things the status can do. Damage over time (each turn), increase movespeed, change action amount, reduce damage done, etc.
-public enum StatusType { DOT, MoveSpeed, Actions, Damage }
+public enum StatusType { DOT, MoveSpeed, Actions, OutgoingDamage, IncomingDamage }
 
-//A status is a collection of StatusType + strength pairs, a duration (rounds) and a visual effect
-//eg. Status Stunned = name: Stunned
-//                     duration: 2 rounds
-//                     visual: some gameobject with the visual effects
-//                     pairStatusStrength: MoveSpeed, -100;
-//                                         ActionUse, -100;
-//Units will have a list of their statusii
 [System.Serializable]
-public class Status
+public class Effect
 {
-    public Status(string _name, KeyValuePair<StatusType, int>[] _pairStatusStrength, int _duration, GameObject _visual) //add bool for buffs or debuffs
+    public Effect(StatusType _type, int _strength, bool _initialEffect)
+    {
+        type = _type;
+        strength = _strength;
+        initialEffect = _initialEffect;
+    }
+
+    public StatusType type;
+    public int strength;
+    bool initialEffect; //initial effects are applied immediately and then removed
+}
+
+[System.Serializable]
+public class Status //need to change key value pair so it can be serialized
+{
+    public Status(string _name, Effect[] _effects, int _duration, GameObject _visual) //add bool for buffs or debuffs
     {
         name = _name;
-        pairStatusStrength = _pairStatusStrength;
+        effects = _effects;
         duration = _duration;
         visual = _visual;
     }
 
     public string name;
-    public KeyValuePair<StatusType, int>[] pairStatusStrength;
+    public Effect[] effects;
     public int duration;
     public GameObject visual;
     public GameObject visualIns;    //instantiated visual effect
@@ -44,44 +52,40 @@ public class StatusHelper : MonoBehaviour {
         Instance = this;
     }
 
-    public void ApplyStatus(Unit unit, Status status)
-    {
-        //put the status in the units list
-        //instantiated the visual effect
-    }
-
     public void CheckStatus(Unit unit)
     {
         //loop backwards so we can remove without affecting loop
         for (int i = unit.statuses.Count - 1; i >= 0; --i)
         {
-            ApplyStatus(unit.statuses[i], unit);
             if (unit.statuses[i].duration <= 0)
             {
                 RemoveStatus(unit, i);
             }
+            else ApplyStatus(unit.statuses[i], unit);
         }
     }
 
     void ApplyStatus(Status status, Unit unit)
     {
-        //apply each effect in the keyValue pair
-        foreach (KeyValuePair<StatusType, int> s in status.pairStatusStrength)
+        foreach (Effect eff in status.effects)
         {
-            switch (s.Key)
+            switch (eff.type)
             {
                 case StatusType.DOT:
                     Debug.Log("Damage over time called.");
-                    unit.TakeDamage(s.Value);
+                    unit.TakeDamage(eff.strength);
                     break;
                 case StatusType.MoveSpeed:
-                    Debug.Log("Speed reduction called.");
+                    Debug.Log("Speed change called.");
                     break;
                 case StatusType.Actions:
                     Debug.Log("Action amount change called.");
                     break;
-                case StatusType.Damage:
-                    Debug.Log("Damage reduction called.");
+                case StatusType.OutgoingDamage:
+                    Debug.Log("Out. Damage reduction called.");
+                    break;
+                case StatusType.IncomingDamage:
+                    Debug.Log("Inc. Damage reduction called.");
                     break;
             }
         }

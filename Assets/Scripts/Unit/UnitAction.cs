@@ -12,6 +12,7 @@ public class UnitAction {
     public int aoe = 0;
     public int cooldown = 0;
     public int initiative = 0;
+    public Status status;
 
     [HideInInspector]
     public int currentCooldown = 0;
@@ -47,7 +48,8 @@ public class UnitAction {
         if (targetNode.currentUnit == null) return;
 
         targetNode.currentUnit.TakeDamage(damage);
-        
+        if (status != null) targetNode.currentUnit.ApplyStatus(status);
+
         //if (action.aoe != 0) ;
         //if (action.cooldown != 0) ;
         //check for current cooldown and decrease it each turn

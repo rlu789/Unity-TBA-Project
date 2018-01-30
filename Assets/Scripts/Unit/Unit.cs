@@ -52,6 +52,11 @@ public class Unit : MonoBehaviour {
 
     public void DrawCards(int no)
     {
+        if (deck.Count <= 0)
+        {
+            Debug.Log("No cards in deck!");
+            return;
+        }
         for (int i = 0; i < no; i++)
         {
             availableActions.Add(deck[Random.Range(0, deck.Count)]);
@@ -257,6 +262,12 @@ public class Unit : MonoBehaviour {
     {
         readyAction = _action;
         targetActionNode = _target;
+    }
+
+    public void ApplyStatus(Status status)
+    {
+        if (status.visual != null) status.visualIns = Instantiate(status.visual, transform.position, Quaternion.identity);
+        statuses.Add(status);
     }
     //public void TogglePathVisual(bool toggle)
     //{

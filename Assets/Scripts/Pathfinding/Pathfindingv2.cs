@@ -10,6 +10,11 @@ public class Pathfindingv2 : MonoBehaviour
         {
             if (infiniteLoopProtectionTchYouWouldSealAwayMyFullStrengthWellINeedItNotPrepareYourselfBoy++ >= 10) return null;   //we tried ten times just quit already
             else destination = ClosestNeighbour(start, destination);    //if we could never make it to the node, try its closest neighbour
+            if (destination == null)
+            {
+                Debug.Log("the dest is null");
+                return null;
+            }
         }
         var closed = new HashSet<Node>();
         var queue = new PriorityQueue<double, Path<Node>>();
