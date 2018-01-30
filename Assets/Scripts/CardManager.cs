@@ -21,7 +21,7 @@ public class CardManager : MonoBehaviour
     }
 
     // Use this for initialization
-    void Start()
+    public void Setup()
     {
         ReadTextFile("Assets/Scripts/ClassVERYSmart.txt", (int)Class.VERYSmart);
         ReadTextFile("Assets/Scripts/ClassDude.txt", (int)Class.Dude);

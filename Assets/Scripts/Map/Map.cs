@@ -63,7 +63,9 @@ public class Map : MonoBehaviour
         nodes[2, 0].SpawnUnit(unitDudeTypes[4], false); 
         nodes[6, 5].SpawnUnit(unitDudeTypes[1], true); 
         nodes[5, 5].SpawnUnit(unitDudeTypes[3], true); 
-        nodes[7, 4].SpawnUnit(unitDudeTypes[5], true); 
+        nodes[7, 4].SpawnUnit(unitDudeTypes[5], true);
+        UIHelper.Instance.Setup();
+        CardManager.Instance.Setup();
         TurnHandler.Instance.Setup(); // after all units are spawned, setup turn handler
     }
 

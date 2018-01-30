@@ -6,6 +6,7 @@ public class Unit : MonoBehaviour {
     public UnitStats stats;
     public List<UnitAction> deck = new List<UnitAction>();
     public List<UnitAction> availableActions = new List<UnitAction>();
+    public List<UnitAction> selectedActions = new List<UnitAction>();
     public List<UnitAction> discardedActions = new List<UnitAction>();
     public bool isEnemy;
 
@@ -35,6 +36,7 @@ public class Unit : MonoBehaviour {
         stats.currentMovement = stats.moveSpeed;
         stats.currentMana = stats.maxMana;
         if (stats.displayName == "") stats.displayName = GenerateRandomNameOfPower();
+        //good coding mike, real good understanding of the fundementals
         unitStateMachine = GetComponent<UnitStateMachine>();
 
         deck = CardManager.Instance.decks[(int)stats._class];
@@ -89,8 +91,8 @@ public class Unit : MonoBehaviour {
 
     public void MoveUnit()    //moves unit on selected tile
     {
-        if ((TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE && !isEnemy) || (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYMOVE && isEnemy))
-        {
+        //if ((TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE && !isEnemy) || (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYMOVE && isEnemy))
+        //
             List<Node> pathToFollow = currentPath;   //get the path to follow, based on the max distance the unit can move this turn
             movePath = currentPath;
             foreach (GameObject haha in pathVisual)
@@ -116,7 +118,7 @@ public class Unit : MonoBehaviour {
             unitComponent.XY = _destNode.XY;
             unitComponent.currentNodeID = _destNode.nodeID;
             currentNode = _destNode;
-        }
+       // }
     }
 
     public void SetUnitPath(List<Node> path)
@@ -199,8 +201,9 @@ public class Unit : MonoBehaviour {
         readyAction = availableActions[currentIndex];
         int range = readyAction.range;
 
+        //TODO CHANGE LATER
         targetActionNode = null;    //changing ability, remove previous target
-        NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.ACT;  //and return to act
+        //NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.ACT;  //and return to act
 
         return readyAction.GetNodesInRange(currentNode);
     }

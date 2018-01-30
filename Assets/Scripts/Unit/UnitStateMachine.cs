@@ -2,9 +2,13 @@
 
 public enum States
 {
-    MOVE,
-    ACT,
-    PERFORM,
+    START,
+    DRAW,
+    SELECT,
+    WAIT,
+    B_SELECTING,
+    B_SELECTINGMOVE,
+    B_SELECTINGACTION,
     END
 }
 public class UnitStateMachine : MonoBehaviour {

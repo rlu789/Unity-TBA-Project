@@ -31,44 +31,37 @@ public class NodeManager : MonoBehaviour {
 
     }
 
+    public void SetSelectedNode(Node node)
+    {
+        if (selectedNode != null)
+            Deselect();
+        Select(node);
+
+    }
+
     public void SelectNode(Node node)
     {
-        if (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYMOVE || TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYACT) return;
+        if (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYDRAW || TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYTURN) return;
 
-        if (selectedNode == null)   //selecting a node with no other nodes selected
+        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERSELECT)
         {
-            if (node.currentUnit != null && node.currentUnit.unitStateMachine.state == States.PERFORM)
-            {
-                Debug.Log("this unit already has an action queued");
-                return; // cant select unit when its in preform state
-            }
-            if (node.currentUnit != null && node.currentUnit.isEnemy)   //cant select an enemy node without a reason
-            {
-                return;
-            }
-            Select(node);
-            return;
+            SelectPlayerSelect(node);
         }
-
-        if (selectedNode == node)   //selecting a node that is already selected
+        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN)
         {
-            Deselect(true);
-            return;
+            SelectPlayerTurn(node);
         }
+    }
 
-        if (selectedNode != null)   //selecting a node with another node selected
+    void SelectPlayerTurn(Node node)
+    {
+        //assume theres a selectednode
+
+        if (selectedNode == node) return;
+        if (selectedNode != node)
         {
-            if (selectedNode.currentUnitGO == null)
-            {
-                if (node.currentUnit != null && node.currentUnit.isEnemy)    //cant switch to an enemy node
-                {
-                    return;
-                }
-                Deselect();
-                Select(node);
-                return;
-            }
-            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE)
+            if (node.currentUnit.unitStateMachine.state == States.B_SELECTING) return; // player still picking cards
+            if (node.currentUnit.unitStateMachine.state == States.B_SELECTINGMOVE) //player has selected a movement card
             {
                 if (node.potentialUnit != null)
                 {
@@ -81,40 +74,71 @@ public class NodeManager : MonoBehaviour {
                     return;
                 }
                 AssignPath(selectedNode, node);
-                Deselect();
                 return;
             }
-            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT)
+            if (node.currentUnit.unitStateMachine.state == States.B_SELECTINGACTION) //player has selected an action card
             {
                 if (nodesInRange.Contains(node))
                 {
-
-                    selectedNode.currentUnit.unitStateMachine.state = States.PERFORM;
-                    selectedNode.currentUnit.GetComponent<Unit>().targetActionNode = node;
-
+                    selectedNode.currentUnit.targetActionNode = node;
+                    selectedNode.currentUnit.PerformAction();
                     // Add action to a queue of actions, clear nodes in range and arrow
-                    TurnHandler.Instance.actionQueue.Add(selectedNode.currentUnit);
+                    //TurnHandler.Instance.actionQueue.Add(selectedNode.currentUnit);
                     Destroy(movementUIObjectTargetGO);
                     foreach (Node n in nodesInRange)
                     {
                         n.myRenderer.material = n.material;
                     }
                     nodesInRange.Clear();
-                    Deselect();
                 }
                 else
                 {
-                    selectedNode.currentUnit.unitStateMachine.state = States.ACT;
+                    Debug.Log("out of range");
                     selectedNode.currentUnit.GetComponent<Unit>().targetActionNode = null;
-                    Deselect();
                 }
+            }
+        }
+    }
+
+    void SelectPlayerSelect(Node node)
+    {
+        if (selectedNode == null)   //selecting a node with no other nodes selected
+        {
+            if (node.currentUnit != null && node.currentUnit.unitStateMachine.state == States.WAIT)
+            {
+                Debug.Log("this unit already has cards selected");
+                return; // cant select unit when its in preform state
+            }
+            if (node.currentUnit != null && node.currentUnit.isEnemy)   //cant select an enemy node without a reason
+            {
+                return;
+            }
+            Select(node);
+            return;
+        }
+        if (selectedNode == node)   //selecting a node that is already selected
+        {
+            Deselect(true);
+            return;
+        }
+        if (selectedNode != null)   //selecting a node with another node selected
+        {
+            if (selectedNode.currentUnitGO == null)
+            {
+                if (node.currentUnit != null && node.currentUnit.isEnemy)    //cant switch to an enemy node
+                {
+                    return;
+                }
+                Deselect();
+                Select(node);
+                return;
             }
         }
     }
 
     void Select(Node node)
     {
-        if (node.currentUnit != null && node.currentUnit.unitStateMachine.state == States.END) return; // Cannot select unit if its turn is over
+        //if (node.currentUnit != null && node.currentUnit.unitStateMachine.state == States.END) return; // Cannot select unit if its turn is over
 
         node.myRenderer.material = node.selectedMaterial;
         selectedNode = node;
@@ -123,7 +147,7 @@ public class NodeManager : MonoBehaviour {
         {
             UIHelper.Instance.SetStatistics(node.currentUnit);
             UIHelper.Instance.SetUnitActions(node.currentUnit);
-            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT)
+            if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTINGACTION)
             {
                 if (selectedNode.currentUnitGO != null)
                 {
@@ -207,17 +231,17 @@ public class NodeManager : MonoBehaviour {
         if (node.currentUnit != null)
         {
             UIHelper.Instance.SetStatistics(node.currentUnit);
-            if (selectedNode != null && selectedNode.currentUnit != null && TurnHandler.Instance.currentState != TurnHandlerStates.PLAYERACT) UIHelper.Instance.SetUnitActions(node.currentUnit);
+            if (selectedNode != null && selectedNode.currentUnit != null && TurnHandler.Instance.currentState != TurnHandlerStates.PLAYERSELECT) UIHelper.Instance.SetUnitActions(node.currentUnit);
             //basically if we have a selected unit that is trying to use an ability, dont switch the action window
         }
 
         if (selectedNode != null)
         {
-            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE) ShowPath(selectedNode, node);    //show path if we are in the move turn
+            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN && selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTINGMOVE) ShowPath(selectedNode, node);    //show path if we are in the move turn
 
             if (selectedNode.currentUnit != null)
             {
-                if (selectedNode.currentUnit.unitStateMachine.state == States.ACT)  //if we are in ACT state, move the targetting object to node
+                if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTINGACTION)  //if we are in ACT state, move the targetting object to node
                 {
                     movementUIObjectTargetGO.transform.position = node.transform.position;
                     selectedNode.currentUnitGO.transform.LookAt(new Vector3(node.transform.position.x, selectedNode.currentUnitGO.transform.position.y, node.transform.position.z));
@@ -240,7 +264,7 @@ public class NodeManager : MonoBehaviour {
 
     public void ShowUnitActionRange(Node node)
     {
-        if (TurnHandler.Instance.currentState != TurnHandlerStates.PLAYERACT || selectedNode != node) return;   //only show range for selected units while in ACT turn
+        if (selectedNode.currentUnit.unitStateMachine.state != States.B_SELECTINGACTION || selectedNode != node) return;   //only show range for selected units while in ACT turn
 
         if (movementUIObjectTargetGO != null)   //clean any previous AOE
         {

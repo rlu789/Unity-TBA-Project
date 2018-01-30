@@ -23,7 +23,7 @@ public class UIHelper : MonoBehaviour {
         Instance = this;
     }
 
-    private void Start()
+    public void Setup()
     {
         statistics = statisticsCanvas.GetComponent<StatisticsUI>();
         unitActions = unitActionsCanvas.GetComponent<UnitActionUI>();
