@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public enum Class { Dude, VERYSmart, HealthyBoy }
+public enum Class { GENERIC, Dude, VERYSmart, HealthyBoy }
 
 [System.Serializable]
 public class UnitStats{

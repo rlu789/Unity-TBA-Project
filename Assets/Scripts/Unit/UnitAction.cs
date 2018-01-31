@@ -20,6 +20,7 @@ public class UnitAction {
     public int cooldown = 0;
     public int initiative = 0;
     public ActionType type = ActionType.ACTION;
+    public Class actionClass = Class.GENERIC;
     public Status status;
 
     [HideInInspector]

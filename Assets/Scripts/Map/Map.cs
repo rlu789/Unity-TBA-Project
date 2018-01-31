@@ -58,6 +58,7 @@ public class Map : MonoBehaviour
 
         GenerateNodes(nodeMap); //generate a grid of nodes based on the data in nodeMap
         //PopulateNeighbors();
+        CardManager.Instance.Setup();
         nodes[0, 0].SpawnUnit(unitDudeTypes[0], false);   //generate a guy at 0,0
         nodes[1, 0].SpawnUnit(unitDudeTypes[2], false); 
         nodes[2, 0].SpawnUnit(unitDudeTypes[4], false); 
@@ -65,7 +66,6 @@ public class Map : MonoBehaviour
         nodes[5, 5].SpawnUnit(unitDudeTypes[3], true); 
         nodes[7, 4].SpawnUnit(unitDudeTypes[5], true);
         UIHelper.Instance.Setup();
-        CardManager.Instance.Setup();
         TurnHandler.Instance.Setup(); // after all units are spawned, setup turn handler
     }
 

@@ -40,7 +40,8 @@ public class Unit : MonoBehaviour {
         //:rage:
         unitStateMachine = GetComponent<UnitStateMachine>();
 
-        deck = CardManager.Instance.decks[(int)stats._class];
+        //deck = CardManager.Instance.decks[(int)stats._class];
+        InitDeck();
         if (isEnemy) selectedActions = deck;
         else DrawCards(2);
     }
@@ -50,6 +51,16 @@ public class Unit : MonoBehaviour {
         if (movePath.Count != 0)
         {
             MoveStep();
+        }
+    }
+
+    void InitDeck()
+    {
+        for (int i = 0; i < CardManager.Instance.allCards.Count; i++)
+        {
+            Debug.Log(CardManager.Instance.allCards[i].name);
+            if (CardManager.Instance.allCards[i].actionClass == stats._class || CardManager.Instance.allCards[i].actionClass == Class.GENERIC)
+                deck.Add(CardManager.Instance.allCards[i]);
         }
     }
 
