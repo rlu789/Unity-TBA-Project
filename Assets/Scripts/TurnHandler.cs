@@ -198,10 +198,10 @@ public class TurnHandler : MonoBehaviour
         NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].currentNode);
         AIHelper.Instance.AIGetTurn(orderedActions[orderedActions.Keys.First()]);
         orderedActions[orderedActions.Keys.First()].MoveUnit();
-        orderedActions[orderedActions.Keys.First()].PerformAction();
+        orderedActions[orderedActions.Keys.First()].PerformActionDelayed(2f);
         orderedActions[orderedActions.Keys.First()].unitStateMachine.state = States.END;
         orderedActions.Remove(orderedActions.Keys.First());
-        NextState();
+        Invoke("NextState", 3f);    //wait for this unit to finish its turn. TODO: handle this cleaner
     }
 
     void HandleEnemyAct()
