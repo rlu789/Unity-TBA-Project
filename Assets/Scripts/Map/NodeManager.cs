@@ -67,6 +67,7 @@ public class NodeManager : MonoBehaviour {
             //BANDAID
             selectingCount = -1;
             Debug.Log(selectingCount);
+            selectedNode.currentUnit.IEndMyEndTurnPegasus();
             TurnHandler.Instance.orderedActions.Remove(TurnHandler.Instance.orderedActions.Keys.First());
             TurnHandler.Instance.NextState();
         }
@@ -95,9 +96,6 @@ public class NodeManager : MonoBehaviour {
                     return;
                 }
                 AssignPath(selectedNode, node);
-                //BANDAID
-                selectedNode.currentUnit.availableActions.RemoveAt(selectedNode.currentUnit.readyActionIndex); // deletes move card
-                //BADNAID
                 Unit theU = selectedNode.currentUnit;
                 selectedNode.currentUnit.MoveUnit();
                 SetSelectedNode(theU.currentNode);
@@ -168,7 +166,7 @@ public class NodeManager : MonoBehaviour {
     void Select(Node node)
     {
         //if (node.currentUnit != null && node.currentUnit.unitStateMachine.state == States.END) return; // Cannot select unit if its turn is over
-
+        Debug.Log(node.XY);
         node.myRenderer.material = node.selectedMaterial;
         selectedNode = node;
 

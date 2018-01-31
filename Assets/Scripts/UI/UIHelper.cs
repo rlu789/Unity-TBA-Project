@@ -75,11 +75,11 @@ public class UIHelper : MonoBehaviour {
         unitActions.SetValues(unit);
     }
 
-    public void SetUnitActions(Node node)
-    {
-        if (node.currentUnit != null) SetUnitActions(node.currentUnit);
-        else ToggleVisible(UIType.UnitActions, false);
-    }
+    //public void SetUnitActions(Node node)
+    //{
+    //    if (node.currentUnit != null) SetUnitActions(node.currentUnit);
+    //    else ToggleVisible(UIType.UnitActions, false);
+    //}
 
     //TurnUI
 

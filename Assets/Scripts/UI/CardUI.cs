@@ -13,6 +13,7 @@ public class CardUI : MonoBehaviour {
 
     Unit unit;
     int index;
+    public bool selected = false;
 
     public void SetCardValues(UnitAction act, Unit _unit, int _index)    //pass in index to access that action directly
     {
@@ -27,9 +28,15 @@ public class CardUI : MonoBehaviour {
         unit = _unit;
         index = _index;
     }
-
+    
     public void UseCard()
     {
-        unit.PrepareAction(index);
+        if (unit.unitStateMachine.state == States.SELECT)
+        {
+            if (!selected) unit.SelectCard(index);
+            else unit.DeselectCard(index);
+            selected = !selected;
+        }
+        else unit.PrepareAction(index);
     }
 }

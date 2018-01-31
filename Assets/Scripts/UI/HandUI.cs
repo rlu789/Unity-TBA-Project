@@ -13,15 +13,28 @@ public class HandUI : MonoBehaviour {
 
     public void SetValues(Unit unit)
     {
+        Debug.Log(unit.name);
         for (int i = cardPrefabs.Count - 1; i >= 0; --i) Destroy(cardPrefabs[i]);
         cardPrefabs.Clear();
 
         currentUnit = unit;
 
-        for (int i = 0; i < unit.availableActions.Count; ++i)
+        if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERSELECT)
         {
-            cardPrefabs.Add(Instantiate(cardPrefab, transform));
-            cardPrefabs[i].GetComponent<CardUI>().SetCardValues(unit.availableActions[i], unit, i);
+            for (int i = 0; i < unit.availableActions.Count; ++i)
+            {
+                cardPrefabs.Add(Instantiate(cardPrefab, transform));
+                cardPrefabs[i].GetComponent<CardUI>().SetCardValues(unit.availableActions[i], unit, i);
+                if (unit.selectedActions.Contains(unit.availableActions[i])) cardPrefabs[i].GetComponent<CardUI>().selected = true;
+            }
+        }
+        else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN)
+        {
+            for (int i = 0; i < unit.selectedActions.Count; ++i)
+            {
+                cardPrefabs.Add(Instantiate(cardPrefab, transform));
+                cardPrefabs[i].GetComponent<CardUI>().SetCardValues(unit.selectedActions[i], unit, i);
+            }
         }
     }
 

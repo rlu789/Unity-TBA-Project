@@ -53,6 +53,14 @@ public class CameraController : MonoBehaviour
         {
             transform.Translate(Vector3.left * panSpeed * Time.deltaTime, Space.World);
         }
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERSELECT)
+            {
+                NodeManager.Instance.Deselect();
+            }
+        }
+
         //these shouldnt be in camera, just temporary
         //if (Input.GetKeyUp(KeyCode.Escape))
         //{

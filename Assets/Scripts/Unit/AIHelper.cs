@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-//IT SEEMS that enemies one range out of their target range wont approach or something, eg. enemyHealthyboy is two range away and wont come into range, but will if he is 3 away
-
+//IF ERROR HERE REMEMBER SELECTED ACTIONS
 public class PossibleAction
 {
     public PossibleAction(List<Node> _path, UnitAction _action, Node _target, int _fitness)
@@ -123,19 +122,19 @@ public class AIHelper : MonoBehaviour {
     {
         PossibleAction act;
 
-        for (int i = 0; i < unit.availableActions.Count; ++i)
+        for (int i = 0; i < unit.selectedActions.Count; ++i)
         {
-            if (unit.availableActions[i].range == 0)
+            if (unit.selectedActions[i].range == 0)
             {
-                act = new PossibleAction(path, unit.availableActions[i], unit.currentNode, 0);
+                act = new PossibleAction(path, unit.selectedActions[i], unit.currentNode, 0);
                 act.DetermineFitness();
                 possibleActions.Add(act);
                 continue;
             }
-            List<Node> nodesInRange = unit.availableActions[i].GetNodesInRange(path[path.Count - 1]);
+            List<Node> nodesInRange = unit.selectedActions[i].GetNodesInRange(path[path.Count - 1]);
             if (!nodesInRange.Contains(target.currentNode)) continue;
 
-            act = new PossibleAction(path, unit.availableActions[i], target.currentNode, 0);
+            act = new PossibleAction(path, unit.selectedActions[i], target.currentNode, 0);
             act.DetermineFitness();
             possibleActions.Add(act);
         }
@@ -194,7 +193,7 @@ public class AIHelper : MonoBehaviour {
 
     UnitAction GetMaxRangeAction(Unit unit, ref int maxActionRange) //returns highest range action of unit, sets maxActionRange to that actions range
     {
-        foreach (UnitAction act in unit.availableActions)    //get the max range of all units actions
+        foreach (UnitAction act in unit.selectedActions)    //get the max range of all units actions
         {
             if (act.range > maxActionRange)
             {

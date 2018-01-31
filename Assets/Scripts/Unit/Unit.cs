@@ -41,7 +41,7 @@ public class Unit : MonoBehaviour {
         unitStateMachine = GetComponent<UnitStateMachine>();
 
         deck = CardManager.Instance.decks[(int)stats._class];
-        if (isEnemy) availableActions = deck;
+        if (isEnemy) selectedActions = deck;
         else DrawCards(2);
     }
 
@@ -121,7 +121,7 @@ public class Unit : MonoBehaviour {
             currentNode = _destNode;
 
             //BANDAID
-            availableActions.Remove(readyAction);
+            selectedActions.Remove(readyAction);
             if (!isEnemy) discardedActions.Add(readyAction);
         // }
     }
@@ -227,12 +227,10 @@ public class Unit : MonoBehaviour {
             Debug.Log("Used action on empty node.");
         }
         readyAction.UseAction(targetActionNode, this);
-        //BANDAID
-        availableActions.Remove(readyAction);
         if (!isEnemy) discardedActions.Add(readyAction);
-        targetActionNode = null;
-        readyAction = null;
-        UIHelper.Instance.SetUnitActions(this);
+
+        //BANGAG
+        SendActionToTheShadowRealm_BYMIKE();
     }
 
     public void PerformActionDelayed(float delay)
@@ -263,7 +261,7 @@ public class Unit : MonoBehaviour {
     public void PrepareAction(int actionIndex)
     {
         readyActionIndex = actionIndex;
-        readyAction = availableActions[actionIndex];
+        readyAction = selectedActions[actionIndex];
         if (readyAction.type == ActionType.ACTION) unitStateMachine.SetState(States.B_SELECTINGACTION);
         else unitStateMachine.SetState(States.B_SELECTINGMOVE);
         NodeManager.Instance.SetSelectedNode(currentNode);
@@ -272,15 +270,15 @@ public class Unit : MonoBehaviour {
     public void SetAction(int actionIndex, Node _target)
     {
         readyActionIndex = actionIndex;
-        readyAction = availableActions[actionIndex];
+        readyAction = selectedActions[actionIndex];
         targetActionNode = _target;
     }
 
     public void SetAction(UnitAction action, Node _target)
     {
-        for (int i = 0; i < availableActions.Count; ++i)
+        for (int i = 0; i < selectedActions.Count; ++i)
         {
-            if (availableActions[i] == action)
+            if (selectedActions[i] == action)
             {
                 SetAction(i, _target);
                 return;
@@ -304,4 +302,52 @@ public class Unit : MonoBehaviour {
     //}
 
     //public void AddAction(UnitAction action) { } //add action to a unit
+
+    public void SelectCard(int index)
+    {
+        selectedActions.Add(availableActions[index]);
+        if (selectedActions.Count == 3)
+        {
+            //TODO FIEN FOR NOW
+            //OR IS IT
+            foreach (UnitAction action in selectedActions)
+                availableActions.Remove(action);
+            UIHelper.Instance.SetUnitActions(this);
+            SelectDone();
+        }
+    }
+
+    public void DeselectCard(int index)
+    {
+        selectedActions.Remove(availableActions[index]);
+    }
+
+    void SelectDone()
+    {
+        unitStateMachine.state = States.WAIT;
+        foreach (GameObject u in Map.Instance.unitDudeFriends)
+        {
+            if (u.GetComponent<Unit>().unitStateMachine.state != States.WAIT)
+                return;
+        }
+        TurnHandler.Instance.DetermineTurnOrder();
+    }
+
+    public void IEndMyEndTurnPegasus()
+    {
+        foreach (UnitAction action in selectedActions)
+        {
+            availableActions.Add(action);
+        }
+        selectedActions.Clear();
+        unitStateMachine.state = States.END;
+    }
+
+    public void SendActionToTheShadowRealm_BYMIKE()
+    {
+        selectedActions.Remove(readyAction);
+        targetActionNode = null;
+        readyAction = null;
+        UIHelper.Instance.SetUnitActions(this);
+    }
 }

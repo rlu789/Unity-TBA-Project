@@ -91,13 +91,10 @@ public class TurnHandler : MonoBehaviour
         }
         if (!orderedActions[orderedActions.Keys.First()].isEnemy)
         {
-            orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
-            NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().currentNode);
             return TurnHandlerStates.PLAYERTURN;
         }
         else
         {
-            orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
             return TurnHandlerStates.ENEMYTURN;
         }
     }
@@ -118,35 +115,37 @@ public class TurnHandler : MonoBehaviour
             case TurnHandlerStates.PLAYERDRAW:
                 SetAllStates(States.DRAW, States.WAIT);
                 currentState = TurnHandlerStates.PLAYERDRAW;
-                Debug.Log("heklo im in player drawing cards");
                 DrawCards();
                 NextState();
                 break;
             case TurnHandlerStates.PLAYERSELECT:
                 SetAllStates(States.SELECT, States.WAIT);
                 currentState = TurnHandlerStates.PLAYERSELECT;
-                Debug.Log("heklo im in playe rsalaected");
+
+
                 //defs not cheating lol
-                LazyTestingCBFFunction();
-                DetermineTurnOrder();
-                NextState();
+                //LazyTestingCBFFunction();
+                //DetermineTurnOrder();
+                //NextState();
                 break;
             case TurnHandlerStates.PLAYERTURN:
                 //SetAllStates(States.END, States.ACT);
                 currentState = TurnHandlerStates.PLAYERTURN;
-                Debug.Log("heklo im in player turn");
+
+                orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
+                NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().currentNode);
+                
                 break;
             case TurnHandlerStates.ENEMYTURN:
                 //SetAllStates(States.END, States.ACT);
                 currentState = TurnHandlerStates.ENEMYTURN;
-                Debug.Log("heklo im in enemyturn");
-                //HandleEnemyAct();
+                orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
+                
                 HandleEnemyTurn();
                 break;
             case TurnHandlerStates.END:
                 SetAllStates(States.END, States.END);
                 currentState = TurnHandlerStates.END;
-                Debug.Log("heklo im in end");
                 break;
         }
         //UIHelper.Instance.SetTurnValues(currentState);
@@ -252,17 +251,44 @@ public class TurnHandler : MonoBehaviour
         }
     }
 
-    void DetermineTurnOrder()
+   public  void DetermineTurnOrder()
     {
-        for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
+        //THIS IS COMPLETELY FUNCTIONAL REGARDLESS OF WHETHER THE COUNT IS ODD OR EVEN
+        foreach(GameObject u in Map.Instance.unitDudeFriends)
         {
-            orderedActions.Add(i, Map.Instance.unitDudeFriends[i].GetComponent<Unit>());
+            List<int> hahagetonemike = new List<int>();
+            foreach (UnitAction action in u.GetComponent<Unit>().selectedActions)
+            {
+                hahagetonemike.Add(action.initiative);
+            }
+            hahagetonemike.Sort();
+            //BANDAID
+            float theF = hahagetonemike[(int)Mathf.Floor(hahagetonemike.Count / 2)];
+            if (!orderedActions.ContainsKey(theF))
+                orderedActions.Add(theF, u.GetComponent<Unit>());
+            else
+                orderedActions.Add(theF + haveYetToCrossTheBridge, u.GetComponent<Unit>());
+            haveYetToCrossTheBridge += 0.01f;
         }
-        for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
+        foreach (GameObject u in Map.Instance.unitDudeEnemies)
         {
-            orderedActions.Add(i + 10, Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
+            List<int> hahagetonemike = new List<int>();
+            foreach (UnitAction action in u.GetComponent<Unit>().selectedActions)
+            {
+                hahagetonemike.Add(action.initiative);
+            }
+            hahagetonemike.Sort();
+            //BANDAID
+            float theF = hahagetonemike[(int)Mathf.Floor(hahagetonemike.Count / 2)];
+            if (!orderedActions.ContainsKey(theF))
+                orderedActions.Add(theF, u.GetComponent<Unit>());
+            else
+                orderedActions.Add(theF + haveYetToCrossTheBridge, u.GetComponent<Unit>());
+            haveYetToCrossTheBridge += 0.01f;
         }
-        NodeManager.Instance.SetSelectedNode(Map.Instance.unitDudeEnemies[0].GetComponent<Unit>().currentNode);
+
+        NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].currentNode);
+        NextState();
     }
 
     public void yeap()
@@ -281,17 +307,17 @@ public class TurnHandler : MonoBehaviour
         NodeManager.Instance.SetSelectedNode(CLONEDNODEgetHAckedNode);
     }
 
-    void LazyTestingCBFFunction()
-    {
-        for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
-        {
-            Map.Instance.unitDudeFriends[i].GetComponent<Unit>().selectedActions = Map.Instance.unitDudeFriends[i].GetComponent<Unit>().availableActions;
-            Map.Instance.unitDudeFriends[i].GetComponent<Unit>().GetComponent<UnitStateMachine>().state = States.WAIT;
-        }
-        for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
-        {
-            Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().selectedActions = Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().availableActions;
-            Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().GetComponent<UnitStateMachine>().state = States.WAIT;
-        }
-    }
+    //void LazyTestingCBFFunction()
+    //{
+    //    for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
+    //    {
+    //        Map.Instance.unitDudeFriends[i].GetComponent<Unit>().selectedActions = Map.Instance.unitDudeFriends[i].GetComponent<Unit>().availableActions;
+    //        Map.Instance.unitDudeFriends[i].GetComponent<Unit>().GetComponent<UnitStateMachine>().state = States.WAIT;
+    //    }
+    //    for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
+    //    {
+    //        Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().selectedActions = Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().availableActions;
+    //        Map.Instance.unitDudeEnemies[i].GetComponent<Unit>().GetComponent<UnitStateMachine>().state = States.WAIT;
+    //    }
+    //}
 }
