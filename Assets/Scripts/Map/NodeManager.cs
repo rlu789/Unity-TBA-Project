@@ -166,7 +166,6 @@ public class NodeManager : MonoBehaviour {
     void Select(Node node)
     {
         //if (node.currentUnit != null && node.currentUnit.unitStateMachine.state == States.END) return; // Cannot select unit if its turn is over
-        Debug.Log(node.XY);
         node.myRenderer.material = node.selectedMaterial;
         selectedNode = node;
 

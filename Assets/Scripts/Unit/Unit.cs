@@ -263,7 +263,11 @@ public class Unit : MonoBehaviour {
         readyActionIndex = actionIndex;
         readyAction = selectedActions[actionIndex];
         if (readyAction.type == ActionType.ACTION) unitStateMachine.SetState(States.B_SELECTINGACTION);
-        else unitStateMachine.SetState(States.B_SELECTINGMOVE);
+        else
+        {
+            unitStateMachine.SetState(States.B_SELECTINGMOVE);
+            stats.moveSpeed = availableActions[actionIndex].range;
+        }
         NodeManager.Instance.SetSelectedNode(currentNode);
     }
 
