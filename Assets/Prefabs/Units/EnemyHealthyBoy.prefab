@@ -328,46 +328,15 @@ MonoBehaviour:
     maxHealth: 24
     moveSpeed: 2
     displayName: 
-    _class: 2
+    _class: 3
     maxMana: 3
     armor: 0
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
-  actions:
-  - projectile: {fileID: 1583182739588176, guid: fc7487470effa884c81503d7686d958f,
-      type: 2}
-    name: Melee Attack
-    manaCost: 0
-    healthCost: 0
-    range: 1
-    damage: 4
-    aoe: 0
-    cooldown: 0
-    initiative: 6
-    currentCooldown: 0
-  - projectile: {fileID: 1583182739588176, guid: fa1d1ffa4388d4b4785b57a3f2bd7241,
-      type: 2}
-    name: Powerful Attack
-    manaCost: 0
-    healthCost: 4
-    range: 1
-    damage: 8
-    aoe: 0
-    cooldown: 0
-    initiative: 3
-    currentCooldown: 0
-  - projectile: {fileID: 1583182739588176, guid: 4841421f4287edc44836df5671f25865,
-      type: 2}
-    name: Rest
-    manaCost: 0
-    healthCost: 0
-    range: 0
-    damage: -4
-    aoe: 0
-    cooldown: 1
-    initiative: 0
-    currentCooldown: 0
+  availableActions: []
+  selectedActions: []
+  discardedActions: []
   isEnemy: 1
   FirePoint: {fileID: 4025879516756686}
   XY: {x: 0, y: 0}
@@ -387,8 +356,18 @@ MonoBehaviour:
     aoe: 0
     cooldown: 0
     initiative: 0
+    type: 1
+    actionClass: 0
+    status:
+      name: 
+      effects: []
+      duration: 0
+      visual: {fileID: 0}
+      visualIns: {fileID: 0}
     currentCooldown: 0
+  readyActionIndex: 0
   unitStateMachine: {fileID: 0}
+  statuses: []
 --- !u!135 &135336063579494900
 SphereCollider:
   m_ObjectHideFlags: 1

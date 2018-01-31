@@ -316,35 +316,15 @@ MonoBehaviour:
     maxHealth: 16
     moveSpeed: 3
     displayName: 
-    _class: 0
+    _class: 1
     maxMana: 3
     armor: 0
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
-  actions:
-  - projectile: {fileID: 1583182739588176, guid: fc7487470effa884c81503d7686d958f,
-      type: 2}
-    name: Melee Attack
-    manaCost: 0
-    healthCost: 0
-    range: 1
-    damage: 4
-    aoe: 0
-    cooldown: 0
-    initiative: 5
-    currentCooldown: 0
-  - projectile: {fileID: 1583182739588176, guid: 7c3e3267ce375fd49a3fc2f692effc08,
-      type: 2}
-    name: Throw Rock
-    manaCost: 0
-    healthCost: 0
-    range: 2
-    damage: 2
-    aoe: 0
-    cooldown: 0
-    initiative: 4
-    currentCooldown: 0
+  availableActions: []
+  selectedActions: []
+  discardedActions: []
   isEnemy: 1
   FirePoint: {fileID: 4644061398980554}
   XY: {x: 0, y: 0}
@@ -364,8 +344,18 @@ MonoBehaviour:
     aoe: 0
     cooldown: 0
     initiative: 0
+    type: 1
+    actionClass: 0
+    status:
+      name: 
+      effects: []
+      duration: 0
+      visual: {fileID: 0}
+      visualIns: {fileID: 0}
     currentCooldown: 0
+  readyActionIndex: 0
   unitStateMachine: {fileID: 0}
+  statuses: []
 --- !u!114 &114858001592289350
 MonoBehaviour:
   m_ObjectHideFlags: 1

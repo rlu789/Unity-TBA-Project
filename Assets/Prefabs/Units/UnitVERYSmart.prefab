@@ -198,35 +198,15 @@ MonoBehaviour:
     maxHealth: 12
     moveSpeed: 3
     displayName: 
-    _class: 1
+    _class: 2
     maxMana: 5
     armor: 0
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
-  actions:
-  - projectile: {fileID: 1583182739588176, guid: 9cc0d0df4084d4544a90c7d973070a77,
-      type: 2}
-    name: Magic Attack
-    manaCost: 0
-    healthCost: 0
-    range: 4
-    damage: 1
-    aoe: 0
-    cooldown: 0
-    initiative: 1
-    currentCooldown: 0
-  - projectile: {fileID: 1583182739588176, guid: db9c44a0c2b7ac54e8ec351b2583ca66,
-      type: 2}
-    name: Fireball
-    manaCost: 2
-    healthCost: 0
-    range: 4
-    damage: 8
-    aoe: 1
-    cooldown: 1
-    initiative: 6
-    currentCooldown: 0
+  availableActions: []
+  selectedActions: []
+  discardedActions: []
   isEnemy: 0
   FirePoint: {fileID: 4801566395878812}
   XY: {x: 0, y: 0}
@@ -246,5 +226,15 @@ MonoBehaviour:
     aoe: 0
     cooldown: 0
     initiative: 10
+    type: 1
+    actionClass: 0
+    status:
+      name: 
+      effects: []
+      duration: 0
+      visual: {fileID: 0}
+      visualIns: {fileID: 0}
     currentCooldown: 0
+  readyActionIndex: 0
   unitStateMachine: {fileID: 0}
+  statuses: []
