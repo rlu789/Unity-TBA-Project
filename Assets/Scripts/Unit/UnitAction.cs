@@ -93,4 +93,3 @@ public class UnitAction {
         return (name == "") ? true : false;
     }
 }
-    //public void ReduceCooldown() { } //use at the end of each turn

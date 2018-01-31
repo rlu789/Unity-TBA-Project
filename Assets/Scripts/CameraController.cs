@@ -78,9 +78,5 @@ public class CameraController : MonoBehaviour
         //        TurnHandler.Instance.actionQueue.RemoveAt(TurnHandler.Instance.actionQueue.Count - 1);
         //    }
         //}
-        if (Input.GetKeyUp(KeyCode.R))
-        {
-            UIHelper.Instance.NextUnitAction();
-        }
     }
 }

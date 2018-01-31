@@ -8,7 +8,7 @@ public class UIHelper : MonoBehaviour {
     public GameObject statisticsCanvas;
     StatisticsUI statistics;
     public GameObject unitActionsCanvas;
-    UnitActionUI unitActions;
+    HandUI unitActions;
     public GameObject turnCanvas;
     TurnUI turnUI;
 
@@ -26,7 +26,7 @@ public class UIHelper : MonoBehaviour {
     public void Setup()
     {
         statistics = statisticsCanvas.GetComponent<StatisticsUI>();
-        unitActions = unitActionsCanvas.GetComponent<UnitActionUI>();
+        unitActions = unitActionsCanvas.GetComponent<HandUI>();
         turnUI = turnCanvas.GetComponent<TurnUI>();
     }
 
@@ -79,36 +79,6 @@ public class UIHelper : MonoBehaviour {
     {
         if (node.currentUnit != null) SetUnitActions(node.currentUnit);
         else ToggleVisible(UIType.UnitActions, false);
-    }
-
-    public void NextUnitAction(Unit unit)   //shows the next action in the units array
-    {
-        if (unit == null) return;
-        ToggleVisible(UIType.UnitActions, true);
-        unitActions.NextValue(unit);
-    }
-
-    public void NextUnitAction(Node node)
-    {
-        if (node.currentUnit != null) NextUnitAction(node.currentUnit);
-        else ToggleVisible(UIType.UnitActions, false);
-    }
-
-    public void NextUnitAction()    //(used for next action button on unitActionUI)
-    {
-        if (unitActions.currentUnit != null) NextUnitAction(unitActions.currentUnit);
-    }
-
-    public int GetActionIndex()
-    {
-        if (unitActions.currentUnit != null) return unitActions.GetCurrentActionIndex();
-        return -1;
-    }
-
-    public Unit GetCurrentActingUnit()
-    {
-        if (unitActions.currentUnit != null) return unitActions.currentUnit;
-        return null;
     }
 
     //TurnUI

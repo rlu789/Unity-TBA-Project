@@ -85,6 +85,10 @@ public class TurnHandler : MonoBehaviour
             Debug.Log("Dgf");
             return TurnHandlerStates.END;
         }
+        if (orderedActions[orderedActions.Keys.First()] == null)
+        {
+            Debug.Log("The next guy whos turn is up is null maybe he died or something :thinking:");
+        }
         if (!orderedActions[orderedActions.Keys.First()].isEnemy)
         {
             orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
@@ -180,7 +184,7 @@ public class TurnHandler : MonoBehaviour
         {
             if (Map.Instance.unitDudeFriends[i].GetComponent<Unit>().isEnemy == false)
             {
-                Map.Instance.unitDudeFriends[i].GetComponent<Unit>().DrawCards(100);
+                Map.Instance.unitDudeFriends[i].GetComponent<Unit>().DrawCards(3);
             }
         }
     }
@@ -264,13 +268,13 @@ public class TurnHandler : MonoBehaviour
     public void yeap()
     {
         //TODO WTF IS ALL OF THIS
-        if (NodeManager.Instance.selectedNode.currentUnit.availableActions[UIHelper.Instance.GetActionIndex()].type == ActionType.ACTION)
+        if (NodeManager.Instance.selectedNode.currentUnit.readyAction.type == ActionType.ACTION)
             NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.B_SELECTINGACTION;
         else
         {
             //YEAP
             NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.B_SELECTINGMOVE;
-            NodeManager.Instance.selectedNode.currentUnit.stats.moveSpeed = NodeManager.Instance.selectedNode.currentUnit.availableActions[UIHelper.Instance.GetActionIndex()].range;
+            NodeManager.Instance.selectedNode.currentUnit.stats.moveSpeed = NodeManager.Instance.selectedNode.currentUnit.readyAction.range;
         }
         //BUT ESPICALLY THIS
         Node CLONEDNODEgetHAckedNode = NodeManager.Instance.selectedNode;

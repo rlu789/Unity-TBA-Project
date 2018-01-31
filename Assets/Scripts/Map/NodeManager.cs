@@ -96,7 +96,7 @@ public class NodeManager : MonoBehaviour {
                 }
                 AssignPath(selectedNode, node);
                 //BANDAID
-                selectedNode.currentUnit.availableActions.RemoveAt(UIHelper.Instance.GetActionIndex()); // deletes move card
+                selectedNode.currentUnit.availableActions.RemoveAt(selectedNode.currentUnit.readyActionIndex); // deletes move card
                 //BADNAID
                 Unit theU = selectedNode.currentUnit;
                 selectedNode.currentUnit.MoveUnit();
@@ -260,7 +260,7 @@ public class NodeManager : MonoBehaviour {
         if (node.currentUnit != null)
         {
             UIHelper.Instance.SetStatistics(node.currentUnit);
-            if (selectedNode != null && selectedNode.currentUnit != null && TurnHandler.Instance.currentState != TurnHandlerStates.PLAYERSELECT) UIHelper.Instance.SetUnitActions(node.currentUnit);
+            //if (selectedNode != null && selectedNode.currentUnit != null && TurnHandler.Instance.currentState != TurnHandlerStates.PLAYERSELECT) UIHelper.Instance.SetUnitActions(node.currentUnit);
             //basically if we have a selected unit that is trying to use an ability, dont switch the action window
         }
 
@@ -286,7 +286,7 @@ public class NodeManager : MonoBehaviour {
         if (selectedNode != null)
         {
             UIHelper.Instance.SetStatistics(selectedNode);  //set the windows back to the selected unit
-            if (selectedNode.currentUnit != UIHelper.Instance.GetCurrentActingUnit()) UIHelper.Instance.SetUnitActions(selectedNode);   //if the unit is the same as the acting one, dont reset its action window (because i made it get new range and so that makes it get new target which puts the target over the untis head and it still works but its not good looking anyway this whole thing needs some refactoring after some serious paint design docs :rage:
+            //if (selectedNode.currentUnit != UIHelper.Instance.GetCurrentActingUnit()) UIHelper.Instance.SetUnitActions(selectedNode);   //if the unit is the same as the acting one, dont reset its action window (because i made it get new range and so that makes it get new target which puts the target over the untis head and it still works but its not good looking anyway this whole thing needs some refactoring after some serious paint design docs :rage:
         }
         else UIHelper.Instance.ToggleAllVisible(false); //if there is no selected node, turn off the windows
     }

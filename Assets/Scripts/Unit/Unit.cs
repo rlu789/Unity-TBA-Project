@@ -24,6 +24,7 @@ public class Unit : MonoBehaviour {
     public Node currentNode, targetActionNode;
 
     public UnitAction readyAction;
+    public int readyActionIndex;
     public UnitStateMachine unitStateMachine;
 
     public List<Status> statuses = new List<Status>();
@@ -199,16 +200,8 @@ public class Unit : MonoBehaviour {
 
     public List<Node> FindRange()
     {
-        int currentIndex = UIHelper.Instance.GetActionIndex();
-        if (currentIndex == -1) return null;
-
-        //TODO CHANGE LATER
-        readyAction = availableActions[currentIndex];
+        if (readyAction == null) return null;
         int range = readyAction.range;
-
-        //TODO CHANGE LATER
-        targetActionNode = null;    //changing ability, remove previous target
-        //NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.ACT;  //and return to act
 
         return readyAction.GetNodesInRange(currentNode);
     }
@@ -221,7 +214,6 @@ public class Unit : MonoBehaviour {
             Debug.Log("No action, returning...");
             return;
         }
-        //Debug.Log("Using " + readyAction.name + " for unit " + stats._class);
         if (targetActionNode == null)
         {
             targetActionNode = null;
@@ -240,6 +232,7 @@ public class Unit : MonoBehaviour {
         if (!isEnemy) discardedActions.Add(readyAction);
         targetActionNode = null;
         readyAction = null;
+        UIHelper.Instance.SetUnitActions(this);
     }
 
     public void PerformActionDelayed(float delay)
@@ -267,10 +260,32 @@ public class Unit : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    public void SetAction(UnitAction _action, Node _target)
+    public void PrepareAction(int actionIndex)
     {
-        readyAction = _action;
+        readyActionIndex = actionIndex;
+        readyAction = availableActions[actionIndex];
+        if (readyAction.type == ActionType.ACTION) unitStateMachine.SetState(States.B_SELECTINGACTION);
+        else unitStateMachine.SetState(States.B_SELECTINGMOVE);
+        NodeManager.Instance.SetSelectedNode(currentNode);
+    }
+
+    public void SetAction(int actionIndex, Node _target)
+    {
+        readyActionIndex = actionIndex;
+        readyAction = availableActions[actionIndex];
         targetActionNode = _target;
+    }
+
+    public void SetAction(UnitAction action, Node _target)
+    {
+        for (int i = 0; i < availableActions.Count; ++i)
+        {
+            if (availableActions[i] == action)
+            {
+                SetAction(i, _target);
+                return;
+            }
+        }
     }
 
     public void ApplyStatus(Status status)
