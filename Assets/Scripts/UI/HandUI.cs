@@ -9,13 +9,17 @@ public class HandUI : MonoBehaviour {
     [HideInInspector]
     public Unit currentUnit = null;
 
+    public Transform hand;
+    public Transform selectedZone;
+
     //GameObject[] availableCards = new GameObject[0];
 
     public void SetValues(Unit unit)
     {
+        Transform[] children = transform.GetComponentsInChildren<Transform>();
+        for (int i = 0; i < children.Length; ++i) if (children[i].name == "PlaceHolderCard(Clone)") Destroy(children[i].gameObject);
         for (int i = cardPrefabs.Count - 1; i >= 0; --i) Destroy(cardPrefabs[i]);
         cardPrefabs.Clear();
-
         currentUnit = unit;
 
         if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERSELECT)

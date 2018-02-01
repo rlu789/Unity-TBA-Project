@@ -14,11 +14,14 @@ public class CardUI : MonoBehaviour {
     Unit unit;
     int index;
     public bool selected = false;
+    [HideInInspector]
+    public int zone = 0;   //0 hand, 1 selectZone
 
     public void SetCardValues(UnitAction act, Unit _unit, int _index)    //pass in index to access that action directly
     {
         _name.text = act.name;
-        cost.text = act.manaCost + " Mana / " + act.healthCost + " Health";
+        if (act.manaCost != 0) cost.text = act.manaCost + " Mana Cost";
+        else if (act.healthCost != 0) cost.text = act.healthCost + " Health Cost";
         range.text = act.range + " Range";
         damage.text = act.damage + " Damage";
         aoe.text = act.aoe + " AOE";
@@ -38,5 +41,11 @@ public class CardUI : MonoBehaviour {
             selected = !selected;
         }
         else unit.PrepareAction(index);
+    }
+    //TODO: need to switch into the other zone (transform) when changing back to the unit
+    public void ChangeZone(int _zone)
+    {
+        zone = _zone;
+        UseCard();
     }
 }

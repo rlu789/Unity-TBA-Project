@@ -19,7 +19,6 @@ public class PathHelper : MonoBehaviour
 
     }
 
-
     void DrawLines(int movement, int current, GameObject GO, List<Node> path = null, List<GameObject> pathV = null)
     {
         #region WTF (theres nothing wrong with this code honestly it might be the best-written code in the whole project so back off)
