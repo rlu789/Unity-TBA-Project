@@ -200,7 +200,7 @@ MonoBehaviour:
   hoverMaterialBad: {fileID: 2100000, guid: 52db73a80aa7a7c46b11a5c01f5f1669, type: 2}
   selectedMaterial: {fileID: 2100000, guid: cd7ba0fc890acb840ae8fd94cdc7b8af, type: 2}
   selectedMaterialBad: {fileID: 2100000, guid: 76fae02f8c000654d8baa6b910aaa8f1, type: 2}
-  rimDanger: {fileID: 2100000, guid: 76fae02f8c000654d8baa6b910aaa8f1, type: 2}
+  readyMaterial: {fileID: 2100000, guid: d1ba97b6ed4622a48a04f776867acc69, type: 2}
   currentUnitGO: {fileID: 0}
   currentUnit: {fileID: 0}
   potentialUnit: {fileID: 0}
@@ -210,7 +210,4 @@ MonoBehaviour:
   material: {fileID: 0}
   moveCost: 0
   passable: 1
-  hexRim: {fileID: 1609691955481202}
-  rimRenderer: {fileID: 0}
-  rimMaterial: {fileID: 0}
   neighbours: []

@@ -13,7 +13,6 @@ public class HandUI : MonoBehaviour {
 
     public void SetValues(Unit unit)
     {
-        Debug.Log(unit.name);
         for (int i = cardPrefabs.Count - 1; i >= 0; --i) Destroy(cardPrefabs[i]);
         cardPrefabs.Clear();
 

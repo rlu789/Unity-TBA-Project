@@ -88,7 +88,7 @@ public class Pathfindingv2 : MonoBehaviour
         return (dx > dy) ? dx : dy;
     }
 
-    public static Node ClosestNeighbour(Node start, Node dest)  //immediate neighbours only for now.
+    public static Node ClosestNeighbour(Node start, Node dest)  //immediate neighbours only for now. need a list of neighbours to try before getting a new closest neighbour from the closest neighbour
     {
         List<Node> possibleTargets = new List<Node>();
         Node closestNeighbour = null;

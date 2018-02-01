@@ -66,7 +66,6 @@ public class NodeManager : MonoBehaviour {
         {
             //BANDAID
             selectingCount = -1;
-            Debug.Log(selectingCount);
             selectedNode.currentUnit.IEndMyEndTurnPegasus();
             TurnHandler.Instance.orderedActions.Remove(TurnHandler.Instance.orderedActions.Keys.First());
             TurnHandler.Instance.NextState();
@@ -113,7 +112,7 @@ public class NodeManager : MonoBehaviour {
                     Destroy(movementUIObjectTargetGO);
                     foreach (Node n in nodesInRange)
                     {
-                        n.myRenderer.material = n.material;
+                        n.SetHexDefault();
                     }
                     nodesInRange.Clear();
                     TurnEndHandler();
@@ -131,14 +130,14 @@ public class NodeManager : MonoBehaviour {
     {
         if (selectedNode == null)   //selecting a node with no other nodes selected
         {
+            if (node.currentUnit != null && node.currentUnit.isEnemy)   //cant select an enemy node without a reason
+            {
+                return;
+            }
             if (node.currentUnit != null && node.currentUnit.unitStateMachine.state == States.WAIT)
             {
                 Debug.Log("this unit already has cards selected");
                 return; // cant select unit when its in preform state
-            }
-            if (node.currentUnit != null && node.currentUnit.isEnemy)   //cant select an enemy node without a reason
-            {
-                return;
             }
             Select(node);
             return;
@@ -166,7 +165,8 @@ public class NodeManager : MonoBehaviour {
     void Select(Node node)
     {
         //if (node.currentUnit != null && node.currentUnit.unitStateMachine.state == States.END) return; // Cannot select unit if its turn is over
-        node.myRenderer.material = node.selectedMaterial;
+        node.SetHexReady(false);
+        node.SetHexSelected();
         selectedNode = node;
 
         if (node.currentUnit != null)
@@ -185,15 +185,16 @@ public class NodeManager : MonoBehaviour {
 
     public void Deselect(bool hovering = false)
     {
+        if (selectedNode == null) return;
         Destroy(movementUIObjectTargetGO);
         foreach (Node n in nodesInRange)
         {
-            n.myRenderer.material = n.material;
+            n.SetHexDefault();
         }
         nodesInRange.Clear();
         UIHelper.Instance.ToggleAllVisible(false);
-        if (!hovering) selectedNode.myRenderer.material = selectedNode.material;
-        else selectedNode.myRenderer.material = selectedNode.hoverMaterial; //if you are still hovering over this node, return to hovering material
+        if (!hovering) selectedNode.SetHexDefault();
+        else selectedNode.SetHexHighlighted(); //if you are still hovering over this node, return to hovering material
         PathHelper.Instance.DeleteCurrentPath();
         selectedNode = null;
     }
@@ -252,13 +253,11 @@ public class NodeManager : MonoBehaviour {
 
     public void NodeHoverEnter(Node node)
     {
-        if (selectedNode != node && !nodesInRange.Contains(node)) node.myRenderer.material = node.hoverMaterial;    //if node isnt selected and we arent range checking -> show hover material
+        if (selectedNode != node && !nodesInRange.Contains(node)) node.SetHexHighlighted();    //if node isnt selected and we arent range checking -> show hover material
 
         if (node.currentUnit != null)
         {
             UIHelper.Instance.SetStatistics(node.currentUnit);
-            //if (selectedNode != null && selectedNode.currentUnit != null && TurnHandler.Instance.currentState != TurnHandlerStates.PLAYERSELECT) UIHelper.Instance.SetUnitActions(node.currentUnit);
-            //basically if we have a selected unit that is trying to use an ability, dont switch the action window
         }
 
         if (selectedNode != null)
@@ -278,7 +277,7 @@ public class NodeManager : MonoBehaviour {
 
     public void NodeHoverExit(Node node)
     {
-        if (selectedNode != node && !nodesInRange.Contains(node)) node.myRenderer.material = node.material;
+        if (selectedNode != node && !nodesInRange.Contains(node)) node.SetHexDefault();
 
         if (selectedNode != null)
         {
@@ -297,14 +296,14 @@ public class NodeManager : MonoBehaviour {
             Destroy(movementUIObjectTargetGO);
             foreach (Node n in nodesInRange)
             {
-                n.myRenderer.material = n.material;
+                n.SetHexDefault();
             }
         }
 
         nodesInRange = node.currentUnit.FindRange();
         foreach (Node n in nodesInRange)
         {
-            n.myRenderer.material = n.hoverMaterialBad;
+            n.SetHexSelectedBad();
         }
         movementUIObjectTargetGO = Instantiate(movementUIObjectTarget, node.transform.position, Quaternion.identity);
     }

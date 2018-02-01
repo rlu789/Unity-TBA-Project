@@ -58,9 +58,10 @@ public class Unit : MonoBehaviour {
     {
         for (int i = 0; i < CardManager.Instance.allCards.Count; i++)
         {
-            Debug.Log(CardManager.Instance.allCards[i].name);
-            if (CardManager.Instance.allCards[i].actionClass == stats._class || CardManager.Instance.allCards[i].actionClass == Class.GENERIC)
+            if (CardManager.Instance.allCards[i].actionClass == stats._class || (CardManager.Instance.allCards[i].actionClass == Class.GENERIC && isEnemy == false))
+            {
                 deck.Add(CardManager.Instance.allCards[i]);
+            }
         }
     }
 
@@ -73,6 +74,7 @@ public class Unit : MonoBehaviour {
         }
         for (int i = 0; i < no; i++)
         {
+            if (availableActions.Count >= 5) return;
             availableActions.Add(deck[Random.Range(0, deck.Count)]);
         }
     }
@@ -103,38 +105,38 @@ public class Unit : MonoBehaviour {
 
     public void MoveUnit()    //moves unit on selected tile
     {
-        //if ((TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE && !isEnemy) || (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYMOVE && isEnemy))
-        //
-            List<Node> pathToFollow = currentPath;   //get the path to follow, based on the max distance the unit can move this turn
-            movePath = currentPath;
-            foreach (GameObject haha in pathVisual)
-                Destroy(haha);
-            pathVisual.Clear();
-            if (pathToFollow == null)
-                return;
-            if (pathToFollow.Count == 0)
-                return;
-            if (pathToFollow[0] == currentNode && pathToFollow.Count == 1) return;
+        List<Node> pathToFollow = currentPath;   //get the path to follow, based on the max distance the unit can move this turn
+        movePath = currentPath;
+        foreach (GameObject haha in pathVisual)
+            Destroy(haha);
+        pathVisual.Clear();
+        if (pathToFollow == null)
+            return;
+        if (pathToFollow.Count == 0)
+            return;
+        if (pathToFollow[0] == currentNode && pathToFollow.Count == 1) return;
 
-            Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
+        Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
 
-            //set values on initial and destination nodes
-            _destNode.currentUnitGO = gameObject;
-            _destNode.currentUnit = this;
-            _destNode.potentialUnit = null;
-            Map.Instance.nodes[XY.x, XY.y].currentUnitGO = null;
-            Map.Instance.nodes[XY.x, XY.y].currentUnit = null;
+        //set values on initial and destination nodes
+        _destNode.currentUnitGO = gameObject;
+        _destNode.currentUnit = this;
+        _destNode.potentialUnit = null;
+        Map.Instance.nodes[XY.x, XY.y].currentUnitGO = null;
+        Map.Instance.nodes[XY.x, XY.y].currentUnit = null;
 
-            //set units new node values
-            Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
-            unitComponent.XY = _destNode.XY;
-            unitComponent.currentNodeID = _destNode.nodeID;
-            currentNode = _destNode;
+        //set units new node values
+        Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
+        unitComponent.XY = _destNode.XY;
+        unitComponent.currentNodeID = _destNode.nodeID;
+        currentNode = _destNode;
 
-            //BANDAID
+        //BANDAID
+        if (!isEnemy)
+        {
             selectedActions.Remove(readyAction);
-            if (!isEnemy) discardedActions.Add(readyAction);
-        // }
+            discardedActions.Add(readyAction);
+        }
     }
 
     public void SetUnitPath(List<Node> path)
@@ -240,7 +242,7 @@ public class Unit : MonoBehaviour {
         readyAction.UseAction(targetActionNode, this);
         if (!isEnemy) discardedActions.Add(readyAction);
 
-        //BANGAG
+        //BANdAG
         SendActionToTheShadowRealm_BYMIKE();
     }
 
@@ -277,7 +279,7 @@ public class Unit : MonoBehaviour {
         else
         {
             unitStateMachine.SetState(States.B_SELECTINGMOVE);
-            stats.moveSpeed = availableActions[actionIndex].range;
+            stats.moveSpeed = selectedActions[actionIndex].range;
         }
         NodeManager.Instance.SetSelectedNode(currentNode);
     }
@@ -342,25 +344,32 @@ public class Unit : MonoBehaviour {
         unitStateMachine.state = States.WAIT;
         foreach (GameObject u in Map.Instance.unitDudeFriends)
         {
+            NodeManager.Instance.Deselect();
             if (u.GetComponent<Unit>().unitStateMachine.state != States.WAIT)
+            {
+                currentNode.SetHexReady(true);
                 return;
+            }
         }
         TurnHandler.Instance.DetermineTurnOrder();
     }
 
     public void IEndMyEndTurnPegasus()
     {
-        foreach (UnitAction action in selectedActions)
+        if (!isEnemy)
         {
-            availableActions.Add(action);
+            foreach (UnitAction action in selectedActions)
+            {
+                availableActions.Add(action);
+            }
+            selectedActions.Clear();
         }
-        selectedActions.Clear();
         unitStateMachine.state = States.END;
     }
 
     public void SendActionToTheShadowRealm_BYMIKE()
     {
-        selectedActions.Remove(readyAction);
+        if (!isEnemy) selectedActions.Remove(readyAction);
         targetActionNode = null;
         readyAction = null;
         UIHelper.Instance.SetUnitActions(this);

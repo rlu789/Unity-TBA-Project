@@ -36,7 +36,7 @@ public class CardManager : MonoBehaviour
         while (!inp_stm.EndOfStream)
         {
             string inp_ln = inp_stm.ReadLine();
-            Debug.Log(inp_ln);
+            //Debug.Log(inp_ln);
             if (inp_ln[0] != '/') allCards.Add(HandleLine(inp_ln));
             // Do Something with the input. 
         }
@@ -69,7 +69,7 @@ public class CardManager : MonoBehaviour
             else
             {
                 action.name = actionName;
-                Debug.Log(prefabName);
+                //Debug.Log(prefabName);
                 action.projectile = (GameObject)AssetDatabase.LoadAssetAtPath(prefabName, typeof(GameObject));
                 action.manaCost = (int)Char.GetNumericValue(line[i + 2]);
                 action.healthCost = (int)Char.GetNumericValue(line[i + 4]);
@@ -80,7 +80,7 @@ public class CardManager : MonoBehaviour
                 action.initiative = (int)Char.GetNumericValue(line[i + 14]);
                 action.type = (ActionType)(int)Char.GetNumericValue(line[i + 16]);
                 action.actionClass = (Class)(int)Char.GetNumericValue(line[i + 18]);
-                Debug.Log(action.name);
+                //Debug.Log(action.name);
                 return action;
             }
         }

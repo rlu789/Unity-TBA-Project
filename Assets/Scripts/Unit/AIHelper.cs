@@ -20,7 +20,7 @@ public class PossibleAction
         Debug.Log("Fitness score is (" + fitness + ")");
     }
 
-    public void DetermineFitness()  //need a way to determine if another unit is already acting on this unit, so they dont overkill too much
+    public void DetermineFitness()
     {
         if (action == null) {
             fitness = 0;

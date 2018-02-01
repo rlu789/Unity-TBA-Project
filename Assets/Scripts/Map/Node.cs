@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
 
 public class Node : MonoBehaviour {
 
@@ -10,7 +8,7 @@ public class Node : MonoBehaviour {
     public Material hoverMaterialBad;
     public Material selectedMaterial;
     public Material selectedMaterialBad;
-    public Material rimDanger;
+    public Material readyMaterial;
 
     //Object fields, don't touch
     [Space(10)]
@@ -29,12 +27,7 @@ public class Node : MonoBehaviour {
     [HideInInspector]
     public int moveCost;
     public bool passable = true;
-
-    public GameObject hexRim;
-    [HideInInspector]
-    public Renderer rimRenderer;
-    [HideInInspector]
-    public Material rimMaterial;
+    bool ready = false;
 
     public List<Node> neighbours  = new List<Node>();
 
@@ -45,8 +38,6 @@ public class Node : MonoBehaviour {
         moveCost = _moveCost;
         myRenderer = GetComponent<Renderer>();
         material = myRenderer.material;
-        rimRenderer = hexRim.GetComponent<Renderer>();
-        rimMaterial = rimRenderer.material;
         List<Node> neighbours = new List<Node>();
     }
 
@@ -70,10 +61,39 @@ public class Node : MonoBehaviour {
         unitComponent.currentNode = this;
     }
 
-    public void SetHexRimState(bool highlighted)
+    public void SetHexReady(bool active)
     {
-        if (highlighted) rimRenderer.material = rimDanger;
-        else rimRenderer.material = rimMaterial;
+        if (active)
+        {
+            myRenderer.material = readyMaterial;
+            ready = true;
+        }
+        else
+        {
+            myRenderer.material = material;
+            ready = false;
+        }
+    }
+
+    public void SetHexDefault()
+    {
+        if (ready) myRenderer.material = readyMaterial;
+        else myRenderer.material = material;
+    }
+
+    public void SetHexHighlighted()
+    {
+        myRenderer.material = hoverMaterial;
+    }
+
+    public void SetHexSelected()
+    {
+        myRenderer.material = selectedMaterial;
+    }
+
+    public void SetHexSelectedBad()
+    {
+        myRenderer.material = selectedMaterialBad;
     }
 
     private void OnMouseUp()
