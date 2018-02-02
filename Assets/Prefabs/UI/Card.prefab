@@ -385,6 +385,9 @@ MonoBehaviour:
   aoe: {fileID: 114726273757892480}
   initiative: {fileID: 114762567304010908}
   selected: 0
+  zone: 0
+  onClick: {fileID: 114653726316273990}
+  onDrag: {fileID: 114267431159820446}
 --- !u!114 &114827596148126650
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -243,7 +243,7 @@ public class Unit : MonoBehaviour {
         if (!isEnemy) discardedActions.Add(readyAction);
 
         //BANdAG
-        SendActionToTheShadowRealm_BYMIKE();
+        SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap();
     }
 
     public void PerformActionDelayed(float delay)
@@ -341,15 +341,12 @@ public class Unit : MonoBehaviour {
 
     void SelectDone()
     {
+        NodeManager.Instance.Deselect();
         unitStateMachine.state = States.WAIT;
+        currentNode.SetHexReady(true);
         foreach (GameObject u in Map.Instance.unitDudeFriends)
         {
-            NodeManager.Instance.Deselect();
-            if (u.GetComponent<Unit>().unitStateMachine.state != States.WAIT)
-            {
-                currentNode.SetHexReady(true);
-                return;
-            }
+            if (u.GetComponent<Unit>().unitStateMachine.state != States.WAIT) return;
         }
         TurnHandler.Instance.DetermineTurnOrder();
     }
@@ -367,7 +364,7 @@ public class Unit : MonoBehaviour {
         unitStateMachine.state = States.END;
     }
 
-    public void SendActionToTheShadowRealm_BYMIKE()
+    public void SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap()
     {
         if (!isEnemy) selectedActions.Remove(readyAction);
         targetActionNode = null;

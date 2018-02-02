@@ -71,7 +71,6 @@ public class NodeManager : MonoBehaviour {
             TurnHandler.Instance.NextState();
         }
         selectingCount++;
-
     }
 
     void SelectPlayerTurn(Node node)

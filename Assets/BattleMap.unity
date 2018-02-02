@@ -734,7 +734,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &696527472
 RectTransform:
   m_ObjectHideFlags: 0
@@ -791,8 +791,9 @@ MonoBehaviour:
   cardPrefab: {fileID: 1525953388415128, guid: d0c858fc05abc024b9fff4d5154747c0, type: 2}
   cardPrefabs: []
   currentUnit: {fileID: 0}
-  hand: {fileID: 0}
-  selectedZone: {fileID: 0}
+  hand: {fileID: 696527472}
+  selectedZone: {fileID: 223853319}
+  selectedZoneGO: {fileID: 223853318}
 --- !u!114 &696527475
 MonoBehaviour:
   m_ObjectHideFlags: 0

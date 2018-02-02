@@ -9,7 +9,6 @@ public enum ActionType
 
 [System.Serializable]
 public class UnitAction {
-
     public GameObject projectile;
     public string name = "";
     public int manaCost = 0;

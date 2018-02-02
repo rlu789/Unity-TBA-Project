@@ -13,11 +13,15 @@ public class CardUI : MonoBehaviour {
 
     Unit unit;
     int index;
+
     public bool selected = false;
     [HideInInspector]
     public int zone = 0;   //0 hand, 1 selectZone
 
-    public void SetCardValues(UnitAction act, Unit _unit, int _index)    //pass in index to access that action directly
+    public Button onClick;
+    public DragObjectHandler onDrag;
+
+    public void SetCardValues(UnitAction act, Unit _unit, int _index, bool drag)    //pass in index to access that action directly
     {
         _name.text = act.name;
         if (act.manaCost != 0) cost.text = act.manaCost + " Mana Cost";
@@ -30,6 +34,17 @@ public class CardUI : MonoBehaviour {
 
         unit = _unit;
         index = _index;
+
+        if (drag)
+        {
+            onClick.enabled = false;
+            onDrag.enabled = true;
+        }
+        else
+        {
+            onClick.enabled = true;
+            onDrag.enabled = false;
+        }
     }
     
     public void UseCard()
@@ -42,10 +57,12 @@ public class CardUI : MonoBehaviour {
         }
         else unit.PrepareAction(index);
     }
-    //TODO: need to switch into the other zone (transform) when changing back to the unit
-    public void ChangeZone(int _zone)
+
+    public void ChangeZone(int _zone, bool activate)    //switch into a different zone (0 - hand, 1 - selected). activate = use card or just set as selected
     {
         zone = _zone;
-        UseCard();
+        gameObject.transform.SetParent(UIHelper.Instance.GetZoneTransform());
+        if (activate) UseCard();
+        else selected = true;
     }
 }

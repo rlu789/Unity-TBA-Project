@@ -80,15 +80,17 @@ public class TurnHandler : MonoBehaviour
 
     TurnHandlerStates DetermineTurn()
     {
+        NodeManager.Instance.Deselect();
         if (orderedActions.Count == 0)
         {
-            Debug.Log("Dgf");
+            Debug.Log("Round Ended.");
             return TurnHandlerStates.END;
         }
         if (orderedActions[orderedActions.Keys.First()] == null)
         {
             Debug.Log("The next guy whos turn is up is null maybe he died or something :thinking:");
             orderedActions.Remove(orderedActions.Keys.First());
+            return DetermineTurn();
         }
         if (!orderedActions[orderedActions.Keys.First()].isEnemy)
         {
@@ -128,7 +130,6 @@ public class TurnHandler : MonoBehaviour
                 NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().currentNode);
                 break;
             case TurnHandlerStates.ENEMYTURN:
-                //SetAllStates(States.END, States.ACT);
                 currentState = TurnHandlerStates.ENEMYTURN;
                 orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
                 HandleEnemyTurn();
@@ -166,7 +167,7 @@ public class TurnHandler : MonoBehaviour
         }
         NextState();
         if (NodeManager.Instance.selectedNode != null)
-            NodeManager.Instance.Deselect(true);
+            NodeManager.Instance.Deselect();
     }
 
     void DrawCards()

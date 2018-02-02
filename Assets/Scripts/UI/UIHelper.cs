@@ -75,6 +75,11 @@ public class UIHelper : MonoBehaviour {
         unitActions.SetValues(unit);
     }
 
+    public Transform GetZoneTransform()
+    {
+        return unitActions.GetZoneTransform();
+    }
+
     //public void SetUnitActions(Node node)
     //{
     //    if (node.currentUnit != null) SetUnitActions(node.currentUnit);

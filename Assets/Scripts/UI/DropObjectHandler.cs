@@ -31,7 +31,7 @@ public class DropObjectHandler : MonoBehaviour, IDropHandler, IPointerEnterHandl
         CardUI card = d.GetComponent<CardUI>();
         if (zone != card.zone)
         {
-            card.ChangeZone(zone);
+            card.ChangeZone(zone, true);
         }
     }
 }
