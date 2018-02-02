@@ -52,6 +52,12 @@ public class HandUI : MonoBehaviour {
                 cardPrefabs[i].GetComponent<CardUI>().SetCardValues(unit.selectedActions[i], unit, i, false);
             }
         }
+        else
+        {
+            //not player turn or player selection
+            UIHelper.Instance.ToggleVisible(UIType.UnitActions, false);
+            return;
+        }
     }
 
     public void RemoveCard(int index)
@@ -65,5 +71,3 @@ public class HandUI : MonoBehaviour {
         return selectedZone;
     }
 }
-
-//NodeManager.Instance.ShowUnitActionRange(unit.currentNode);

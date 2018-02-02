@@ -31,6 +31,8 @@ public class TurnHandler : MonoBehaviour
     public SortedDictionary<float, Unit> orderedActions = new SortedDictionary<float, Unit>();
     
     float haveYetToCrossTheBridge = 0.01f;
+    [HideInInspector]
+    public bool waitingForAction = false;
 
     private void Awake()
     {
@@ -45,7 +47,7 @@ public class TurnHandler : MonoBehaviour
 
     public void Setup()
     {
-        Invoke("DelaySwitch", 1f);
+        Invoke("DelaySwitch", 0.5f);
     }
 
     void DelaySwitch()  //VERY bad code
@@ -55,6 +57,11 @@ public class TurnHandler : MonoBehaviour
 
     public void NextState()
     {
+        if (waitingForAction)   //if we are waiting for projectiles/animations to finish, try again in 0.5 seconds
+        {
+            Invoke("NextState", 0.5f);
+            return;
+        }
         switch (currentState)
         {
             case TurnHandlerStates.ENEMYDRAW:
@@ -86,9 +93,8 @@ public class TurnHandler : MonoBehaviour
             Debug.Log("Round Ended.");
             return TurnHandlerStates.END;
         }
-        if (orderedActions[orderedActions.Keys.First()] == null)
+        if (orderedActions[orderedActions.Keys.First()] == null)    //enemy was killed
         {
-            Debug.Log("The next guy whos turn is up is null maybe he died or something :thinking:");
             orderedActions.Remove(orderedActions.Keys.First());
             return DetermineTurn();
         }
@@ -108,7 +114,7 @@ public class TurnHandler : MonoBehaviour
         switch (state)
         {
             case TurnHandlerStates.ENEMYDRAW:
-                //function to have enemy draw their cards
+                //TODO: function to have enemy draw their cards
                 SetAllStates(States.START, States.DRAW);
                 currentState = TurnHandlerStates.ENEMYDRAW;
                 //HandleStatus();
@@ -181,11 +187,6 @@ public class TurnHandler : MonoBehaviour
         }
     }
 
-    public void PerformButton()
-    {
-        NextState();
-    }
-
     void HandleEnemyTurn()
     {
         NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].currentNode);
@@ -256,7 +257,8 @@ public class TurnHandler : MonoBehaviour
 
         NextState();
     }
-
+    #region ah the old yeap function.. good times
+    /*
     public void yeap()
     {
         //TODO WTF IS ALL OF THIS
@@ -272,4 +274,6 @@ public class TurnHandler : MonoBehaviour
         Node CLONEDNODEgetHAckedNode = NodeManager.Instance.selectedNode;
         NodeManager.Instance.SetSelectedNode(CLONEDNODEgetHAckedNode);
     }
+    */
+    #endregion
 }

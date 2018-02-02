@@ -68,6 +68,7 @@ public class NodeManager : MonoBehaviour {
             selectingCount = -1;
             selectedNode.currentUnit.IEndMyEndTurnPegasus();
             TurnHandler.Instance.orderedActions.Remove(TurnHandler.Instance.orderedActions.Keys.First());
+            UIHelper.Instance.ToggleVisible(UIType.UnitActions, false);
             TurnHandler.Instance.NextState();
         }
         selectingCount++;
@@ -77,8 +78,8 @@ public class NodeManager : MonoBehaviour {
     {
         //assume theres a selectednode
 
-        if (selectedNode == node) return;
-        if (selectedNode != node)
+        //if (selectedNode == node) return;
+        if (selectedNode == node || selectedNode != node)
         {
             if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTING) return; // player still picking cards
             if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTINGMOVE) //player has selected a movement card
@@ -171,7 +172,7 @@ public class NodeManager : MonoBehaviour {
         if (node.currentUnit != null)
         {
             UIHelper.Instance.SetStatistics(node.currentUnit);
-            UIHelper.Instance.SetUnitActions(node.currentUnit);
+            UIHelper.Instance.SetUnitActions(node.currentUnit); //if (!node.currentUnit.isEnemy || TurnHandler.Instance.currentState != TurnHandlerStates.ENEMYTURN) 
             if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTINGACTION)
             {
                 if (selectedNode.currentUnitGO != null)

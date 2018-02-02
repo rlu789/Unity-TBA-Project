@@ -81,6 +81,11 @@ public class CardManager : MonoBehaviour
                 action.type = (ActionType)(int)Char.GetNumericValue(line[i + 16]);
                 action.actionClass = (Class)(int)Char.GetNumericValue(line[i + 18]);
                 //Debug.Log(action.name);
+                if (action.cooldown == 9)   //richard this code is mega dodgy get on it already the team is suffering
+                {                           //anyway i hacked together this because it doesnt read in -negative numbers the sign breaks it REAl classic stuff :clap: :smirk:
+                    action.cooldown = 0;
+                    action.damage = -action.damage;
+                }
                 return action;
             }
         }

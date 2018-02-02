@@ -10,8 +10,11 @@ public class StatisticsUI : MonoBehaviour {
     public Text movement;
     public Text armor;
 
+    public Unit currentUnit;
+
     public void SetValues(Unit unit)
     {
+        currentUnit = unit;
         _name.text = "Name: " + unit.stats.displayName;
         _class.text = "Class: " + unit.stats._class;
         health.text = "Health: " + unit.stats.currentHealth + "/" + unit.stats.maxHealth;

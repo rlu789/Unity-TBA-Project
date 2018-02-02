@@ -58,7 +58,7 @@ public class CardUI : MonoBehaviour {
         else unit.PrepareAction(index);
     }
 
-    public void ChangeZone(int _zone, bool activate)    //switch into a different zone (0 - hand, 1 - selected). activate = use card or just set as selected
+    public void ChangeZone(int _zone, bool activate)    //switch into a different zone (0 - hand, 1 - selected). activate = player dragging into zone (true), player returning to this units actions (false)
     {
         zone = _zone;
         gameObject.transform.SetParent(UIHelper.Instance.GetZoneTransform());

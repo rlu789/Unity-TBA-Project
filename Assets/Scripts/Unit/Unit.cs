@@ -260,6 +260,7 @@ public class Unit : MonoBehaviour {
             Die();
         }
         if (stats.currentHealth > stats.maxHealth) stats.currentHealth = stats.maxHealth;
+        if (UIHelper.Instance.GetCurrentUnit() == this) UIHelper.Instance.SetStatistics(this);
     }
 
     void Die()

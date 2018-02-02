@@ -67,6 +67,7 @@ public class Projectile : MonoBehaviour
 
     private void OnDestroy()
     {
+        TurnHandler.Instance.waitingForAction = false;
         if (travelEffect)
         {
             travelEffectPS.Stop();

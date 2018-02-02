@@ -67,6 +67,11 @@ public class UIHelper : MonoBehaviour {
         else ToggleVisible(UIType.Statistics, false);
     }
 
+    public Unit GetCurrentUnit()
+    {
+        return statistics.currentUnit;
+    }
+
     //UnitActionsUI
     public void SetUnitActions(Unit unit)
     {
