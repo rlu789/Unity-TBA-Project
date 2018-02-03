@@ -137,8 +137,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
+  projectileGraphics: {fileID: 1208198492700144}
   impactEffect: {fileID: 1895260083416092, guid: 180ddf3b13dbf15428901879fff08739,
     type: 2}
   travelEffect: {fileID: 0}
   spawnEffect: {fileID: 0}
   spawnEffectLife: 2
+  fireDelay: 0

@@ -83,12 +83,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
+  projectileGraphics: {fileID: 1302982356085928}
   impactEffect: {fileID: 1267722965183100, guid: 03ab431301d767e4e9fba3c07eeeecd3,
     type: 2}
   travelEffect: {fileID: 1799131968791612, guid: 8e7466f2526a1c24486c04fa808ac83a,
     type: 2}
-  spawnEffect: {fileID: 0}
+  spawnEffect: {fileID: 1267722965183100, guid: 37d7aaedaba148b429dcb47dc4ea9131,
+    type: 2}
   spawnEffectLife: 2
+  fireDelay: 1
 --- !u!198 &198628176461650972
 ParticleSystem:
   m_ObjectHideFlags: 1

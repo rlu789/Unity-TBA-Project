@@ -6,11 +6,13 @@ public class Projectile : MonoBehaviour
     private Unit targetUnit;
 
     public float speed = 70f;
+    public GameObject projectileGraphics;
     public GameObject impactEffect;
     public GameObject travelEffect;
     private ParticleSystem travelEffectPS;
     public GameObject spawnEffect;
     public float spawnEffectLife;
+    public float fireDelay = 0f;
     
     UnitAction action;
     Vector3 firePoint;
@@ -25,6 +27,7 @@ public class Projectile : MonoBehaviour
 
     private void Start()
     {
+        if (projectileGraphics != null && fireDelay > 0) projectileGraphics.SetActive(false);
         if (travelEffect)
         {
             travelEffect = Instantiate(travelEffect);
@@ -35,6 +38,13 @@ public class Projectile : MonoBehaviour
 
     void Update()
     {
+        if (fireDelay > 0)
+        {
+            fireDelay -= Time.deltaTime;
+            return;
+        }
+        else if (projectileGraphics != null) projectileGraphics.SetActive(true);
+
         if (target == null)
         {
             Destroy(gameObject);
