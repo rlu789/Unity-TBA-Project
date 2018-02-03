@@ -196,7 +196,6 @@ public class AIHelper : MonoBehaviour {
         UnitAction ret = null;
         foreach (UnitAction act in unit.selectedActions)    //get the max range of all units actions
         {
-            Debug.Log(act.range + " " + act.name);
             if (act.range > maxActionRange)
             {
                 maxActionRange = act.range;

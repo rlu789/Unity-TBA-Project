@@ -882,6 +882,7 @@ MonoBehaviour:
   unitTurnCount: 0
   currentState: 0
   actionQueue: []
+  waitingForAction: 0
 --- !u!1 &804334534
 GameObject:
   m_ObjectHideFlags: 0
@@ -2193,6 +2194,7 @@ MonoBehaviour:
   mana: {fileID: 1379520365}
   movement: {fileID: 2091557441}
   armor: {fileID: 317019775}
+  currentUnit: {fileID: 0}
 --- !u!114 &1917123958
 MonoBehaviour:
   m_ObjectHideFlags: 0
