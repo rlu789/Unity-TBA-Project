@@ -3,6 +3,7 @@
 public class Projectile : MonoBehaviour
 {
     private Transform target;
+    private Unit targetUnit;
 
     public float speed = 70f;
     public GameObject impactEffect;
@@ -14,11 +15,12 @@ public class Projectile : MonoBehaviour
     UnitAction action;
     Vector3 firePoint;
 
-    public void Setup(UnitAction _action, Vector3 _firePoint, Transform _target)
+    public void Setup(UnitAction _action, Vector3 _firePoint, Transform _target, Unit _targetUnit)
     {
         action = _action;
         firePoint = _firePoint;
         target = _target;
+        targetUnit = _targetUnit;
     }
 
     private void Start()
@@ -60,14 +62,14 @@ public class Projectile : MonoBehaviour
 
         Destroy(effectIns, 5f);
 
-        action.ActivateAction();
+        action.ActivateAction(targetUnit);
 
         Destroy(gameObject);
     }
 
     private void OnDestroy()
     {
-        TurnHandler.Instance.waitingForAction = false;
+        TurnHandler.Instance.waitingForAction--;
         if (travelEffect)
         {
             travelEffectPS.Stop();

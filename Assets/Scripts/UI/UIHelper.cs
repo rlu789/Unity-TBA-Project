@@ -85,6 +85,11 @@ public class UIHelper : MonoBehaviour {
         return unitActions.GetZoneTransform();
     }
 
+    public void DebugDraw()
+    {
+        unitActions.DebugCardDraw();
+    }
+
     //public void SetUnitActions(Node node)
     //{
     //    if (node.currentUnit != null) SetUnitActions(node.currentUnit);

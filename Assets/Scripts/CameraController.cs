@@ -53,6 +53,7 @@ public class CameraController : MonoBehaviour
         {
             transform.Translate(Vector3.left * panSpeed * Time.deltaTime, Space.World);
         }
+        //TEMPORARY
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERSELECT)
@@ -60,31 +61,6 @@ public class CameraController : MonoBehaviour
                 NodeManager.Instance.Deselect();
             }
         }
-
-        //these shouldnt be in camera, just temporary
-        //if (Input.GetKeyUp(KeyCode.Escape))
-        //{
-        //    if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERMOVE)
-        //    {
-        //        if (NodeManager.Instance.unitsWithAssignedPaths.Count > 0)
-        //        {
-        //            NodeManager.Instance.UnassignUnitPath();
-        //        }
-        //    }
-        //    else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT && NodeManager.Instance.selectedNode != null && NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state == States.ACT)
-        //    {
-        //        NodeManager.Instance.Deselect();
-        //    }
-        //    else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT && NodeManager.Instance.selectedNode != null && NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state == States.PERFORM)
-        //    {
-        //        NodeManager.Instance.selectedNode.currentUnit.unitStateMachine.state = States.ACT;
-        //    }
-        //    else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERACT && TurnHandler.Instance.actionQueue.Count > 0) // if in playeract and there are actions in action queue
-        //    {
-        //        Debug.Log("Removing action for unit: " + TurnHandler.Instance.actionQueue[TurnHandler.Instance.actionQueue.Count - 1]);
-        //        TurnHandler.Instance.actionQueue[TurnHandler.Instance.actionQueue.Count - 1].unitStateMachine.state = States.ACT;
-        //        TurnHandler.Instance.actionQueue.RemoveAt(TurnHandler.Instance.actionQueue.Count - 1);
-        //    }
-        //}
+        if (Input.GetKeyUp(KeyCode.B)) UIHelper.Instance.DebugDraw();
     }
 }

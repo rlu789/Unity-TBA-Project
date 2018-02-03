@@ -40,7 +40,6 @@ public class Unit : MonoBehaviour {
         //:rage:
         unitStateMachine = GetComponent<UnitStateMachine>();
 
-        //deck = CardManager.Instance.decks[(int)stats._class];
         InitDeck();
         if (isEnemy) selectedActions = deck;
         else DrawCards(2);
@@ -268,6 +267,10 @@ public class Unit : MonoBehaviour {
         NodeManager.Instance.unitsWithAssignedPaths.Remove(this);
         Map.Instance.unitDudeEnemies.Remove(gameObject);
         Map.Instance.unitDudeFriends.Remove(gameObject);
+        currentNode.SetHexReady(false);
+        currentNode.currentUnit = null;
+        currentNode.currentUnitGO = null;
+        currentNode.potentialUnit = null;
 
         Destroy(gameObject);
     }

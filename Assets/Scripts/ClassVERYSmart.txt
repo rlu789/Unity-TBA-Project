@@ -1,2 +1,0 @@
-Magic Attack-MagicProjectile.prefab: 0 0 4 1 0 0 1 1
-Fireball-FireballProjectile.prefab: 2 0 4 8 1 1 2 1

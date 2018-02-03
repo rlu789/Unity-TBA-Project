@@ -1,3 +1,0 @@
-Melee Attack-MeleeProjectile.prefab: 0 0 1 4 0 0 5 1
-Throw Rock-RockProjectile.prefab: 0 0 2 2 0 0 4 1
-Move Dude-: 0 0 2 0 0 0 0 0

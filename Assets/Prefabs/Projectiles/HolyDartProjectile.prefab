@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 198628176461650972}
   - component: {fileID: 199236790647525554}
   m_Layer: 0
-  m_Name: HealGoldEffectGlow
+  m_Name: HolyDartEffectGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 4917275239828372}
   - component: {fileID: 114509827475585886}
   m_Layer: 0
-  m_Name: HealGoldProjectile
+  m_Name: HolyDartProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,7 +94,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1583182739588176}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.693387, y: 0.5, z: -3.5781865}
+  m_LocalPosition: {x: -9.94776, y: 0.5, z: -2.2398534}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4577436433202418}
@@ -222,7 +222,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1567657449
+  randomSeed: -1897338581
   InitialModule:
     serializedVersion: 3
     enabled: 1

@@ -18,6 +18,7 @@ public class PossibleAction
         //Debug.Log("Target is node (" + target.nodeID + ")");
         Debug.Log("Action is (" + action.name + ")");
         Debug.Log("Fitness score is (" + fitness + ")");
+        Debug.Log("Target is " + target.currentUnit);
     }
 
     public void DetermineFitness()
@@ -85,19 +86,12 @@ public class AIHelper : MonoBehaviour {
         maxAction = GetMaxRangeAction(unit, ref maxActionRange);
         maxActionAndMoveRange = maxActionRange + unit.stats.moveSpeed;   //the full distance the unit could move + its max attack range;
 
-        foreach (GameObject enemyGO in Map.Instance.unitDudeFriends)    //(friends means enemies for the enemies)
-        {
-            Unit enemy = enemyGO.GetComponent<Unit>();
+        possibleTargets = GetPossibleTargets(unit, maxActionAndMoveRange);  //get the targets 
 
-            if (Pathfindingv2.EstimateXY(unit.currentNode, enemy.currentNode) > maxActionAndMoveRange) continue; //out of range, skip this target
-
-            possibleTargets.Add(enemy); //enemy within max possible range, going to pathfind towards it
-        }
-
-        foreach (Unit enemy in possibleTargets)
+        foreach (Unit target in possibleTargets)
         {
             List<Node> pathList = new List<Node>();
-            Path<Node> path = NodeManager.Instance.CheckPath(unit.currentNode, enemy.currentNode, unit);    //find the closest node to the enemy we can get to
+            Path<Node> path = NodeManager.Instance.CheckPath(unit.currentNode, target.currentNode, unit);    //find the closest node to the target we can get to
             if (path == null)
             {
                 pathList.Add(unit.currentNode);
@@ -109,13 +103,36 @@ public class AIHelper : MonoBehaviour {
                 break;
             }
             List<Node> nodesInRange = maxAction.GetNodesInRange(pathList[pathList.Count - 1]);  //is this enemy in range from the closest we can get
-            if (nodesInRange.Contains(enemy.currentNode)) AssignActions(unit, enemy, pathList); //get possible actions for this path
+            if (nodesInRange.Contains(target.currentNode)) AssignActions(unit, target, pathList); //get possible actions for this path
 
             nodesInRange = maxAction.GetNodesInRange(unit.currentNode);                     //is this enemy in range from the starting position
-            if (nodesInRange.Contains(enemy.currentNode)) AssignActions(unit, enemy, start); //get possible actions for starting node
+            if (nodesInRange.Contains(target.currentNode)) AssignActions(unit, target, start); //get possible actions for starting node
         }
 
         HehIGuessItsTimeIMadeMyChoice(unit);
+    }
+
+    List<Unit> GetPossibleTargets(Unit unit, int range)   //TODO: bool for target allies aswell (unit has healing?)
+    {
+        List<Unit> possibleTargets = new List<Unit>();
+        foreach (GameObject enemyGO in Map.Instance.unitDudeFriends)    //(friends means enemies for the enemies)
+        {
+            Unit enemy = enemyGO.GetComponent<Unit>();
+
+            if (Pathfindingv2.EstimateXY(unit.currentNode, enemy.currentNode) > range) continue; //out of range, skip this target
+
+            possibleTargets.Add(enemy); //enemy within max possible range, going to pathfind towards it
+        }
+
+        foreach (GameObject allyGO in Map.Instance.unitDudeEnemies) //get allies (for healing)
+        {
+            Unit ally = allyGO.GetComponent<Unit>();
+
+            if (Pathfindingv2.EstimateXY(unit.currentNode, ally.currentNode) > range) continue;
+
+            possibleTargets.Add(ally);
+        }
+        return possibleTargets;
     }
 
     void AssignActions(Unit unit, Unit target, List<Node> path)
@@ -145,18 +162,17 @@ public class AIHelper : MonoBehaviour {
         possibleActions.Clear();
 
         int maxActionRange = 0;
+        List<Unit> possibleTargets = new List<Unit>();
         List<Node> start = new List<Node>();
         start.Add(unit.currentNode);
 
         GetMaxRangeAction(unit, ref maxActionRange);
 
-        foreach (GameObject enemyGO in Map.Instance.unitDudeFriends)
+        possibleTargets = GetPossibleTargets(unit, maxActionRange);
+
+        foreach (Unit target in possibleTargets)
         {
-            Unit enemy = enemyGO.GetComponent<Unit>();
-
-            if (Pathfindingv2.EstimateXY(unit.currentNode, enemy.currentNode) > maxActionRange) continue;
-
-            AssignActions(unit, enemy, start);
+            AssignActions(unit, target, start);
         }
 
         HehIGuessItsTimeIMadeMyChoice(unit, false);
@@ -178,6 +194,7 @@ public class AIHelper : MonoBehaviour {
         {
             index = Random.Range(0, Map.Instance.unitDudeFriends.Count);
             NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.unitDudeFriends[index].GetComponent<Unit>().currentNode);
+            //TODO: Change this to get ideal range and move there instead
             return;
         }
         else if ((possibleActions.Count == 0 || trueActions.Count == 0) && !move)

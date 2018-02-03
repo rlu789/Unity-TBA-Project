@@ -70,4 +70,12 @@ public class HandUI : MonoBehaviour {
     {
         return selectedZone;
     }
+
+    public void DebugCardDraw() //draws the first three cards for faster debugging
+    {
+        if (TurnHandler.Instance.currentState != TurnHandlerStates.PLAYERSELECT) return;
+        cardPrefabs[0].GetComponent<CardUI>().UseCard();
+        cardPrefabs[1].GetComponent<CardUI>().UseCard();
+        cardPrefabs[2].GetComponent<CardUI>().UseCard();
+    }
 }

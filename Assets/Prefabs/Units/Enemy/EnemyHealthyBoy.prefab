@@ -329,7 +329,7 @@ MonoBehaviour:
     moveSpeed: 2
     displayName: 
     _class: 3
-    maxMana: 3
+    maxMana: 2
     armor: 0
     currentHealth: 0
     currentMana: 0

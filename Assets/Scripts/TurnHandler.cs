@@ -32,7 +32,7 @@ public class TurnHandler : MonoBehaviour
     
     float haveYetToCrossTheBridge = 0.01f;
     [HideInInspector]
-    public bool waitingForAction = false;
+    public int waitingForAction = 0;
 
     private void Awake()
     {
@@ -57,7 +57,7 @@ public class TurnHandler : MonoBehaviour
 
     public void NextState()
     {
-        if (waitingForAction)   //if we are waiting for projectiles/animations to finish, try again in 0.5 seconds
+        if (waitingForAction != 0)   //if we are waiting for projectiles/animations to finish, try again in 0.5 seconds
         {
             Invoke("NextState", 0.5f);
             return;
@@ -189,13 +189,16 @@ public class TurnHandler : MonoBehaviour
 
     void HandleEnemyTurn()
     {
-        NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].currentNode);
-        AIHelper.Instance.AIGetTurn(orderedActions[orderedActions.Keys.First()]);
-        orderedActions[orderedActions.Keys.First()].MoveUnit();
-        orderedActions[orderedActions.Keys.First()].PerformActionDelayed(2f);
-        orderedActions[orderedActions.Keys.First()].unitStateMachine.state = States.END;
+        Unit enemy = orderedActions[orderedActions.Keys.First()];
+
+        NodeManager.Instance.SetSelectedNode(enemy.currentNode);
+        AIHelper.Instance.AIGetTurn(enemy);
+        enemy.MoveUnit();
+        AIHelper.Instance.ConfirmBestAction(enemy);
+        enemy.PerformActionDelayed(2f);
+        enemy.unitStateMachine.state = States.END;
         orderedActions.Remove(orderedActions.Keys.First());
-        Invoke("NextState", 3f);    //wait for this unit to finish its turn. TODO: handle this cleaner
+        Invoke("NextState", 3f);
     }
 
     void HandleEnemyAct()
@@ -257,6 +260,12 @@ public class TurnHandler : MonoBehaviour
 
         NextState();
     }
+
+    public string WhosTurnIsItAnyway()
+    {
+        return orderedActions[orderedActions.Keys.First()].stats.displayName;
+    }
+
     #region ah the old yeap function.. good times
     /*
     public void yeap()
