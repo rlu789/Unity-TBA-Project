@@ -30,7 +30,7 @@ public class PossibleAction
         if (targetUnit == null)
         {
             fitness = 0;  //for now ignore the fact that there could be AOE etc.
-            return; 
+            return;
         }
 
         if (!targetUnit.isEnemy)
@@ -193,14 +193,16 @@ public class AIHelper : MonoBehaviour {
 
     UnitAction GetMaxRangeAction(Unit unit, ref int maxActionRange) //returns highest range action of unit, sets maxActionRange to that actions range
     {
+        UnitAction ret = null;
         foreach (UnitAction act in unit.selectedActions)    //get the max range of all units actions
         {
+            Debug.Log(act.range + " " + act.name);
             if (act.range > maxActionRange)
             {
                 maxActionRange = act.range;
-                return act;
+                ret = act;
             }
         }
-        return null;
+        return ret;
     }
 }
