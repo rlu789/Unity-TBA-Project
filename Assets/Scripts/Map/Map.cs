@@ -57,7 +57,7 @@ public class Map : MonoBehaviour
         nodeMap[6, 2] = NodeTerrain.Water;
 
         GenerateNodes(nodeMap); //generate a grid of nodes based on the data in nodeMap
-        //PopulateNeighbors();
+
         CardManager.Instance.Setup();
         nodes[0, 0].SpawnUnit(unitDudeTypes[0], false);   //generate a guy at 0,0
         nodes[1, 0].SpawnUnit(unitDudeTypes[2], false); 
