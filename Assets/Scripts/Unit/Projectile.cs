@@ -15,12 +15,10 @@ public class Projectile : MonoBehaviour
     public float fireDelay = 0f;
     
     UnitAction action;
-    Vector3 firePoint;
 
-    public void Setup(UnitAction _action, Vector3 _firePoint, Transform _target, Unit _targetUnit)
+    public void Setup(UnitAction _action, Transform _target, Unit _targetUnit)
     {
         action = _action;
-        firePoint = _firePoint;
         target = _target;
         targetUnit = _targetUnit;
     }

@@ -6,7 +6,7 @@ public class Pathfindingv2 : MonoBehaviour
     public static Path<Node> FindPath(Node start, Node destination, List<Node> _closed = null)
     {
         int infiniteLoopProtectionTchYouWouldSealAwayMyFullStrengthWellINeedItNotPrepareYourselfBoy = 0;    //just incase we get an infinite loop :monkaS:
-        while (!destination.passable || destination.moveCost >= 100 || destination.currentUnit != null || destination.potentialUnit != null)
+        while (!destination.passable || destination.moveCost >= 100 || destination.currentUnit != null)
         {
             if (infiniteLoopProtectionTchYouWouldSealAwayMyFullStrengthWellINeedItNotPrepareYourselfBoy++ >= 10) return null;   //we tried ten times just quit already
             else destination = ClosestNeighbour(start, destination);    //if we could never make it to the node, try its closest neighbour
@@ -53,14 +53,14 @@ public class Pathfindingv2 : MonoBehaviour
     {
         if (!NodeManager.Instance.selectedNode.currentUnit.isEnemy)
         {
-            if (nodeB.potentialUnit != null && nodeB.potentialUnit.isEnemy || nodeB.currentUnit != null && nodeB.currentUnit.isEnemy)
+            if (nodeB.currentUnit != null && nodeB.currentUnit.isEnemy)
             {
                 return Mathf.Infinity;
             }
         }
         else
         {
-            if (nodeB.potentialUnit != null && !nodeB.potentialUnit.isEnemy || nodeB.currentUnit != null && !nodeB.currentUnit.isEnemy)
+            if (nodeB.currentUnit != null && !nodeB.currentUnit.isEnemy)
             {
                 return Mathf.Infinity;
             }
@@ -97,7 +97,7 @@ public class Pathfindingv2 : MonoBehaviour
 
         foreach (Node n in dest.neighbours)
         {
-            if (n.currentUnit == null && n.potentialUnit == null) possibleTargets.Add(n);
+            if (n.currentUnit == null) possibleTargets.Add(n);
         }
 
         foreach (Node n in possibleTargets)

@@ -190,11 +190,18 @@ public class AIHelper : MonoBehaviour {
 
         int index = 0;
 
-        if ((possibleActions.Count == 0 || trueActions.Count == 0) && move) //just move towards a random enemy
+        if ((possibleActions.Count == 0 || trueActions.Count == 0) && move) //just move towards a random enemy (or ally)
         {
-            index = Random.Range(0, Map.Instance.unitDudeFriends.Count);
-            NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.unitDudeFriends[index].GetComponent<Unit>().currentNode);
-            //TODO: Change this to get ideal range and move there instead
+            if (!unit.stats.hugFriends)
+            {
+                index = Random.Range(0, Map.Instance.unitDudeFriends.Count);
+                NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.unitDudeFriends[index].GetComponent<Unit>().currentNode);
+            }
+            else
+            {
+                index = Random.Range(0, Map.Instance.unitDudeEnemies.Count);
+                NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.unitDudeEnemies[index].GetComponent<Unit>().currentNode);
+            }
             return;
         }
         else if ((possibleActions.Count == 0 || trueActions.Count == 0) && !move)

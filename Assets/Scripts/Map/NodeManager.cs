@@ -84,11 +84,6 @@ public class NodeManager : MonoBehaviour {
             if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTING) return; // player still picking cards
             if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTINGMOVE) //player has selected a movement card
             {
-                if (node.potentialUnit != null)
-                {
-                    Debug.Log("Node has a potential unit! Unit: " + node.potentialUnit);    //put some message here
-                    return;
-                }
                 if (node.currentUnit != null)
                 {
                     Debug.Log("Node has a unit! Unit: " + node.currentUnit);

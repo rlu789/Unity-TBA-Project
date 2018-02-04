@@ -331,6 +331,8 @@ MonoBehaviour:
     _class: 2
     maxMana: 5
     armor: 0
+    idealRange: 4
+    hugFriends: 0
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
@@ -341,11 +343,8 @@ MonoBehaviour:
   FirePoint: {fileID: 4341415800392146}
   XY: {x: 0, y: 0}
   currentNodeID: -1
-  currentPath: []
-  __testObject: {fileID: 1798533339409000, guid: bb8f408335feb8743b3450a994bb8690,
-    type: 2}
   currentNode: {fileID: 0}
-  targetActionNode: {fileID: 0}
+  currentPath: []
   readyAction:
     projectile: {fileID: 0}
     name: 
@@ -366,6 +365,7 @@ MonoBehaviour:
       visualIns: {fileID: 0}
     currentCooldown: 0
   readyActionIndex: 0
+  targetActionNode: {fileID: 0}
   unitStateMachine: {fileID: 0}
   statuses: []
 --- !u!135 &135336063579494900

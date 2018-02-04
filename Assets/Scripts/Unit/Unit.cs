@@ -15,19 +15,22 @@ public class Unit : MonoBehaviour {
     [Header("For unity and debug, don't change")]
     public Vector2Int XY = new Vector2Int(0, 0);
     public int currentNodeID = -1;
+    public Node currentNode;
+    //Movement fields
     public List<Node> currentPath = new List<Node>();
-    public GameObject __testObject;
-    //fresh fIelds
     List<Node> movePath = new List<Node>();
     List<GameObject> pathVisual = new List<GameObject>();
     int currMoveIndex = 0;
-    public Node currentNode, targetActionNode;
-
+    //Action fields
     public UnitAction readyAction;
     public int readyActionIndex;
+    public Node targetActionNode;
     public UnitStateMachine unitStateMachine;
 
     public List<Status> statuses = new List<Status>();
+    //Network fields
+    int ownerID;
+
 
     GameObject[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,] loadBearingArray;
 
@@ -101,7 +104,8 @@ public class Unit : MonoBehaviour {
             return;
         }
     }
-
+    //TODO: bug when trying to move to a new node while already moving to a node (i believe only when trying to move a shorter distance than the current movement distance?) will fix later
+    //ive only seen it happen with very smart guy
     public void MoveUnit()    //moves unit on selected tile
     {
         List<Node> pathToFollow = currentPath;   //get the path to follow, based on the max distance the unit can move this turn
@@ -120,7 +124,6 @@ public class Unit : MonoBehaviour {
         //set values on initial and destination nodes
         _destNode.currentUnitGO = gameObject;
         _destNode.currentUnit = this;
-        _destNode.potentialUnit = null;
         Map.Instance.nodes[XY.x, XY.y].currentUnitGO = null;
         Map.Instance.nodes[XY.x, XY.y].currentUnit = null;
 
@@ -148,9 +151,7 @@ public class Unit : MonoBehaviour {
 
         pathVisual = PathHelper.Instance.DrawActualPath(_currentPath);
 
-        if (currentPath.Count != 0) currentPath[currentPath.Count - 1].potentialUnit = null;
         currentPath = _currentPath;
-        currentPath[currentPath.Count - 1].potentialUnit = this;
     }
 
     public void DeleteUnitPath()
@@ -159,7 +160,6 @@ public class Unit : MonoBehaviour {
             Destroy(haha);
         pathVisual.Clear();
 
-        currentPath[currentPath.Count - 1].potentialUnit = null;
         currentPath.Clear();
         stats.currentMovement = stats.moveSpeed;
         UIHelper.Instance.SetStatistics(this);
@@ -171,7 +171,7 @@ public class Unit : MonoBehaviour {
 
         Node nodeToCheck = _currentPath[_currentPath.Count - 1];
 
-        return (nodeToCheck.potentialUnit != null || nodeToCheck.currentUnit != null) ? false : true;
+        return (nodeToCheck.currentUnit != null) ? false : true;
     }
 
     public List<Node> GetValidPath(List<Node> path, bool moving = false)    //optional arguement to update units movement when getting valid path
@@ -203,7 +203,7 @@ public class Unit : MonoBehaviour {
 
         for (int i = 0; i < nameLength; ++i)
         {
-            randIndex = Random.Range(0, letters.Length - 1);
+            randIndex = Random.Range(0, letters.Length);
             if (i > 0) name += letters[randIndex];
             else name += letters[randIndex].ToUpper();
         }
@@ -213,9 +213,7 @@ public class Unit : MonoBehaviour {
     public List<Node> FindRange()
     {
         if (readyAction == null) return null;
-        int range = readyAction.range;
-
-        return readyAction.GetNodesInRange(currentNode);
+        else return readyAction.GetNodesInRange(currentNode);
     }
 
     public void PerformAction()
@@ -223,25 +221,18 @@ public class Unit : MonoBehaviour {
         if (readyAction == null)
         {
             targetActionNode = null;
-            Debug.Log("No action, returning...");
             return;
         }
         if (targetActionNode == null)
         {
             targetActionNode = null;
             readyAction = null;
-            Debug.Log("No node selected, returning..");
             return;
         }
 
-        if (targetActionNode.currentUnit == null)
-        {
-            Debug.Log("Used action on empty node.");
-        }
         readyAction.UseAction(targetActionNode, this);
         if (!isEnemy) discardedActions.Add(readyAction);
 
-        //BANdAG
         SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap();
     }
 
@@ -262,6 +253,13 @@ public class Unit : MonoBehaviour {
         if (UIHelper.Instance.GetCurrentUnit() == this) UIHelper.Instance.SetStatistics(this);
     }
 
+    public void ApplyStatus(Status status)
+    {
+        if (status.visual != null) status.visualIns = Instantiate(status.visual, transform.position, Quaternion.identity);
+        StatusHelper.Instance.ApplyInitialEffects(status, this);
+        statuses.Add(status);
+    }
+
     void Die()
     {
         NodeManager.Instance.unitsWithAssignedPaths.Remove(this);
@@ -270,7 +268,6 @@ public class Unit : MonoBehaviour {
         currentNode.SetHexReady(false);
         currentNode.currentUnit = null;
         currentNode.currentUnitGO = null;
-        currentNode.potentialUnit = null;
 
         Destroy(gameObject);
     }
@@ -306,23 +303,6 @@ public class Unit : MonoBehaviour {
             }
         }
     }
-
-    public void ApplyStatus(Status status)
-    {
-        if (status.visual != null) status.visualIns = Instantiate(status.visual, transform.position, Quaternion.identity);
-        statuses.Add(status);
-    }
-    //public void TogglePathVisual(bool toggle)
-    //{
-    //    if (pathVisual.Count == 0) return;
-
-    //    foreach (GameObject GO in pathVisual)
-    //    {
-    //        GO.SetActive(toggle);
-    //    }
-    //}
-
-    //public void AddAction(UnitAction action) { } //add action to a unit
 
     public void SelectCard(int index)
     {

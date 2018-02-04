@@ -14,7 +14,6 @@ public class Node : MonoBehaviour {
     [Space(10)]
     public GameObject currentUnitGO;
     public Unit currentUnit;
-    public Unit potentialUnit; // If a unit of going to move here at end of turn
 
     [HideInInspector]
     public int nodeID;
@@ -38,7 +37,7 @@ public class Node : MonoBehaviour {
         moveCost = _moveCost;
         myRenderer = GetComponent<Renderer>();
         material = myRenderer.material;
-        List<Node> neighbours = new List<Node>();
+        //List<Node> neighbours = new List<Node>();
     }
 
     public void SpawnUnit(GameObject unitGO, bool isEnemy)

@@ -11,6 +11,10 @@ public class UnitStats{
     public int maxMana = 3;
     public int armor = 0;
 
+    [Header("AI Fields")]
+    public int idealRange = 1;
+    public bool hugFriends = false;
+
     [HideInInspector]
     public int currentHealth;
     [HideInInspector]

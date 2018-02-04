@@ -90,7 +90,6 @@ public class TurnHandler : MonoBehaviour
         NodeManager.Instance.Deselect();
         if (orderedActions.Count == 0)
         {
-            Debug.Log("Round Ended.");
             return TurnHandlerStates.END;
         }
         if (orderedActions[orderedActions.Keys.First()] == null)    //enemy was killed

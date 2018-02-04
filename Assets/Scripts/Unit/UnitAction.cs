@@ -48,8 +48,8 @@ public class UnitAction {
         }
         TurnHandler.Instance.waitingForAction++;
         GameObject projectileGO = Object.Instantiate(projectile, owner.FirePoint.position, Quaternion.identity);
-        if (targetNode.currentUnit == null) projectileGO.GetComponent<Projectile>().Setup(this, owner.FirePoint.position, targetNode.transform, null); //if we dont find a target just fire at the node
-        else projectileGO.GetComponent<Projectile>().Setup(this, owner.FirePoint.position, targetNode.currentUnit.FirePoint, targetNode.currentUnit);
+        if (targetNode.currentUnit == null) projectileGO.GetComponent<Projectile>().Setup(this, targetNode.transform, null); //if we dont find a target just fire at the node
+        else projectileGO.GetComponent<Projectile>().Setup(this, targetNode.currentUnit.FirePoint, targetNode.currentUnit);
     }
 
     public void ActivateAction(Unit target)    //only call from projectile

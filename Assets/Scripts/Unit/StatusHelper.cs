@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 //The actual things the status can do. Damage over time (each turn), increase movespeed, change action amount, reduce damage done, etc.
 public enum StatusType { DOT, MoveSpeed, Actions, OutgoingDamage, IncomingDamage }
@@ -16,7 +15,7 @@ public class Effect
 
     public StatusType type;
     public int strength;
-    bool initialEffect; //initial effects are applied immediately and then removed
+    public bool initialEffect; //initial effects are applied immediately and then removed
 }
 
 [System.Serializable]
@@ -61,36 +60,51 @@ public class StatusHelper : MonoBehaviour {
             {
                 RemoveStatus(unit, i);
             }
-            else ApplyStatus(unit.statuses[i], unit);
+            else ApplyEffects(unit.statuses[i], unit);
         }
     }
 
-    void ApplyStatus(Status status, Unit unit)
+    void ApplyEffects(Status status, Unit unit)
     {
         foreach (Effect eff in status.effects)
         {
-            switch (eff.type)
-            {
-                case StatusType.DOT:
-                    Debug.Log("Damage over time called.");
-                    unit.TakeDamage(eff.strength);
-                    break;
-                case StatusType.MoveSpeed:
-                    Debug.Log("Speed change called.");
-                    break;
-                case StatusType.Actions:
-                    Debug.Log("Action amount change called.");
-                    break;
-                case StatusType.OutgoingDamage:
-                    Debug.Log("Out. Damage reduction called.");
-                    break;
-                case StatusType.IncomingDamage:
-                    Debug.Log("Inc. Damage reduction called.");
-                    break;
-            }
+            if (eff.initialEffect) continue;    //initial effects are check once then skipped
+            UseEffect(eff, unit);
         }
         //reduce the effect duration
         status.duration--;
+    }
+
+    public void ApplyInitialEffects(Status status, Unit unit)
+    {
+        foreach (Effect eff in status.effects)
+        {
+            if (!eff.initialEffect) continue;    //only initial effects are used
+            UseEffect(eff, unit);
+        }
+    }
+
+    void UseEffect(Effect eff, Unit unit)
+    {
+        switch (eff.type)
+        {
+            case StatusType.DOT:
+                Debug.Log("Damage over time called.");
+                unit.TakeDamage(eff.strength);
+                break;
+            case StatusType.MoveSpeed:
+                Debug.Log("Speed change called.");
+                break;
+            case StatusType.Actions:
+                Debug.Log("Action amount change called.");
+                break;
+            case StatusType.OutgoingDamage:
+                Debug.Log("Out. Damage reduction called.");
+                break;
+            case StatusType.IncomingDamage:
+                Debug.Log("Inc. Damage reduction called.");
+                break;
+        }
     }
 
     void RemoveStatus(Unit unit, int index)
