@@ -1,11 +1,9 @@
-/manacost healthcost range damage aoe cooldown initiative type actionclass
-
 [Action]
 Name: Move Dude
 Prefab: 
 Mana: 0
 Health: 0
-Range: 0
+Range: 2
 Damage: 0
 AOE: 0
 Cooldown: 0
