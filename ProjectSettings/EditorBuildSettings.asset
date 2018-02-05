@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/NetworkLobby.unity
+    guid: 91aca881927f73a48bc435ac210179c9
+  - enabled: 1
+    path: Assets/BattleMap.unity
+    guid: 88ff7b5afacef8049b33f2a3ae0e20a1

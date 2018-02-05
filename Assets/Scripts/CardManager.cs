@@ -71,6 +71,7 @@ public class CardManager : MonoBehaviour
                 action.name = actionName;
                 //Debug.Log(prefabName);
                 action.projectile = (GameObject)AssetDatabase.LoadAssetAtPath(prefabName, typeof(GameObject));
+                //action.projectile = (GameObject)Resources.Load(prefabName, typeof(GameObject));
                 action.manaCost = (int)Char.GetNumericValue(line[i + 2]);
                 action.healthCost = (int)Char.GetNumericValue(line[i + 4]);
                 action.range = (int)Char.GetNumericValue(line[i + 6]);

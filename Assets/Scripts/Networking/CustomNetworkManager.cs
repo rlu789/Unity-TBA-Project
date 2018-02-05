@@ -11,6 +11,7 @@ public class CustomNetworkManager : NetworkManager
         //Debug.Log(NetworkServer.listenPort);
         //Debug.Log(client.serverPort);
         //Debug.Log(NetworkManager.singleton.networkAddress);
+        gameObject.SetActive(false);
     }
 
     public void JoinGame()
@@ -18,6 +19,8 @@ public class CustomNetworkManager : NetworkManager
         SetIPAddress();
         SetPort();
         StartClient();
+
+        gameObject.SetActive(false);
     }
 
     public void SetIPAddress()

@@ -19,7 +19,10 @@ public class PlayerSetup : NetworkBehaviour
             {
                 componentsToDisable[i].enabled = false;
             }
+            return;
         }
         GetComponent<PlayerInfo>().playerID = connectionToServer.connectionId;
+
+        FindObjectOfType<LobbyUI>().playerInfo = GetComponent<PlayerInfo>();
     }
 }

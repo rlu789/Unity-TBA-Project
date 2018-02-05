@@ -1,4 +1,6 @@
 ﻿using UnityEngine.Networking;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NetworkCommands : NetworkBehaviour
 {
@@ -9,7 +11,7 @@ public class NetworkCommands : NetworkBehaviour
         playerInfo = GetComponent<PlayerInfo>();
     }
 
-    #region Getting team list from host
+    #region Lobby team list
     [Command]
     public void CmdRequestTeamList()    //request team list
     {
@@ -46,7 +48,24 @@ public class NetworkCommands : NetworkBehaviour
         playerInfo.ChangeTeam(teamList);
     }
 
-    //TODO: send local team when player is ready, display each players local team on each client.
-    //when everyone is ready, switch scene to battlemap with the complete team list
+    [Command]
+    public void CmdLobbyReady(TeamListing[] localTeam)  //send other players your local team
+    {
+        RpcLobbyReady(localTeam);
+    }
+
+    [ClientRpc]
+    public void RpcLobbyReady(TeamListing[] localTeam) //set the team units at a preset location for the owner
+    {
+        int ownerID = localTeam[0].ownerID; //get the owner ID from one of the sent units
+        playerInfo.team[ownerID * 2] = localTeam[0];
+        playerInfo.team[(ownerID * 2) + 1] = localTeam[1];
+    }
+
+    [Command]
+    public void CmdLobbyStartGame()
+    {
+        SceneManager.LoadScene(1);
+    }
     #endregion
 }

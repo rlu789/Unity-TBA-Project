@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 [System.Serializable]
-public class TeamListing
+public class TeamListing    //TODO: move to a different class
 {
     public TeamListing()
     {
@@ -23,7 +23,7 @@ public class TeamListing
 public class PlayerInfo : MonoBehaviour {
 
     public int playerID;
-    NetworkCommands commands;
+    public NetworkCommands commands;
 
     public TeamListing[] team = new TeamListing[10];
     public List<TeamListing> localTeam = new List<TeamListing>();
