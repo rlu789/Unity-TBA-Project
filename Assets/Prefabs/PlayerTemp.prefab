@@ -22,6 +22,9 @@ GameObject:
   - component: {fileID: 33484272267159198}
   - component: {fileID: 23431598642508246}
   - component: {fileID: 114649712683325270}
+  - component: {fileID: 114501917749811650}
+  - component: {fileID: 114434885544691780}
+  - component: {fileID: 114893507576799748}
   m_Layer: 0
   m_Name: PlayerTemp
   m_TagString: Untagged
@@ -37,7 +40,7 @@ Transform:
   m_GameObject: {fileID: 1744815581009890}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 559.4003, y: 324.33945, z: 1.7780664}
-  m_LocalScale: {x: 50, y: 50, z: 50}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -83,6 +86,57 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1744815581009890}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114434885544691780
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1744815581009890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48c640a0f63b26247b67f3d247d3a347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerID: -1
+  commands: {fileID: 0}
+  team:
+  - ownerID: 0
+    unitID: -1
+  - ownerID: 0
+    unitID: -1
+  - ownerID: 0
+    unitID: -1
+  - ownerID: 0
+    unitID: -1
+  - ownerID: 0
+    unitID: -1
+  - ownerID: 0
+    unitID: -1
+  - ownerID: 0
+    unitID: -1
+  - ownerID: 0
+    unitID: -1
+  - ownerID: 0
+    unitID: -1
+  - ownerID: 0
+    unitID: -1
+  localTeam: []
+  teamCapacity: 6
+  localTeamCapacity: 2
+--- !u!114 &114501917749811650
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1744815581009890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f77ed444adef554e9fc05a1496b1dbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  componentsToDisable:
+  - {fileID: 114434885544691780}
+  - {fileID: 114893507576799748}
 --- !u!114 &114649712683325270
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -115,3 +169,14 @@ MonoBehaviour:
     i15: 111
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114893507576799748
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1744815581009890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccd7f78abc2acd1488c8b293cb4bcd57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

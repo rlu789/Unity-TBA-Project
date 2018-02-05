@@ -29,7 +29,7 @@ public class Unit : MonoBehaviour {
 
     public List<Status> statuses = new List<Status>();
     //Network fields
-    int ownerID;
+    public int ownerID;
 
     GameObject[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,][,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,] loadBearingArray;
 

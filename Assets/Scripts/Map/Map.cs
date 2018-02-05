@@ -19,7 +19,6 @@ public class Map : MonoBehaviour
     public int mapSizeY = 8;
     public int nodeSize = 2;
     [Space(10)]
-    public GameObject[] unitDudeTypes;
     public List<GameObject> unitDudeFriends = new List<GameObject>();
     public List<GameObject> unitDudeEnemies = new List<GameObject>();
 
@@ -59,14 +58,7 @@ public class Map : MonoBehaviour
         GenerateNodes(nodeMap); //generate a grid of nodes based on the data in nodeMap
 
         CardManager.Instance.Setup();
-        nodes[0, 0].SpawnUnit(unitDudeTypes[0], false);   //generate a guy at 0,0
-        nodes[1, 0].SpawnUnit(unitDudeTypes[2], false); 
-        nodes[2, 0].SpawnUnit(unitDudeTypes[4], false); 
-        nodes[1, 1].SpawnUnit(unitDudeTypes[6], false);
-        nodes[6, 5].SpawnUnit(unitDudeTypes[1], true); 
-        nodes[5, 5].SpawnUnit(unitDudeTypes[3], true); 
-        nodes[7, 4].SpawnUnit(unitDudeTypes[5], true);
-        nodes[6, 4].SpawnUnit(unitDudeTypes[7], true);
+        SpawnUnits();
         UIHelper.Instance.Setup();
         TurnHandler.Instance.Setup(); // after all units are spawned, setup turn handler
     }
@@ -88,6 +80,39 @@ public class Map : MonoBehaviour
         }
 
         VisitNeighbours();
+    }
+
+    void SpawnUnits()
+    {
+        PlayerInfo p = FindObjectOfType<PlayerInfo>();
+
+        if (p == null)  //no player found, just generate some hard coded dudes
+        {
+            nodes[0, 0].SpawnUnit(PrefabHelper.Instance.units[0], false);
+            nodes[1, 0].SpawnUnit(PrefabHelper.Instance.units[2], false);
+            nodes[2, 0].SpawnUnit(PrefabHelper.Instance.units[4], false);
+            nodes[1, 1].SpawnUnit(PrefabHelper.Instance.units[6], false);
+            nodes[6, 5].SpawnUnit(PrefabHelper.Instance.units[1], true);
+            nodes[5, 5].SpawnUnit(PrefabHelper.Instance.units[3], true);
+            nodes[7, 4].SpawnUnit(PrefabHelper.Instance.units[5], true);
+            nodes[6, 4].SpawnUnit(PrefabHelper.Instance.units[7], true);
+        }
+        else
+        {
+            for (int i = 0; i < p.team.Length; i+=2)
+            {
+                if (p.team[i].unitID == -1)
+                {
+                    Debug.Log("Thats a null unit there");
+                    continue;
+                }
+                nodes[0, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i].unitID], false, p.team[i].ownerID);
+                nodes[1, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i + 1].unitID], false, p.team[i].ownerID);
+                //spawn enemy clones of chosen units
+                nodes[6, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i].unitID + 1], true);
+                nodes[7, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i + 1].unitID + 1], true);
+            }
+        }
     }
 
     public void VisitNeighbours()
