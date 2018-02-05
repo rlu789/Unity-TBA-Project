@@ -136,7 +136,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   componentsToDisable:
   - {fileID: 114434885544691780}
-  - {fileID: 114893507576799748}
 --- !u!114 &114649712683325270
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -180,3 +179,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccd7f78abc2acd1488c8b293cb4bcd57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInfo: {fileID: 0}

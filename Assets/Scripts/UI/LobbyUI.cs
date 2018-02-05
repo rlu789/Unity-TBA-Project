@@ -29,7 +29,7 @@ public class LobbyUI : MonoBehaviour {
         if (playerInfo.localTeam.Count != 2) Debug.Log("Select two units");
         else
         {
-            playerInfo.commands.CmdLobbyReady(playerInfo.localTeam.ToArray());
+            PlayerInfo.Instance.commands.CmdLobbyReady(playerInfo.localTeam.ToArray());
             gameObject.SetActive(false);
         }
     }

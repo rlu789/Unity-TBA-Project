@@ -84,7 +84,7 @@ public class Map : MonoBehaviour
 
     void SpawnUnits()
     {
-        PlayerInfo p = FindObjectOfType<PlayerInfo>();
+        PlayerInfo p = PlayerInfo.Instance;
 
         if (p == null)  //no player found, just generate some hard coded dudes
         {

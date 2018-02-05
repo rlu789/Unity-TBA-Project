@@ -15,6 +15,7 @@ public class PlayerSetup : NetworkBehaviour
     {
         if (!isLocalPlayer)
         {
+            Debug.Log("Not the local player");
             for (int i = 0; i < componentsToDisable.Length; ++i)
             {
                 componentsToDisable[i].enabled = false;

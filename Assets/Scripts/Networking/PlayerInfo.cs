@@ -24,6 +24,8 @@ public class UnitListing    //TODO: move to a different class
 
 public class PlayerInfo : MonoBehaviour {
 
+    public static PlayerInfo Instance;
+
     public int playerID;
     public NetworkCommands commands;
 
@@ -38,10 +40,16 @@ public class PlayerInfo : MonoBehaviour {
         commands.playerInfo = this;
 
         if (playerID != 0) GetComponent<PlayerInfo>().commands.CmdRequestTeamList();
-        team.Initialize();
-        Debug.Log(localTeam.Count);
-        Debug.Log(team.Length);
+
         Debug.Log("Player " + playerID + " joined.");
+
+        if (Instance != null)
+        {
+            Debug.LogError("PlayerInfo already exists!");
+            enabled = false;
+            return;
+        }
+        Instance = this;
     }
 
     public void AddTeamMember(int unitID)
@@ -67,6 +75,5 @@ public class PlayerInfo : MonoBehaviour {
     public void ChangeTeam(UnitListing[] teamList)   //updated based on host
     {
         team = teamList;
-        //display full team based on all players local teams
     }
 }
