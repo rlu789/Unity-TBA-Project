@@ -2,7 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System;
-using UnityEditor;
+//using UnityEditor; //can't use this in build
 
 public class CardManager : MonoBehaviour
 {
@@ -47,8 +47,9 @@ public class CardManager : MonoBehaviour
     {
         UnitAction action = new UnitAction();
         bool takingName = true, takingPrefab = false;
-        string actionName = "", prefabName = "Assets/Prefabs/Projectiles/";
-
+        string actionName = "";
+        int prefabIndex = 0;   //not going to work with two digit numbers or higher (or negative), could take in string and convert it
+        //prefabName = "Assets/Prefabs/Projectiles/";
         for (int i = 0; i < line.Length; i++)
         {
             if (line[i].Equals('-'))
@@ -64,14 +65,14 @@ public class CardManager : MonoBehaviour
             }
             else if (takingPrefab)
             {
-                prefabName += line[i];
+                prefabIndex = (int)Char.GetNumericValue(line[i]);
             }
             else
             {
                 action.name = actionName;
-                //Debug.Log(prefabName);
-                action.projectile = (GameObject)AssetDatabase.LoadAssetAtPath(prefabName, typeof(GameObject));
-                //action.projectile = (GameObject)Resources.Load(prefabName, typeof(GameObject));
+                //if (prefabIndex > 0) prefabIndex -= '0'; //char to int conversion
+                action.projectile = PrefabHelper.Instance.projectiles[prefabIndex];
+                //action.projectile = (GameObject)AssetDatabase.LoadAssetAtPath(prefabName, typeof(GameObject));
                 action.manaCost = (int)Char.GetNumericValue(line[i + 2]);
                 action.healthCost = (int)Char.GetNumericValue(line[i + 4]);
                 action.range = (int)Char.GetNumericValue(line[i + 6]);

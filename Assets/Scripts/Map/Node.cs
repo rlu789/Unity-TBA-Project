@@ -40,7 +40,7 @@ public class Node : MonoBehaviour {
         //List<Node> neighbours = new List<Node>();
     }
 
-    public void SpawnUnit(GameObject unitGO, bool isEnemy)
+    public void SpawnUnit(GameObject unitGO, bool isEnemy, int ownerID = 0)
     {
         if (currentUnitGO != null)
         {
@@ -57,6 +57,7 @@ public class Node : MonoBehaviour {
         unitComponent.XY = XY;
         unitComponent.currentNodeID = nodeID;
         unitComponent.isEnemy = isEnemy;
+        unitComponent.ownerID = ownerID;
         unitComponent.currentNode = this;
     }
 

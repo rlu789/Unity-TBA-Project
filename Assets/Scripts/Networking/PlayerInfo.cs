@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 
 [System.Serializable]
-public class TeamListing    //TODO: move to a different class
+public class UnitListing    //TODO: move to a different class
 {
-    public TeamListing()
+    public UnitListing()
     {
         ownerID = 0;
-        unitID = -1;
+        unitID = -1;    //ID points to an array of all units
+        //deck to assign to unit
+        //any changes to stats like missing health etc. if we want to carry that over between battles
     }
 
-    public TeamListing(int _ownerID, int _unitID)
+    public UnitListing(int _ownerID, int _unitID)
     {
         ownerID = _ownerID;
         unitID = _unitID;
@@ -25,16 +27,20 @@ public class PlayerInfo : MonoBehaviour {
     public int playerID;
     public NetworkCommands commands;
 
-    public TeamListing[] team = new TeamListing[10];
-    public List<TeamListing> localTeam = new List<TeamListing>();
+    public UnitListing[] team = new UnitListing[10];
+    public List<UnitListing> localTeam = new List<UnitListing>();
     public int teamCapacity = 8;
     public int localTeamCapacity = 2;
 
     private void Start()
     {
         commands = FindObjectOfType<NetworkCommands>();
-        Debug.Log(commands);
+        commands.playerInfo = this;
 
+        if (playerID != 0) GetComponent<PlayerInfo>().commands.CmdRequestTeamList();
+        team.Initialize();
+        Debug.Log(localTeam.Count);
+        Debug.Log(team.Length);
         Debug.Log("Player " + playerID + " joined.");
     }
 
@@ -45,7 +51,7 @@ public class PlayerInfo : MonoBehaviour {
             Debug.Log("Too many units!");
             return;
         }
-        localTeam.Add(new TeamListing(playerID, unitID));
+        localTeam.Add(new UnitListing(playerID, unitID));
     }
 
     public void RemoveFromTeam()
@@ -58,7 +64,7 @@ public class PlayerInfo : MonoBehaviour {
         localTeam.RemoveAt(localTeam.Count - 1);
     }
 
-    public void ChangeTeam(TeamListing[] teamList)   //updated based on host
+    public void ChangeTeam(UnitListing[] teamList)   //updated based on host
     {
         team = teamList;
         //display full team based on all players local teams
