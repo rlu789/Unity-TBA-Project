@@ -2,7 +2,7 @@
 
 [Action]
 Name: Move Dude
-Prefab:
+Prefab: 
 Mana: 0
 Health: 0
 Range: 0
@@ -16,7 +16,7 @@ ActionClass: 0
 
 [Action]
 Name: Melee Attack
-Prefab: MeleeProjectile.prefab
+Prefab: 0 MeleeProjectile.prefab
 Mana: 0
 Health: 0
 Range: 1
@@ -30,7 +30,7 @@ ActionClass: 1
 
 [Action]
 Name: Power Attack
-Prefab: MeleePowerfulProjectile.prefab
+Prefab: 2 MeleePowerfulProjectile.prefab
 Mana: 0
 Health: 4
 Range: 1
@@ -44,7 +44,7 @@ ActionClass: 3
 
 [Action]
 Name: Magic Attack
-Prefab: MagicProjectile.prefab
+Prefab: 4 MagicProjectile.prefab
 Mana: 0
 Health: 0
 Range: 4
@@ -58,7 +58,7 @@ ActionClass: 2
 
 [Action]
 Name: Fireball
-Prefab: FireballProjectile.prefab
+Prefab: 5 FireballProjectile.prefab
 Mana: 2
 Health: 0
 Range: 4
@@ -72,7 +72,7 @@ ActionClass: 2
 
 [Action]
 Name: Throw Rock
-Prefab: RockProjectile.prefab
+Prefab: 1 RockProjectile.prefab
 Mana: 0
 Health: 0
 Range: 2
@@ -86,7 +86,7 @@ ActionClass: 1
 
 [Action]
 Name: Rest
-Prefab: RestProjectile.prefab
+Prefab: 3 RestProjectile.prefab
 Mana: 0
 Health: 0
 Range: 0
@@ -100,7 +100,7 @@ ActionClass: 3
 
 [Action]
 Name: Holy Dart
-Prefab: HolyDartProjectile.prefab
+Prefab: 6 HolyDartProjectile.prefab
 Mana: 0
 Health: 0
 Range: 3

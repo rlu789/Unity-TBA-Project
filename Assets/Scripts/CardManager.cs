@@ -2,7 +2,6 @@
 using System.IO;
 using System.Collections.Generic;
 using System;
-using UnityEditor;
 
 public class CardManager : MonoBehaviour
 {
@@ -68,7 +67,14 @@ public class CardManager : MonoBehaviour
                     }
                     break;
                 case "Prefab:":
-                    if (parts.Length > 1) tempAction.projectile = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefabs/Projectiles/" + parts[++i], typeof(GameObject));
+                    try
+                    {
+                        if (parts.Length > 1) tempAction.projectile = PrefabHelper.Instance.projectiles[Int32.Parse(parts[++i])];
+                    }
+                    catch (System.FormatException)
+                    {
+                        Debug.Log("ur welcome mike");
+                    }
                     break;
                 case "Mana:":
                     tempAction.manaCost = Int32.Parse(parts[++i]);
