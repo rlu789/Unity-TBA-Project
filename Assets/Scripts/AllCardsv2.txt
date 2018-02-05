@@ -1,0 +1,113 @@
+/manacost healthcost range damage aoe cooldown initiative type actionclass
+
+[Action]
+Name: Move Dude
+Prefab:
+Mana: 0
+Health: 0
+Range: 0
+Damage: 0
+AOE: 0
+Cooldown: 0
+Initiative: 3
+Type: 0
+ActionClass: 0
+[End]
+
+[Action]
+Name: Melee Attack
+Prefab: MeleeProjectile.prefab
+Mana: 0
+Health: 0
+Range: 1
+Damage: 4
+AOE: 0
+Cooldown: 0
+Initiative: 3
+Type: 1
+ActionClass: 1
+[End]
+
+[Action]
+Name: Power Attack
+Prefab: MeleePowerfulProjectile.prefab
+Mana: 0
+Health: 4
+Range: 1
+Damage: 8
+AOE: 0
+Cooldown: 0
+Initiative: 5
+Type: 1
+ActionClass: 3
+[End]
+
+[Action]
+Name: Magic Attack
+Prefab: MagicProjectile.prefab
+Mana: 0
+Health: 0
+Range: 4
+Damage: 2
+AOE: 0
+Cooldown: 0
+Initiative: 2
+Type: 1
+ActionClass: 2
+[End]
+
+[Action]
+Name: Fireball
+Prefab: FireballProjectile.prefab
+Mana: 2
+Health: 0
+Range: 4
+Damage: 8
+AOE: 1
+Cooldown: 1
+Initiative: 7
+Type: 1
+ActionClass: 2
+[End]
+
+[Action]
+Name: Throw Rock
+Prefab: RockProjectile.prefab
+Mana: 0
+Health: 0
+Range: 2
+Damage: 2
+AOE: 0
+Cooldown: 0
+Initiative: 3
+Type: 1
+ActionClass: 1
+[End]
+
+[Action]
+Name: Rest
+Prefab: RestProjectile.prefab
+Mana: 0
+Health: 0
+Range: 0
+Damage: -4
+AOE: 0
+Cooldown: 0
+Initiative: 1
+Type: 1
+ActionClass: 3
+[End]
+
+[Action]
+Name: Holy Dart
+Prefab: HolyDartProjectile.prefab
+Mana: 0
+Health: 0
+Range: 3
+Damage: -3
+AOE: 0
+Cooldown: 0
+Initiative: 1
+Type: 1
+ActionClass: 4
+[End]
