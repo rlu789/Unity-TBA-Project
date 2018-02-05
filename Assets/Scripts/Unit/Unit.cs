@@ -120,6 +120,51 @@ public class Unit : MonoBehaviour {
 
         Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
 
+        //if we arent the player that called this movement then send it to the other players
+        if (!isEnemy)
+        {
+            if (PlayerInfo.Instance != null)
+            {
+                PlayerInfo.Instance.commands.CmdSendMove(currentNode.nodeID, _destNode.nodeID);
+                return;
+            }
+        }
+
+        //set values on initial and destination nodes
+        _destNode.currentUnitGO = gameObject;
+        _destNode.currentUnit = this;
+        Map.Instance.nodes[XY.x, XY.y].currentUnitGO = null;
+        Map.Instance.nodes[XY.x, XY.y].currentUnit = null;
+
+        //set units new node values
+        Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
+        unitComponent.XY = _destNode.XY;
+        unitComponent.currentNodeID = _destNode.nodeID;
+        currentNode = _destNode;
+
+        //BANDAID
+        if (!isEnemy)
+        {
+            selectedActions.Remove(readyAction);
+            discardedActions.Add(readyAction);
+        }
+    }
+
+    public void MoveUnitClient()    //doesnt send commands to other players
+    {
+        List<Node> pathToFollow = currentPath;   //get the path to follow, based on the max distance the unit can move this turn
+        movePath = currentPath;
+        foreach (GameObject haha in pathVisual)
+            Destroy(haha);
+        pathVisual.Clear();
+        if (pathToFollow == null)
+            return;
+        if (pathToFollow.Count == 0)
+            return;
+        if (pathToFollow[0] == currentNode && pathToFollow.Count == 1) return;
+
+        Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
+
         //set values on initial and destination nodes
         _destNode.currentUnitGO = gameObject;
         _destNode.currentUnit = this;
@@ -229,10 +274,40 @@ public class Unit : MonoBehaviour {
             return;
         }
 
+        //if we arent the player that called this action then send it to the other players
+        if (!isEnemy)
+        {
+            if (PlayerInfo.Instance != null)
+            {
+                PlayerInfo.Instance.commands.CmdSendAction(currentNode.nodeID, targetActionNode.nodeID, readyActionIndex);
+                return;
+            }
+        }
+
         readyAction.UseAction(targetActionNode, this);
         if (!isEnemy) discardedActions.Add(readyAction);
 
         SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap();
+    }
+
+    public void PerformActionClient()   //doesn't try to send command to other players
+    {
+        if (readyAction == null)
+        {
+            targetActionNode = null;
+            return;
+        }
+        if (targetActionNode == null)
+        {
+            targetActionNode = null;
+            readyAction = null;
+            return;
+        }
+
+        readyAction.UseAction(targetActionNode, this);
+        if (!isEnemy) discardedActions.Add(readyAction);
+
+        SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap(true);
     }
 
     public void PerformActionDelayed(float delay)
@@ -347,11 +422,11 @@ public class Unit : MonoBehaviour {
         unitStateMachine.state = States.END;
     }
 
-    public void SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap()
+    public void SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap(bool calledFromClient = false)
     {
         if (!isEnemy) selectedActions.Remove(readyAction);
         targetActionNode = null;
         readyAction = null;
-        UIHelper.Instance.SetUnitActions(this);
+        if (!calledFromClient) UIHelper.Instance.SetUnitActions(this);
     }
 }

@@ -78,16 +78,16 @@ public class NetworkCommands : NetworkBehaviour
         SceneManager.LoadScene(1);
     }
     #endregion
-
+    //TODO: make the RPCs targetted so i can remove the return from the initial local function and not have to return after the CMD call
     #region Unit move/action functions
     [Command]
-    public void CmdSendMove(int startNodeID, int endNodeID, bool endTurn)
+    public void CmdSendMove(int startNodeID, int endNodeID)
     {
-        RpcSendMove(startNodeID, endNodeID, endTurn);
+        RpcSendMove(startNodeID, endNodeID);
     }
 
     [ClientRpc]
-    void RpcSendMove(int startNodeID, int endNodeID, bool endTurn)
+    void RpcSendMove(int startNodeID, int endNodeID)
     {
         Node startNode = null;
         Node endNode = null;
@@ -103,22 +103,21 @@ public class NetworkCommands : NetworkBehaviour
             }
             if (startNode != null && endNode != null) break;
         }
-
         NodeManager.Instance.AssignPath(startNode, endNode);
         Unit theU = startNode.currentUnit;
-        theU.MoveUnit();
+        theU.MoveUnitClient();
 
-        if (endTurn) NodeManager.Instance.TurnEndHandler(endNode.currentUnit);
+        NodeManager.Instance.TurnEndHandler(endNode.currentUnit);
     }
 
     [Command]
-    public void CmdSendAction(int startNodeID, int targetNodeID, int actionID, bool endTurn)
+    public void CmdSendAction(int startNodeID, int targetNodeID, int actionID)
     {
-        RpcSendAction(startNodeID, targetNodeID, actionID, endTurn);
+        RpcSendAction(startNodeID, targetNodeID, actionID);
     }
 
     [ClientRpc]
-    void RpcSendAction(int startNodeID, int targetNodeID, int actionID, bool endTurn)
+    void RpcSendAction(int startNodeID, int targetNodeID, int actionID)
     {
         Node startNode = null;
         Node targetNode = null;
@@ -134,10 +133,11 @@ public class NetworkCommands : NetworkBehaviour
             }
             if (startNode != null && targetNode != null) break;
         }
-        startNode.currentUnit.SetAction(actionID, targetNode);
-        startNode.currentUnit.PerformAction();
+        Unit theU = startNode.currentUnit;
+        theU.SetAction(actionID, targetNode);
+        theU.PerformActionClient();
 
-        if (endTurn) NodeManager.Instance.TurnEndHandler(targetNode.currentUnit);
+        NodeManager.Instance.TurnEndHandler(theU);
     }
     #endregion
 }

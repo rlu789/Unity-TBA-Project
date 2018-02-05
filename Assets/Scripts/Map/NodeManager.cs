@@ -74,12 +74,18 @@ public class NodeManager : MonoBehaviour {
         selectingCount++;
     }
 
-    public void TurnEndHandler(Unit unit)
+    public void TurnEndHandler(Unit unit)   //for other players units
     {
-        selectingCount = -1;
-        unit.IEndMyEndTurnPegasus();
-        TurnHandler.Instance.orderedActions.Remove(TurnHandler.Instance.orderedActions.Keys.First());
-        TurnHandler.Instance.NextState();
+        unit.unitStateMachine.state = States.B_SELECTING;
+        if (selectingCount >= 1) //if the player has played two cards, goto next turn
+        {
+            selectingCount = 0;
+            unit.IEndMyEndTurnPegasus();
+            TurnHandler.Instance.orderedActions.Remove(TurnHandler.Instance.orderedActions.Keys.First());
+            TurnHandler.Instance.NextState();
+            return;
+        }
+        selectingCount++;
     }
 
     void SelectPlayerTurn(Node node)
@@ -92,7 +98,6 @@ public class NodeManager : MonoBehaviour {
             if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTING) return; // player still picking cards
             if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTINGMOVE) //player has selected a movement card
             {
-                PlayerInfo.Instance.commands.CmdSendMove(selectedNode.nodeID, node.nodeID, false);
                 if (node.currentUnit != null)
                 {
                     Debug.Log("Node has a unit! Unit: " + node.currentUnit);
@@ -109,7 +114,6 @@ public class NodeManager : MonoBehaviour {
             {
                 if (nodesInRange.Contains(node))
                 {
-                    PlayerInfo.Instance.commands.CmdSendAction(selectedNode.nodeID, node.nodeID, selectedNode.currentUnit.readyActionIndex, false);
                     selectedNode.currentUnit.targetActionNode = node;
                     selectedNode.currentUnit.PerformAction();
                     // Add action to a queue of actions, clear nodes in range and arrow
