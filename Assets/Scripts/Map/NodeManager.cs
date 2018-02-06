@@ -46,7 +46,7 @@ public class NodeManager : MonoBehaviour {
     public void SelectNode(Node node)
     {
         if (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYDRAW || TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYTURN) return;
-
+        if (node.currentUnit != null && PlayerInfo.Instance != null && node.currentUnit.ownerID != PlayerInfo.Instance.playerID) return;
         if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERSELECT)
         {
             SelectPlayerSelect(node);

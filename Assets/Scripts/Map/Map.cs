@@ -103,7 +103,6 @@ public class Map : MonoBehaviour
             {
                 if (p.team[i].unitID == -1)
                 {
-                    Debug.Log("Thats a null unit there");
                     continue;
                 }
                 nodes[0, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i].unitID], false, p.team[i].ownerID);

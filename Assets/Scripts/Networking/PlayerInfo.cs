@@ -41,8 +41,6 @@ public class PlayerInfo : MonoBehaviour {
 
         if (playerID != 0) GetComponent<PlayerInfo>().commands.CmdRequestTeamList();
 
-        Debug.Log("Player " + playerID + " joined.");
-
         if (Instance != null)
         {
             Debug.LogError("PlayerInfo already exists!");

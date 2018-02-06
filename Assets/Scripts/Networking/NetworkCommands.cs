@@ -8,7 +8,6 @@ public class NetworkCommands : NetworkBehaviour
 
     private void Start()
     {
-        Debug.Log("A network commands was created");
         playerInfo = PlayerInfo.Instance;
     }
 
@@ -78,16 +77,21 @@ public class NetworkCommands : NetworkBehaviour
         SceneManager.LoadScene(1);
     }
     #endregion
-    //TODO: make the RPCs targetted so i can remove the return from the initial local function and not have to return after the CMD call
     #region Unit move/action functions
     [Command]
-    public void CmdSendMove(int startNodeID, int endNodeID)
+    public void CmdSendMove(int playerID, int startNodeID, int endNodeID)
     {
-        RpcSendMove(startNodeID, endNodeID);
+        foreach (NetworkConnection target in NetworkServer.connections)
+        {
+            if (target.connectionId != playerID)    //if the target is not that player who sent the command, send the RPC
+            {
+                TargetRpcSendMove(target, startNodeID, endNodeID);
+            }
+        }
     }
 
-    [ClientRpc]
-    void RpcSendMove(int startNodeID, int endNodeID)
+    [TargetRpc]
+    void TargetRpcSendMove(NetworkConnection target, int startNodeID, int endNodeID)
     {
         Node startNode = null;
         Node endNode = null;
@@ -111,13 +115,19 @@ public class NetworkCommands : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSendAction(int startNodeID, int targetNodeID, int actionID)
+    public void CmdSendAction(int playerID, int startNodeID, int targetNodeID, int actionID)
     {
-        RpcSendAction(startNodeID, targetNodeID, actionID);
+        foreach (NetworkConnection target in NetworkServer.connections)
+        {
+            if (target.connectionId != playerID)
+            {
+                TargetRpcSendAction(target, startNodeID, targetNodeID, actionID);
+            }
+        }
     }
 
-    [ClientRpc]
-    void RpcSendAction(int startNodeID, int targetNodeID, int actionID)
+    [TargetRpc]
+    void TargetRpcSendAction(NetworkConnection target, int startNodeID, int targetNodeID, int actionID)
     {
         Node startNode = null;
         Node targetNode = null;
@@ -139,5 +149,29 @@ public class NetworkCommands : NetworkBehaviour
 
         NodeManager.Instance.TurnEndHandler(theU);
     }
+
+    [Command]
+    public void CmdSendSelectedCards(int playerID, int[] actionIndexes, int nodeID)
+    {
+        foreach (NetworkConnection target in NetworkServer.connections)
+        {
+            if (target.connectionId != playerID)
+            {
+                TargetRpcSendSelectedCards(target, actionIndexes, nodeID);
+            }
+        }
+    }
+
+    [TargetRpc]
+    void TargetRpcSendSelectedCards(NetworkConnection target, int[] actionIndexes, int nodeID)
+    {
+        Node node = null;
+        foreach (Node n in Map.Instance.nodes)
+        {
+            if (n.nodeID == nodeID) node = n;
+        }
+        node.currentUnit.SelectCards(actionIndexes);
+    }
+
     #endregion
 }
