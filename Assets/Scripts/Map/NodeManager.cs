@@ -18,6 +18,7 @@ public class NodeManager : MonoBehaviour {
     public List<Unit> unitsWithAssignedPaths;
 
     public List<Node> nodesInRange = new List<Node>();
+    public List<Node> nodesInAOE = new List<Node>();
 
     //BANDAID
     int selectingCount = 0;
@@ -124,6 +125,7 @@ public class NodeManager : MonoBehaviour {
                         n.SetHexDefault();
                     }
                     nodesInRange.Clear();
+
                     TurnEndHandler();
                 }
                 else
@@ -279,6 +281,11 @@ public class NodeManager : MonoBehaviour {
                 {
                     movementUIObjectTargetGO.transform.position = node.transform.position;
                     selectedNode.currentUnitGO.transform.LookAt(new Vector3(node.transform.position.x, selectedNode.currentUnitGO.transform.position.y, node.transform.position.z));
+                    // AOE HANDLING
+                    if (selectedNode.currentUnit.readyAction.aoe > 0)
+                    {
+                        ShowUnitActionAOE(node);
+                    }
                 }
             }
         }
@@ -316,4 +323,53 @@ public class NodeManager : MonoBehaviour {
         }
         movementUIObjectTargetGO = Instantiate(movementUIObjectTarget, node.transform.position, Quaternion.identity);
     }
+
+    //Bandaid
+    public void ShowUnitActionAOE(Node node)
+    {
+        if (selectedNode == null) return;
+        if (nodesInAOE.Count > 0) // clear prev list of aoe nodes
+        {
+            foreach (Node n in nodesInAOE)
+            {
+                if (!nodesInRange.Contains(n)) n.SetHexDefault();
+                else n.SetHexSelectedBad();
+            }
+            nodesInAOE.Clear();
+        }
+        // set new list of aoe nodes
+        // code stolen from unitaction
+        int _aoe = selectedNode.currentUnit.readyAction.aoe;
+
+        List<Node> tempNodes = new List<Node>();
+        nodesInAOE.Add(node); node.SetHexHighlighted();
+        while (_aoe > 0)
+        {
+            foreach (Node n in nodesInAOE)
+            {
+                foreach (Node m in n.neighbours)
+                    tempNodes.Add(m);
+            }
+            foreach (Node n in tempNodes)
+            {
+                if (!nodesInAOE.Contains(n))
+                {
+                    nodesInAOE.Add(n);
+                    n.SetHexHighlighted();
+                }
+            }
+            tempNodes.Clear();
+            _aoe--;
+        }
+    }
+
+    public void ClearActionAOE()
+    {
+        foreach (Node n in nodesInAOE)
+        {
+            n.SetHexDefault();
+        }
+        nodesInAOE.Clear();
+    }
 }
+

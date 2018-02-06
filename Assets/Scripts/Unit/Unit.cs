@@ -82,7 +82,7 @@ public class Unit : MonoBehaviour {
                 PlayerInfo.Instance.commands.CmdSendAction(PlayerInfo.Instance.playerID, currentNode.nodeID, targetActionNode.nodeID, readyActionIndex);
             }
         }
-
+        
         readyAction.UseAction(targetActionNode, this);
         if (!isEnemy) discardedActions.Add(readyAction);
 
