@@ -37,11 +37,10 @@ public class PlayerInfo : MonoBehaviour {
     private void Start()
     {
         commands = FindObjectOfType<NetworkCommands>();
-        commands.playerInfo = this;
 
         if (playerID != 0) GetComponent<PlayerInfo>().commands.CmdRequestTeamList();
 
-        if (Instance != null)
+        if (Instance != null)   //done in start vs awake so that the instance is set after the others (non local players) have been disabled)
         {
             Debug.LogError("PlayerInfo already exists!");
             enabled = false;

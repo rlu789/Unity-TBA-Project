@@ -39,6 +39,9 @@ public class NodeManager : MonoBehaviour {
     {
         if (selectedNode != null)
             Deselect();
+        //hmm
+        if (node.currentUnit != null && PlayerInfo.Instance != null && TurnHandler.Instance.orderedActions[TurnHandler.Instance.orderedActions.Keys.First()].GetComponent<Unit>().ownerID != PlayerInfo.Instance.playerID) return;
+
         Select(node);
 
     }
@@ -46,7 +49,7 @@ public class NodeManager : MonoBehaviour {
     public void SelectNode(Node node)
     {
         if (TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYDRAW || TurnHandler.Instance.currentState == TurnHandlerStates.ENEMYTURN) return;
-        if (node.currentUnit != null && PlayerInfo.Instance != null && node.currentUnit.ownerID != PlayerInfo.Instance.playerID) return;
+
         if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERSELECT)
         {
             SelectPlayerSelect(node);
@@ -65,11 +68,12 @@ public class NodeManager : MonoBehaviour {
         if (selectingCount >= 1) //if the player has played two cards, goto next turn
         {
             //BANDAID
-            selectingCount = -1;
+            selectingCount = 0;
             selectedNode.currentUnit.IEndMyEndTurnPegasus();
             TurnHandler.Instance.orderedActions.Remove(TurnHandler.Instance.orderedActions.Keys.First());
             UIHelper.Instance.ToggleVisible(UIType.UnitActions, false);
             TurnHandler.Instance.NextState();
+            return;
         }
         selectingCount++;
     }
@@ -91,6 +95,8 @@ public class NodeManager : MonoBehaviour {
     void SelectPlayerTurn(Node node)
     {
         //assume theres a selectednode
+        //ok we cant assume theres a selected node anymore
+        if (selectedNode == null) return;
 
         //if (selectedNode == node) return;
         if (selectedNode == node || selectedNode != node)

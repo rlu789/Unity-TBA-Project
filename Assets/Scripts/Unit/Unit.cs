@@ -89,20 +89,8 @@ public class Unit : MonoBehaviour {
         SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap();
     }
 
-    public void PerformActionClient()   //doesn't try to send command to other players
+    public void PerformActionClient()   //doesn't try to send command to other players (can't use optional arguements in commands and rpcs)
     {
-        if (readyAction == null)
-        {
-            targetActionNode = null;
-            return;
-        }
-        if (targetActionNode == null)
-        {
-            targetActionNode = null;
-            readyAction = null;
-            return;
-        }
-
         readyAction.UseAction(targetActionNode, this);
         if (!isEnemy) discardedActions.Add(readyAction);
 

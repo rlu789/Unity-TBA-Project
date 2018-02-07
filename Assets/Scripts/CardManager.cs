@@ -8,7 +8,7 @@ public class CardManager : MonoBehaviour
     public static CardManager Instance;
     public List<UnitAction> allCards = new List<UnitAction>();
     UnitAction tempAction = new UnitAction();
-
+    public TextAsset cardsFile;
     private void Awake()
     {
         if (Instance != null)
@@ -26,21 +26,17 @@ public class CardManager : MonoBehaviour
         //ReadTextFile("Assets/Scripts/ClassVERYSmart.txt", (int)Class.VERYSmart);
         //ReadTextFile("Assets/Scripts/ClassDude.txt", (int)Class.Dude);
         //ReadTextFile("Assets/Scripts/ClassHealthyBoy.txt", (int)Class.HealthyBoy);
-        ReadTextFile("Assets/Scripts/AllCardsv2.txt");
+        ReadTextFile(cardsFile);
     }
 
-    void ReadTextFile(string file_path)
+    void ReadTextFile(TextAsset file)
     {
-        StreamReader inp_stm = new StreamReader(file_path);
+        string[] textLines = file.text.Split('\n');
 
-        while (!inp_stm.EndOfStream)
+        foreach (string line in textLines)
         {
-            string inp_ln = inp_stm.ReadLine();
-            //Debug.Log(inp_ln);
-            if (inp_ln.Length != 0 && inp_ln[0] != '/') HandleLine(inp_ln);
-            // Do Something with the input. 
+            if (line.Length != 0 && line[0] != '/') HandleLine(line);
         }
-        inp_stm.Close();
     }
 
     void HandleLine(string line)
@@ -48,7 +44,8 @@ public class CardManager : MonoBehaviour
         string[] parts = line.Split(' ');
         for (int i = 0; i < parts.Length; i++)
         {
-            switch (parts[i])
+            //Debug.Log(parts[i]);
+            switch (parts[i].Trim())
             {
                 case "[Action]":
                     tempAction = new UnitAction();
@@ -62,7 +59,7 @@ public class CardManager : MonoBehaviour
                         }
                         catch (System.IndexOutOfRangeException)
                         {
-                            Debug.Log("wtf why tho");
+                            //Debug.Log("wtf why tho");
                         }
                     }
                     break;
@@ -73,7 +70,7 @@ public class CardManager : MonoBehaviour
                     }
                     catch (System.FormatException)
                     {
-                        Debug.Log("ur welcome mike");
+                        //Debug.Log("ur welcome mike");
                     }
                     break;
                 case "Mana:":

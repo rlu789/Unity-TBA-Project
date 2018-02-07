@@ -4,13 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class NetworkCommands : NetworkBehaviour
 {
-    public PlayerInfo playerInfo;
-
-    private void Start()
-    {
-        playerInfo = PlayerInfo.Instance;
-    }
-
     #region Lobby/Team list
     [Command]
     public void CmdRequestTeamList()    //request team list
@@ -27,8 +20,7 @@ public class NetworkCommands : NetworkBehaviour
     [TargetRpc]
     void TargetRpcSendTeamList(NetworkConnection target)    //host sends the team list
     {
-        if (playerInfo == null) playerInfo = FindObjectOfType<PlayerInfo>();
-        CmdSendTeamList(playerInfo.team);
+        CmdSendTeamList(PlayerInfo.Instance.team);
     }
 
     [Command]
@@ -46,7 +38,7 @@ public class NetworkCommands : NetworkBehaviour
     [TargetRpc]
     void TargetRpcUpdateTeamList(NetworkConnection target, UnitListing[] teamList)
     {
-        playerInfo.ChangeTeam(teamList);
+        PlayerInfo.Instance.ChangeTeam(teamList);
     }
 
     [Command]
@@ -58,10 +50,9 @@ public class NetworkCommands : NetworkBehaviour
     [ClientRpc]
     public void RpcLobbyReady(UnitListing[] localTeam) //set the team units at a preset location for the owner
     {
-        if (playerInfo == null) playerInfo = FindObjectOfType<PlayerInfo>();
         int ownerID = localTeam[0].ownerID; //get the owner ID from one of the sent units
-        playerInfo.team[ownerID * 2] = localTeam[0];
-        playerInfo.team[(ownerID * 2) + 1] = localTeam[1];
+        PlayerInfo.Instance.team[ownerID * 2] = localTeam[0];
+        PlayerInfo.Instance.team[(ownerID * 2) + 1] = localTeam[1];
     }
 
     [Command]

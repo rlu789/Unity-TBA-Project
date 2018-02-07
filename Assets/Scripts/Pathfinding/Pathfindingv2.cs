@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Pathfindingv2 : MonoBehaviour
 {
@@ -51,7 +52,7 @@ public class Pathfindingv2 : MonoBehaviour
 
     static double Distance(Node nodeA, Node nodeB)  //distance to the next node is the cost it takes to move there
     {
-        if (!NodeManager.Instance.selectedNode.currentUnit.isEnemy)
+        if (!TurnHandler.Instance.orderedActions[TurnHandler.Instance.orderedActions.Keys.First()].isEnemy)
         {
             if (nodeB.currentUnit != null && nodeB.currentUnit.isEnemy)
             {
@@ -65,7 +66,6 @@ public class Pathfindingv2 : MonoBehaviour
                 return Mathf.Infinity;
             }
         }
-
         return nodeB.moveCost;
     }
 

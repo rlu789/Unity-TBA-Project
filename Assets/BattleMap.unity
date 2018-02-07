@@ -1730,6 +1730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allCards: []
+  cardsFile: {fileID: 4900000, guid: b26b997435c04b043bde367d568b6710, type: 3}
 --- !u!1 &1440865571
 GameObject:
   m_ObjectHideFlags: 0
