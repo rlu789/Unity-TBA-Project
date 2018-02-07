@@ -52,14 +52,30 @@ public class UnitAction {
         else projectileGO.GetComponent<Projectile>().Setup(this, targetNode.currentUnit.FirePoint, targetNode.currentUnit);
     }
 
-    public void ActivateAction(Unit target)    //only call from projectile
+    void ApplyDamageAndStatus(Unit target)
     {
-        if (target == null) return;
-
         target.TakeDamage(damage);
         if (status != null) target.ApplyStatus(status);
+    }
 
-        //if (action.aoe != 0) ;
+    public void ActivateAction(Unit target)    //only call from projectile
+    {
+        if (aoe > 0) //enemy aoe attack bugged as the nodesInAOE list is never used
+        {
+            Debug.Log(NodeManager.Instance.nodesInAOE.Count);
+            Debug.Log(aoe);
+            foreach (Node n in NodeManager.Instance.nodesInAOE)
+            {
+                if (n.currentUnit != null)
+                {
+                    ApplyDamageAndStatus(n.currentUnit);
+                }
+            }
+            return;
+        }
+        if (target == null) return;
+        ApplyDamageAndStatus(target);
+
         //if (action.cooldown != 0) ;
         //check for current cooldown and decrease it each turn
     }

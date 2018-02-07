@@ -63,7 +63,7 @@ Range: 4
 Damage: 8
 AOE: 1
 Cooldown: 1
-Initiative: 7
+Initiative: 0
 Type: 1
 ActionClass: 2
 [End]
