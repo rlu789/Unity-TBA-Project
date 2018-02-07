@@ -163,5 +163,30 @@ public class NetworkCommands : NetworkBehaviour
         }
         node.currentUnit.SelectCards(actionIndexes);
     }
+
+    [Command]
+    public void CmdSendUnitHand(int playerID, int[] cardIndexes, int nodeID)
+    {
+        foreach (NetworkConnection target in NetworkServer.connections)
+        {
+            if (target.connectionId != playerID)
+            {
+                TargetRpcSetUnitHand(target, cardIndexes, nodeID);
+            }
+        }
+    }
+
+    [TargetRpc]
+    void TargetRpcSetUnitHand(NetworkConnection target, int[] cardIndexes, int nodeID)
+    {
+        foreach (Node n in Map.Instance.nodes)
+        {
+            if (n.nodeID == nodeID)
+            {
+                n.currentUnit.SetUnitHand(cardIndexes);
+                return;
+            }
+        }
+    }
     #endregion
 }

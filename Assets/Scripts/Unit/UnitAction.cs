@@ -62,8 +62,6 @@ public class UnitAction {
     {
         if (aoe > 0) //enemy aoe attack bugged as the nodesInAOE list is never used
         {
-            Debug.Log(NodeManager.Instance.nodesInAOE.Count);
-            Debug.Log(aoe);
             foreach (Node n in NodeManager.Instance.nodesInAOE)
             {
                 if (n.currentUnit != null)

@@ -100,7 +100,6 @@ public class NodeManager : MonoBehaviour {
         //ok we cant assume theres a selected node anymore
         if (selectedNode == null) return;
 
-        //if (selectedNode == node) return;
         if (selectedNode == node || selectedNode != node)
         {
             if (selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTING) return; // player still picking cards
@@ -124,7 +123,7 @@ public class NodeManager : MonoBehaviour {
                 {
                     selectedNode.currentUnit.targetActionNode = node;
                     selectedNode.currentUnit.PerformAction();
-                    // Add action to a queue of actions, clear nodes in range and arrow
+                    //Add action to a queue of actions, clear nodes in range and arrow
                     //TurnHandler.Instance.actionQueue.Add(selectedNode.currentUnit);
                     Destroy(movementUIObjectTargetGO);
                     foreach (Node n in nodesInRange)
@@ -146,6 +145,7 @@ public class NodeManager : MonoBehaviour {
 
     void SelectPlayerSelect(Node node)
     {
+        if (PlayerInfo.Instance != null && node.currentUnit.ownerID != PlayerInfo.Instance.playerID) return;
         if (selectedNode == null)   //selecting a node with no other nodes selected
         {
             if (node.currentUnit != null && node.currentUnit.isEnemy)   //cant select an enemy node without a reason

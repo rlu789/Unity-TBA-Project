@@ -346,17 +346,33 @@ public class Unit : MonoBehaviour {
         }
     }
 
-    public void DrawCards(int no)
+    public void DrawCards(int amount)
     {
         if (deck.Count <= 0)
         {
             Debug.Log("No cards in deck!");
             return;
         }
-        for (int i = 0; i < no; i++)
+        for (int i = 0; i < amount; i++)
         {
             if (availableActions.Count >= 5) return;
             availableActions.Add(deck[Random.Range(0, deck.Count)]);
+        }
+        if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID == ownerID)
+        {
+            List<int> cardIndexesToSend = new List<int>();
+            foreach (UnitAction selectedAct in selectedActions)
+            {
+                for (int i = 0; i < deck.Count; ++i)
+                {
+                    if (selectedAct == deck[i])
+                    {
+                        cardIndexesToSend.Add(i);
+                        break;
+                    }
+                }
+            }
+            //PlayerInfo.Instance.commands.CmdSendUnitHand(PlayerInfo.Instance.playerID, cardIndexesToSend.ToArray(), currentNode.nodeID);
         }
     }
 
@@ -390,6 +406,21 @@ public class Unit : MonoBehaviour {
 
         selectedActionIndexes.Clear();
         SelectDone(true);
+    }
+    //used to match client hand with the owner of the unit (set at the top of each turn)
+    public void SetUnitHand(int[] cardIndexes)  //may need to refactor when we implement an actual deck
+    {
+        availableActions.Clear();   //put back into deck?
+        foreach (int index in cardIndexes) availableActions.Add(deck[index]);
+    }
+
+    int GetDeckIndex(UnitAction action) //works because we dont actually remove anything from the deck
+    {
+        for (int i = 0; i < deck.Count; ++i)
+        {
+            if (action == deck[i]) return i;
+        }
+        return -1;
     }
 
     public void DeselectCard(int index)
