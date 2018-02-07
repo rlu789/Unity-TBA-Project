@@ -70,6 +70,7 @@ public class UnitAction {
                 {
                     ApplyDamageAndStatus(n.currentUnit);
                 }
+                NodeManager.Instance.ClearActionAOE();
             }
             return;
         }

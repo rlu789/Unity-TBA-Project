@@ -371,6 +371,11 @@ public class Unit : MonoBehaviour {
             selectedActionIndexes.Clear();
 
             SelectDone();
+
+            foreach(UnitAction action in selectedActions)
+            {
+                availableActions.Remove(action);
+            }
         }
     }
 
