@@ -36,7 +36,10 @@ public class PlayerInfo : MonoBehaviour {
 
     private void Start()
     {
-        commands = FindObjectOfType<NetworkCommands>();
+        Debug.LogError("Starting build debug log...");
+
+        //commands = FindObjectOfType<NetworkCommands>();
+        commands = GetComponent<NetworkCommands>();
 
         if (playerID != 0) GetComponent<PlayerInfo>().commands.CmdRequestTeamList();
 

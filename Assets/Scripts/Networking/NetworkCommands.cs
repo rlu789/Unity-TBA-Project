@@ -163,6 +163,5 @@ public class NetworkCommands : NetworkBehaviour
         }
         node.currentUnit.SelectCards(actionIndexes);
     }
-
     #endregion
 }

@@ -21,7 +21,8 @@ public class PlayerSetup : NetworkBehaviour
             }
             return;
         }
-        GetComponent<PlayerInfo>().playerID = connectionToServer.connectionId;
+        GetComponent<PlayerInfo>().playerID = (int)GetComponent<NetworkIdentity>().netId.Value;
+        GetComponent<PlayerInfo>().playerID -= 1;
 
         FindObjectOfType<LobbyUI>().playerInfo = GetComponent<PlayerInfo>();
     }
