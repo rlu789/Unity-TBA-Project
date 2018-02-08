@@ -145,7 +145,7 @@ public class NodeManager : MonoBehaviour {
 
     void SelectPlayerSelect(Node node)
     {
-        if (PlayerInfo.Instance != null && node.currentUnit.ownerID != PlayerInfo.Instance.playerID) return;
+        if (PlayerInfo.Instance != null && node.currentUnit != null && node.currentUnit.ownerID != PlayerInfo.Instance.playerID) return;
         if (selectedNode == null)   //selecting a node with no other nodes selected
         {
             if (node.currentUnit != null && node.currentUnit.isEnemy)   //cant select an enemy node without a reason
@@ -335,7 +335,7 @@ public class NodeManager : MonoBehaviour {
     public void ShowUnitActionAOE(Node node)
     {
         if (selectedNode == null) return;
-        if (nodesInAOE.Count > 0) // clear prev list of aoe nodes
+        if (nodesInAOE.Count > 0)
         {
             foreach (Node n in nodesInAOE)
             {
@@ -346,6 +346,7 @@ public class NodeManager : MonoBehaviour {
         }
         // set new list of aoe nodes
         // code stolen from unitaction
+        //you can use unitaction.GetNodesInRange(node, true)    //the bool is for getting AOE instead of range
         int _aoe = selectedNode.currentUnit.readyAction.aoe;
 
         List<Node> tempNodes = new List<Node>();

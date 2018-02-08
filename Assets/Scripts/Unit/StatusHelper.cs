@@ -34,6 +34,12 @@ public class Status //need to change key value pair so it can be serialized
     public int duration;
     public GameObject visual;
     public GameObject visualIns;    //instantiated visual effect
+
+    public bool IsEmpty()
+    {
+        if (name == "" || effects == null || effects.Length == 0) return true;
+        return false;
+    }
 }
 
 public class StatusHelper : MonoBehaviour {

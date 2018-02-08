@@ -55,7 +55,7 @@ public class UnitAction {
     void ApplyDamageAndStatus(Unit target)
     {
         target.TakeDamage(damage);
-        if (status != null) target.ApplyStatus(status);
+        if (status != null && !status.IsEmpty()) target.ApplyStatus(status);
     }
 
     public void ActivateAction(Unit target)    //only call from projectile
@@ -79,9 +79,10 @@ public class UnitAction {
         //check for current cooldown and decrease it each turn
     }
 
-    public List<Node> GetNodesInRange(Node start)
+    public List<Node> GetNodesInRange(Node start, bool AOE = false)
     {
         int _range = range;
+        if (AOE) _range = aoe;  //checking for aoe not range
 
         List<Node> nodesInRange = new List<Node>();
         List<Node> tempNodes = new List<Node>();
@@ -104,7 +105,7 @@ public class UnitAction {
         return nodesInRange;
     }
 
-    public bool isEmpty()
+    public bool IsEmpty()
     {
         return (name == "") ? true : false;
     }

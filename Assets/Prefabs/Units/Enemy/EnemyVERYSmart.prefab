@@ -331,6 +331,7 @@ MonoBehaviour:
     _class: 2
     maxMana: 5
     armor: 0
+    baseInitiative: 7
     idealRange: 4
     hugFriends: 0
     currentHealth: 0
@@ -338,6 +339,7 @@ MonoBehaviour:
     currentMovement: 0
   availableActions: []
   selectedActions: []
+  selectedActionIndexes: 
   discardedActions: []
   isEnemy: 1
   FirePoint: {fileID: 4341415800392146}
@@ -368,6 +370,7 @@ MonoBehaviour:
   targetActionNode: {fileID: 0}
   unitStateMachine: {fileID: 0}
   statuses: []
+  ownerID: 0
 --- !u!135 &135336063579494900
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -131,12 +131,13 @@ public class TurnHandler : MonoBehaviour
                 break;
             case TurnHandlerStates.PLAYERTURN:
                 currentState = TurnHandlerStates.PLAYERTURN;
-                orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
+                orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().SetState(States.B_SELECTING);
+                orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().currentNode.SetHexReady(false);
                 NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().currentNode);
                 break;
             case TurnHandlerStates.ENEMYTURN:
                 currentState = TurnHandlerStates.ENEMYTURN;
-                orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().state = States.B_SELECTING;
+                orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().SetState(States.B_SELECTING);
                 HandleEnemyTurn();
                 break;
             case TurnHandlerStates.END:
@@ -188,6 +189,7 @@ public class TurnHandler : MonoBehaviour
 
     void HandleEnemyTurn()
     {
+        if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID != 0) return;   //only host should handle enemy turns
         Unit enemy = orderedActions[orderedActions.Keys.First()];
 
         NodeManager.Instance.SetSelectedNode(enemy.currentNode);
@@ -200,6 +202,13 @@ public class TurnHandler : MonoBehaviour
         Invoke("NextState", 3f);
     }
 
+    public void EndEnemyTurn()
+    {
+        orderedActions[orderedActions.Keys.First()].unitStateMachine.state = States.END;
+        orderedActions.Remove(orderedActions.Keys.First());
+        Invoke("NextState", 3f);
+    }
+
     void HandleEnemyAct()
     {
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
@@ -207,7 +216,7 @@ public class TurnHandler : MonoBehaviour
             Unit enemy = Map.Instance.unitDudeEnemies[i].GetComponent<Unit>();
             //AIHelper.Instance.ConfirmBestAction(enemy);
             //checking if action = null
-            if (enemy.readyAction != null && !enemy.readyAction.isEmpty()) actionQueue.Add(enemy);
+            if (enemy.readyAction != null && !enemy.readyAction.IsEmpty()) actionQueue.Add(enemy);
         }
     }
 
@@ -241,19 +250,15 @@ public class TurnHandler : MonoBehaviour
         }
         foreach (GameObject u in Map.Instance.unitDudeEnemies)
         {
-            List<int> initiativeOrder = new List<int>();
-            foreach (UnitAction action in u.GetComponent<Unit>().selectedActions)
-            {
-                initiativeOrder.Add(action.initiative);
-            }
-            initiativeOrder.Sort();
-            //BANDAID
-            float median = initiativeOrder[(int)Mathf.Floor(initiativeOrder.Count / 2)];
-            if (!orderedActions.ContainsKey(median))
-                orderedActions.Add(median, u.GetComponent<Unit>());
+            float initiative = u.GetComponent<Unit>().stats.baseInitiative;
+
+            if (!orderedActions.ContainsKey(initiative)) orderedActions.Add(initiative, u.GetComponent<Unit>());
             else
-                orderedActions.Add(median + haveYetToCrossTheBridge, u.GetComponent<Unit>());
-            haveYetToCrossTheBridge += 0.01f;
+            {
+                orderedActions.Add(initiative + haveYetToCrossTheBridge, u.GetComponent<Unit>());
+                haveYetToCrossTheBridge += 0.01f;
+            }
+
         }
         NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].currentNode);
 

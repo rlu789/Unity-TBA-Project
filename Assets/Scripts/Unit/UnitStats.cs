@@ -10,6 +10,7 @@ public class UnitStats{
     public Class _class = Class.Dude;
     public int maxMana = 3;
     public int armor = 0;
+    public int baseInitiative;
 
     [Header("AI Fields")]
     public int idealRange = 1;

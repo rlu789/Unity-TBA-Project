@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.IO;
 using System.Collections.Generic;
 using System;
 
@@ -13,19 +12,15 @@ public class CardManager : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("TurnHandler already exists!");
+            Debug.LogError("CardManager already exists!");
             Destroy(gameObject);
             return;
         }
         Instance = this;
     }
 
-    // Use this for initialization
     public void Setup()
     {
-        //ReadTextFile("Assets/Scripts/ClassVERYSmart.txt", (int)Class.VERYSmart);
-        //ReadTextFile("Assets/Scripts/ClassDude.txt", (int)Class.Dude);
-        //ReadTextFile("Assets/Scripts/ClassHealthyBoy.txt", (int)Class.HealthyBoy);
         ReadTextFile(cardsFile);
     }
 

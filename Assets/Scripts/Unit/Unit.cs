@@ -74,13 +74,9 @@ public class Unit : MonoBehaviour {
             return;
         }
 
-        //if we are the local player that called this action then send it to the other players
-        if (!isEnemy)
+        if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID == ownerID)    //why didnt i just do if the unit owner is you instead of two functions?
         {
-            if (PlayerInfo.Instance != null)
-            {
-                PlayerInfo.Instance.commands.CmdSendAction(PlayerInfo.Instance.playerID, currentNode.nodeID, targetActionNode.nodeID, readyActionIndex);
-            }
+            PlayerInfo.Instance.commands.CmdSendAction(PlayerInfo.Instance.playerID, currentNode.nodeID, targetActionNode.nodeID, readyActionIndex);
         }
         
         readyAction.UseAction(targetActionNode, this);
@@ -121,12 +117,10 @@ public class Unit : MonoBehaviour {
         Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
 
         //if we arent the player that called this movement then send it to the other players
-        if (!isEnemy)
+
+        if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID == ownerID)
         {
-            if (PlayerInfo.Instance != null)
-            {
-                PlayerInfo.Instance.commands.CmdSendMove(PlayerInfo.Instance.playerID, currentNode.nodeID, _destNode.nodeID);
-            }
+            PlayerInfo.Instance.commands.CmdSendMove(PlayerInfo.Instance.playerID, currentNode.nodeID, _destNode.nodeID);
         }
 
         //set values on initial and destination nodes
@@ -348,6 +342,7 @@ public class Unit : MonoBehaviour {
 
     public void DrawCards(int amount)
     {
+        if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID != ownerID) return;
         if (deck.Count <= 0)
         {
             Debug.Log("No cards in deck!");
@@ -358,21 +353,16 @@ public class Unit : MonoBehaviour {
             if (availableActions.Count >= 5) return;
             availableActions.Add(deck[Random.Range(0, deck.Count)]);
         }
-        if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID == ownerID)
+        if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID == ownerID) //if im the owner of this unit, send my hand to the other players
         {
             List<int> cardIndexesToSend = new List<int>();
-            foreach (UnitAction selectedAct in selectedActions)
+
+            foreach (UnitAction availableAct in availableActions)
             {
-                for (int i = 0; i < deck.Count; ++i)
-                {
-                    if (selectedAct == deck[i])
-                    {
-                        cardIndexesToSend.Add(i);
-                        break;
-                    }
-                }
+                cardIndexesToSend.Add(GetDeckIndex(availableAct));
             }
-            //PlayerInfo.Instance.commands.CmdSendUnitHand(PlayerInfo.Instance.playerID, cardIndexesToSend.ToArray(), currentNode.nodeID);
+
+            PlayerInfo.Instance.commands.CmdSendUnitHand(PlayerInfo.Instance.playerID, cardIndexesToSend.ToArray(), currentNode.nodeID);
         }
     }
 
@@ -411,7 +401,7 @@ public class Unit : MonoBehaviour {
     public void SetUnitHand(int[] cardIndexes)  //may need to refactor when we implement an actual deck
     {
         availableActions.Clear();   //put back into deck?
-        foreach (int index in cardIndexes) availableActions.Add(deck[index]);
+        foreach (int index in cardIndexes) if (index != -1) availableActions.Add(deck[index]);
     }
 
     int GetDeckIndex(UnitAction action) //works because we dont actually remove anything from the deck

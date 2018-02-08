@@ -331,21 +331,22 @@ MonoBehaviour:
     _class: 1
     maxMana: 3
     armor: 0
+    baseInitiative: 4
+    idealRange: 1
+    hugFriends: 0
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
   availableActions: []
   selectedActions: []
+  selectedActionIndexes: 
   discardedActions: []
   isEnemy: 0
   FirePoint: {fileID: 4549278640386806}
   XY: {x: 0, y: 0}
   currentNodeID: -1
-  currentPath: []
-  __testObject: {fileID: 1798533339409000, guid: bb8f408335feb8743b3450a994bb8690,
-    type: 2}
   currentNode: {fileID: 0}
-  targetActionNode: {fileID: 0}
+  currentPath: []
   readyAction:
     projectile: {fileID: 0}
     name: 
@@ -366,8 +367,10 @@ MonoBehaviour:
       visualIns: {fileID: 0}
     currentCooldown: 0
   readyActionIndex: 0
+  targetActionNode: {fileID: 0}
   unitStateMachine: {fileID: 0}
   statuses: []
+  ownerID: 0
 --- !u!135 &135336063579494900
 SphereCollider:
   m_ObjectHideFlags: 1
