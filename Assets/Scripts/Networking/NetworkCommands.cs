@@ -166,7 +166,7 @@ public class NetworkCommands : NetworkBehaviour
         {
             if (n.nodeID == nodeID) node = n;
         }
-        node.currentUnit.SelectCards(actionIndexes);
+        node.currentUnit.cards.SelectCards(actionIndexes);
     }
 
     [Command]
@@ -188,7 +188,7 @@ public class NetworkCommands : NetworkBehaviour
         {
             if (n.nodeID == nodeID)
             {
-                n.currentUnit.SetUnitHand(cardIndexes);
+                n.currentUnit.cards.SetUnitHand(cardIndexes);
                 return;
             }
         }

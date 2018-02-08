@@ -28,17 +28,17 @@ public class HandUI : MonoBehaviour {
         if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERSELECT)
         {
             selectedZoneGO.SetActive(true);
-            UnitAction[] actionsClone = (UnitAction[])unit.selectedActions.ToArray().Clone();   //need to clone for shallow copy
+            UnitAction[] actionsClone = (UnitAction[])unit.cards.selectedActions.ToArray().Clone();   //need to clone for shallow copy
             List<UnitAction> selectedList = actionsClone.ToList();
 
-            for (int i = 0; i < unit.availableActions.Count; ++i)
+            for (int i = 0; i < unit.cards.availableActions.Count; ++i)
             {
                 cardPrefabs.Add(Instantiate(cardPrefab, transform));
-                cardPrefabs[i].GetComponent<CardUI>().SetCardValues(unit.availableActions[i], unit, i, true);
-                if (selectedList.Contains(unit.availableActions[i]))
+                cardPrefabs[i].GetComponent<CardUI>().SetCardValues(unit.cards.availableActions[i], unit, i, true);
+                if (selectedList.Contains(unit.cards.availableActions[i]))
                 {
                     cardPrefabs[i].GetComponent<CardUI>().ChangeZone(1, false);
-                    selectedList.Remove(unit.availableActions[i]); //to deal with adding multiple of the same card even if there is only one
+                    selectedList.Remove(unit.cards.availableActions[i]); //to deal with adding multiple of the same card even if there is only one
                 }
 
             }
@@ -46,10 +46,10 @@ public class HandUI : MonoBehaviour {
         else if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN)
         {
             selectedZoneGO.SetActive(false);
-            for (int i = 0; i < unit.selectedActions.Count; ++i)
+            for (int i = 0; i < unit.cards.selectedActions.Count; ++i)
             {
                 cardPrefabs.Add(Instantiate(cardPrefab, transform));
-                cardPrefabs[i].GetComponent<CardUI>().SetCardValues(unit.selectedActions[i], unit, i, false);
+                cardPrefabs[i].GetComponent<CardUI>().SetCardValues(unit.cards.selectedActions[i], unit, i, false);
             }
         }
         else

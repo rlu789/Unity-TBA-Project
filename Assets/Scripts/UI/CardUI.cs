@@ -57,8 +57,8 @@ public class CardUI : MonoBehaviour {
     {
         if (unit.unitStateMachine.state == States.SELECT)
         {
-            if (!selected) unit.SelectCard(index);
-            else unit.DeselectCard(index);
+            if (!selected) unit.cards.SelectCard(index);
+            else unit.cards.DeselectCard(index);
             selected = !selected;
         }
         else unit.PrepareAction(index);

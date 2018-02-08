@@ -182,7 +182,7 @@ public class TurnHandler : MonoBehaviour
         {
             if (!Map.Instance.unitDudeFriends[i].GetComponent<Unit>().isEnemy)
             {
-                Map.Instance.unitDudeFriends[i].GetComponent<Unit>().DrawCards(3);
+                Map.Instance.unitDudeFriends[i].GetComponent<Unit>().cards.DrawCards(3);
             }
         }
     }
@@ -235,7 +235,7 @@ public class TurnHandler : MonoBehaviour
         foreach (GameObject u in Map.Instance.unitDudeFriends)
         {
             List<int> hahagetonemike = new List<int>();
-            foreach (UnitAction action in u.GetComponent<Unit>().selectedActions)
+            foreach (UnitAction action in u.GetComponent<Unit>().cards.selectedActions)
             {
                 hahagetonemike.Add(action.initiative);
             }

@@ -9,11 +9,7 @@ using System.Collections.Generic;
 public class Unit : MonoBehaviour {
     [Header("Stats")]
     public UnitStats stats;
-    List<UnitAction> deck = new List<UnitAction>();
-    public List<UnitAction> availableActions = new List<UnitAction>();
-    public List<UnitAction> selectedActions = new List<UnitAction>();
-    public List<int> selectedActionIndexes = new List<int>();
-    public List<UnitAction> discardedActions = new List<UnitAction>();
+    public UnitCards cards = new UnitCards();
     public bool isEnemy;
 
     //Setup fields
@@ -46,9 +42,9 @@ public class Unit : MonoBehaviour {
         //:rage:
         unitStateMachine = GetComponent<UnitStateMachine>();
 
-        InitDeck();
-        if (isEnemy) selectedActions = deck;
-        else DrawCards(2);
+        cards.InitDeck(this);
+        if (isEnemy) cards.CopySelectedActionsToDeck();
+        else cards.DrawCards(2);
     }
 
     void Update()
@@ -80,17 +76,17 @@ public class Unit : MonoBehaviour {
         }
 
         readyAction.UseAction(targetActionNode, this);
-        if (!isEnemy) discardedActions.Add(readyAction);
+        if (!isEnemy) cards.discardedActions.Add(readyAction);
 
-        SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap();
+        cards.SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap();
     }
 
     public void PerformActionClient()   //doesn't try to send command to other players (can't use optional arguements in commands and rpcs)
     {
         readyAction.UseAction(targetActionNode, this);
-        if (!isEnemy) discardedActions.Add(readyAction);
+        if (!isEnemy) cards.discardedActions.Add(readyAction);
 
-        SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap(true);
+        cards.SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap(true);
     }
 
     public void PerformActionDelayed(float delay)
@@ -146,8 +142,7 @@ public class Unit : MonoBehaviour {
         //BANDAID
         if (!isEnemy)
         {
-            selectedActions.Remove(readyAction);
-            discardedActions.Add(readyAction);
+            cards.ActionUsed(readyAction);
         }
     }
 
@@ -180,8 +175,7 @@ public class Unit : MonoBehaviour {
         //BANDAID
         if (!isEnemy)
         {
-            selectedActions.Remove(readyAction);
-            discardedActions.Add(readyAction);
+            cards.ActionUsed(readyAction);
         }
     }
     #endregion
@@ -274,12 +268,12 @@ public class Unit : MonoBehaviour {
     public void PrepareAction(int actionIndex, bool calledFromClient = false)
     {
         readyActionIndex = actionIndex;
-        readyAction = selectedActions[actionIndex];
+        readyAction = cards.selectedActions[actionIndex];
         if (readyAction.type == ActionType.ACTION) unitStateMachine.SetState(States.B_SELECTINGACTION);
         else
         {
             unitStateMachine.SetState(States.B_SELECTINGMOVE);
-            stats.moveSpeed = selectedActions[actionIndex].range;
+            stats.moveSpeed = cards.selectedActions[actionIndex].range;
         }
         if (!calledFromClient) NodeManager.Instance.SetSelectedNode(currentNode);
     }
@@ -287,15 +281,15 @@ public class Unit : MonoBehaviour {
     public void SetAction(int actionIndex, Node _target)
     {
         readyActionIndex = actionIndex;
-        readyAction = selectedActions[actionIndex];
+        readyAction = cards.selectedActions[actionIndex];
         targetActionNode = _target;
     }
 
     public void SetAction(UnitAction action, Node _target)
     {
-        for (int i = 0; i < selectedActions.Count; ++i)
+        for (int i = 0; i < cards.selectedActions.Count; ++i)
         {
-            if (selectedActions[i] == action)
+            if (cards.selectedActions[i] == action)
             {
                 SetAction(i, _target);
                 return;
@@ -335,12 +329,53 @@ public class Unit : MonoBehaviour {
         Destroy(gameObject);
     }
     #endregion
-    #region Card/turn related functions
-    void InitDeck()
+
+    string GenerateRandomNameOfPower()
     {
+        string name = "";
+        string[] letters = { "mic", "ric", "jo", "hae", "har", "n", "el", "ard", "oj", "ri", "on", "rd", "cha", "ich", "j", "rich", "jon", "mich", " The Great, ", " of Power..." };
+        int nameLength = Random.Range(2, 6);
+        int randIndex = 0;
+
+        for (int i = 0; i < nameLength; ++i)
+        {
+            randIndex = Random.Range(0, letters.Length);
+            if (i > 0) name += letters[randIndex];
+            else name += letters[randIndex].ToUpper();
+        }
+        return name;
+    }
+}
+
+[System.Serializable]
+public class UnitCards
+{
+    List<UnitAction> deck = new List<UnitAction>();
+    public List<UnitAction> availableActions = new List<UnitAction>();
+    public List<UnitAction> selectedActions = new List<UnitAction>();
+    public List<int> selectedActionIndexes = new List<int>();
+    public List<UnitAction> discardedActions = new List<UnitAction>();
+    Unit unit;
+
+    public void CopySelectedActionsToDeck()
+    {
+        selectedActions = deck;
+    }
+
+    public void ActionUsed(UnitAction action)
+    {
+        selectedActions.Remove(action);
+        discardedActions.Add(action);
+    }
+
+
+    #region Card/turn related functions
+    public void InitDeck(Unit u)
+    {
+        unit = u;
         for (int i = 0; i < CardManager.Instance.allCards.Count; i++)
         {
-            if (CardManager.Instance.allCards[i].actionClass == stats._class || (CardManager.Instance.allCards[i].actionClass == Class.GENERIC && isEnemy == false))
+            if (CardManager.Instance.allCards[i].actionClass == u.stats._class || (CardManager.Instance.allCards[i].actionClass == Class.GENERIC && u.isEnemy == false))
             {
                 deck.Add(CardManager.Instance.allCards[i]);
             }
@@ -349,7 +384,7 @@ public class Unit : MonoBehaviour {
 
     public void DrawCards(int amount)
     {
-        if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID != ownerID) return;
+        if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID != unit.ownerID) return;
         if (deck.Count <= 0)
         {
             Debug.Log("No cards in deck!");
@@ -360,7 +395,7 @@ public class Unit : MonoBehaviour {
             if (availableActions.Count >= 5) break;
             availableActions.Add(deck[Random.Range(0, deck.Count)]);
         }
-        if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID == ownerID) //if im the owner of this unit, send my hand to the other players
+        if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID == unit.ownerID) //if im the owner of this unit, send my hand to the other players
         {
             List<int> cardIndexesToSend = new List<int>();
 
@@ -369,7 +404,7 @@ public class Unit : MonoBehaviour {
                 cardIndexesToSend.Add(GetDeckIndex(availableAct));
             }
 
-            PlayerInfo.Instance.commands.CmdSendUnitHand(PlayerInfo.Instance.playerID, cardIndexesToSend.ToArray(), currentNode.nodeID);
+            PlayerInfo.Instance.commands.CmdSendUnitHand(PlayerInfo.Instance.playerID, cardIndexesToSend.ToArray(), unit.currentNode.nodeID);
         }
     }
 
@@ -379,13 +414,13 @@ public class Unit : MonoBehaviour {
         selectedActionIndexes.Add(index);
         if (selectedActions.Count == 3)
         {
-            UIHelper.Instance.SetUnitActions(this);
-            if (PlayerInfo.Instance != null) PlayerInfo.Instance.commands.CmdSendSelectedCards(PlayerInfo.Instance.playerID, selectedActionIndexes.ToArray(), currentNode.nodeID);
+            UIHelper.Instance.SetUnitActions(unit);
+            if (PlayerInfo.Instance != null) PlayerInfo.Instance.commands.CmdSendSelectedCards(PlayerInfo.Instance.playerID, selectedActionIndexes.ToArray(), unit.currentNode.nodeID);
             selectedActionIndexes.Clear();
 
             SelectDone();
 
-            foreach(UnitAction action in selectedActions)
+            foreach (UnitAction action in selectedActions)
             {
                 availableActions.Remove(action);
             }
@@ -428,8 +463,8 @@ public class Unit : MonoBehaviour {
     void SelectDone(bool calledFromClient = false)
     {
         if (!calledFromClient) NodeManager.Instance.Deselect(); //don't deselect what the local player is doing if another player called this function
-        unitStateMachine.state = States.WAIT;
-        currentNode.SetHexReady(true);
+        unit.unitStateMachine.state = States.WAIT;
+        unit.currentNode.SetHexReady(true);
         foreach (GameObject u in Map.Instance.unitDudeFriends)
         {
             if (u.GetComponent<Unit>().unitStateMachine.state != States.WAIT) return;
@@ -439,7 +474,7 @@ public class Unit : MonoBehaviour {
 
     public void IEndMyEndTurnPegasus()
     {
-        if (!isEnemy)
+        if (!unit.isEnemy)
         {
             foreach (UnitAction action in selectedActions)
             {
@@ -447,31 +482,15 @@ public class Unit : MonoBehaviour {
             }
             selectedActions.Clear();
         }
-        unitStateMachine.state = States.END;
+        unit.unitStateMachine.state = States.END;
     }
 
     public void SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap(bool calledFromClient = false)
     {
-        if (!isEnemy) selectedActions.Remove(readyAction);
-        targetActionNode = null;
-        readyAction = null;
-        if (!calledFromClient) UIHelper.Instance.SetUnitActions(this);
+        if (!unit.isEnemy) selectedActions.Remove(unit.readyAction);
+        unit.targetActionNode = null;
+        unit.readyAction = null;
+        if (!calledFromClient) UIHelper.Instance.SetUnitActions(unit);
     }
     #endregion
-
-    string GenerateRandomNameOfPower()
-    {
-        string name = "";
-        string[] letters = { "mic", "ric", "jo", "hae", "har", "n", "el", "ard", "oj", "ri", "on", "rd", "cha", "ich", "j", "rich", "jon", "mich", " The Great, ", " of Power..." };
-        int nameLength = Random.Range(2, 6);
-        int randIndex = 0;
-
-        for (int i = 0; i < nameLength; ++i)
-        {
-            randIndex = Random.Range(0, letters.Length);
-            if (i > 0) name += letters[randIndex];
-            else name += letters[randIndex].ToUpper();
-        }
-        return name;
-    }
 }
