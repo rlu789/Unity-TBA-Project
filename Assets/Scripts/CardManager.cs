@@ -6,8 +6,19 @@ public class CardManager : MonoBehaviour
 {
     public static CardManager Instance;
     public List<UnitAction> allCards = new List<UnitAction>();
+    public Dictionary<int, Status> allStatuses = new Dictionary<int, Status>();
+    public List<Status> testingStatus = new List<Status>();
     UnitAction tempAction = new UnitAction();
-    public TextAsset cardsFile;
+    Status tempStatus;
+    public TextAsset cardsFile, statusFile;
+
+    //temp variables for status reader
+    int id = -1;
+    string statusName = ""; int duration = 0;
+    List<Effect> eff = new List<Effect>();
+    Effect tempEffect = new Effect(StatusType.DOT, 0, false);
+    //StatusType type; int strength; bool initialEffect;
+
     private void Awake()
     {
         if (Instance != null)
@@ -21,6 +32,7 @@ public class CardManager : MonoBehaviour
 
     public void Setup()
     {
+        ReadStatusFile(statusFile);
         ReadTextFile(cardsFile);
     }
 
@@ -94,6 +106,9 @@ public class CardManager : MonoBehaviour
                 case "ActionClass:":
                     tempAction.actionClass = (Class) Int32.Parse(parts[++i]);
                     break;
+                case "StatusId:":
+                    tempAction.status = allStatuses[Int32.Parse(parts[++i])];
+                    break;
                 case "[End]":
                     if (tempAction != null)
                     {
@@ -104,52 +119,74 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    //UnitAction HandleLine(string line)
-    //{
-    //    UnitAction action = new UnitAction();
-    //    bool takingName = true, takingPrefab = false;
-    //    string actionName = "", prefabName = "Assets/Prefabs/Projectiles/";
+    void ReadStatusFile(TextAsset file)
+    {
+        string[] textLines = file.text.Split('\n');
 
-    //    for (int i = 0; i < line.Length; i++)
-    //    {
-    //        if (line[i].Equals('-'))
-    //        {
-    //            takingName = false; takingPrefab = true;
-    //            i++;
-    //        }
-    //        if (line[i].Equals(':')) takingPrefab = false;
+        foreach (string line in textLines)
+        {
+            if (line.Length != 0 && line[0] != '/') HandleStatusLine(line);
+        }
+        foreach (KeyValuePair<int, Status> entry in allStatuses)
+        {
+            testingStatus.Add(entry.Value);
+        }
+    }
 
-    //        if (takingName)
-    //        {
-    //            actionName += line[i];
-    //        }
-    //        else if (takingPrefab)
-    //        {
-    //            prefabName += line[i];
-    //        }
-    //        else
-    //        {
-    //            action.name = actionName;
-    //            //Debug.Log(prefabName);
-    //            action.projectile = (GameObject)AssetDatabase.LoadAssetAtPath(prefabName, typeof(GameObject));
-    //            action.manaCost = (int)Char.GetNumericValue(line[i + 2]);
-    //            action.healthCost = (int)Char.GetNumericValue(line[i + 4]);
-    //            action.range = (int)Char.GetNumericValue(line[i + 6]);
-    //            action.damage = (int)Char.GetNumericValue(line[i + 8]);
-    //            action.aoe = (int)Char.GetNumericValue(line[i + 10]);
-    //            action.cooldown = (int)Char.GetNumericValue(line[i + 12]);
-    //            action.initiative = (int)Char.GetNumericValue(line[i + 14]);
-    //            action.type = (ActionType)(int)Char.GetNumericValue(line[i + 16]);
-    //            action.actionClass = (Class)(int)Char.GetNumericValue(line[i + 18]);
-    //            //Debug.Log(action.name);
-    //            if (action.cooldown == 9)   //richard this code is mega dodgy get on it already the team is suffering
-    //            {                           //anyway i hacked together this because it doesnt read in -negative numbers the sign breaks it REAl classic stuff :clap: :smirk:
-    //                action.cooldown = 0;
-    //                action.damage = -action.damage;
-    //            }
-    //            return action;
-    //        }
-    //    }
-    //    return null;
-    //}
+    void HandleStatusLine(string line)
+    {
+        string[] parts = line.Split(' ');
+
+        switch (parts[0].Trim())
+        {
+            case "[Status]":
+                tempStatus = null;
+                break;
+            case "Id:":
+                id = Int32.Parse(parts[1].Trim());
+                break;
+            case "Name:":
+                for (int x = 1; x < parts[1].Length - 2; x++)
+                {
+                    try
+                    {
+                        statusName += parts[x] + " ";
+                    }
+                    catch (System.IndexOutOfRangeException)
+                    {
+                        //Debug.Log("wtf why tho");
+                    }
+                }
+                break;
+            case "EffectType:": //TODO account for more than one effect
+                switch (parts[1].Trim())
+                {
+                    case "DOT":
+                        tempEffect.type = StatusType.DOT;
+                        break;
+                }
+                break;
+            case "EffectStrength:":
+                tempEffect.strength = Int32.Parse(parts[1].Trim());
+                break;
+            case "InitalEffect:":
+                tempEffect.initialEffect = bool.Parse( parts[1].Trim());
+                eff.Add(tempEffect);
+                break;
+            case "Duration:":
+                duration = Int32.Parse(parts[1].Trim());
+                break;
+            case "Visuals:":
+                // TODO this
+                break;
+            case "[End]":
+                if (id >= 0)
+                {
+                    tempStatus = new Status(statusName, eff.ToArray(), duration, null);
+                    allStatuses.Add(id, tempStatus);
+                }
+                else Debug.Log("empty status or negative id");
+                break;
+        }
+    }
 }

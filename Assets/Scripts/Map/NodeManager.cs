@@ -123,6 +123,7 @@ public class NodeManager : MonoBehaviour {
                 {
                     selectedNode.currentUnit.targetActionNode = node;
                     selectedNode.currentUnit.PerformAction();
+                    ClearActionAOE();
                     //Add action to a queue of actions, clear nodes in range and arrow
                     //TurnHandler.Instance.actionQueue.Add(selectedNode.currentUnit);
                     Destroy(movementUIObjectTargetGO);

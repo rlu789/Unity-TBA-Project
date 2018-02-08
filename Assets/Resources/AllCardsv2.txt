@@ -66,6 +66,7 @@ Cooldown: 1
 Initiative: 0
 Type: 1
 ActionClass: 2
+StatusId: 0
 [End]
 
 [Action]

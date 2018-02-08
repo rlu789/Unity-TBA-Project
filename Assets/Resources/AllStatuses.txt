@@ -1,0 +1,9 @@
+[Status]
+Id: 0
+Name: Yeap
+EffectType: DOT
+EffectStrength: 100
+InitialEffect: 0
+Duration: 100
+Visuals:
+[End]
