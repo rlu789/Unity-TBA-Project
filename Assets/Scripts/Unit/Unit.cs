@@ -78,7 +78,7 @@ public class Unit : MonoBehaviour {
         {
             PlayerInfo.Instance.commands.CmdSendAction(PlayerInfo.Instance.playerID, currentNode.nodeID, targetActionNode.nodeID, readyActionIndex);
         }
-        
+
         readyAction.UseAction(targetActionNode, this);
         if (!isEnemy) discardedActions.Add(readyAction);
 
@@ -95,7 +95,16 @@ public class Unit : MonoBehaviour {
 
     public void PerformActionDelayed(float delay)
     {
-        Invoke("PerformAction", delay);
+        if (readyAction == null || targetActionNode == null)
+        {
+            if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID == ownerID)    //why didnt i just do if the unit owner is you instead of two functions?
+            {
+                PlayerInfo.Instance.commands.CmdEndEnemyTurn(PlayerInfo.Instance.playerID);
+            }
+            readyAction = null;
+            targetActionNode = null;
+        }
+        else Invoke("PerformAction", delay);
     }
     #endregion
     #region Movement handling
@@ -120,7 +129,7 @@ public class Unit : MonoBehaviour {
 
         if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID == ownerID)
         {
-            PlayerInfo.Instance.commands.CmdSendMove(PlayerInfo.Instance.playerID, currentNode.nodeID, _destNode.nodeID);
+            PlayerInfo.Instance.commands.CmdSendMove(PlayerInfo.Instance.playerID, currentNode.nodeID, _destNode.nodeID, readyActionIndex);
         }
 
         //set values on initial and destination nodes
@@ -130,9 +139,8 @@ public class Unit : MonoBehaviour {
         Map.Instance.nodes[XY.x, XY.y].currentUnit = null;
 
         //set units new node values
-        Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
-        unitComponent.XY = _destNode.XY;
-        unitComponent.currentNodeID = _destNode.nodeID;
+        XY = _destNode.XY;
+        currentNodeID = _destNode.nodeID;
         currentNode = _destNode;
 
         //BANDAID
@@ -165,9 +173,8 @@ public class Unit : MonoBehaviour {
         Map.Instance.nodes[XY.x, XY.y].currentUnit = null;
 
         //set units new node values
-        Unit unitComponent = _destNode.currentUnitGO.GetComponent<Unit>();
-        unitComponent.XY = _destNode.XY;
-        unitComponent.currentNodeID = _destNode.nodeID;
+        XY = _destNode.XY;
+        currentNodeID = _destNode.nodeID;
         currentNode = _destNode;
 
         //BANDAID
@@ -264,7 +271,7 @@ public class Unit : MonoBehaviour {
         else return readyAction.GetNodesInRange(currentNode);
     }
 
-    public void PrepareAction(int actionIndex)
+    public void PrepareAction(int actionIndex, bool calledFromClient = false)
     {
         readyActionIndex = actionIndex;
         readyAction = selectedActions[actionIndex];
@@ -274,7 +281,7 @@ public class Unit : MonoBehaviour {
             unitStateMachine.SetState(States.B_SELECTINGMOVE);
             stats.moveSpeed = selectedActions[actionIndex].range;
         }
-        NodeManager.Instance.SetSelectedNode(currentNode);
+        if (!calledFromClient) NodeManager.Instance.SetSelectedNode(currentNode);
     }
 
     public void SetAction(int actionIndex, Node _target)
@@ -350,7 +357,7 @@ public class Unit : MonoBehaviour {
         }
         for (int i = 0; i < amount; i++)
         {
-            if (availableActions.Count >= 5) return;
+            if (availableActions.Count >= 5) break;
             availableActions.Add(deck[Random.Range(0, deck.Count)]);
         }
         if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID == ownerID) //if im the owner of this unit, send my hand to the other players

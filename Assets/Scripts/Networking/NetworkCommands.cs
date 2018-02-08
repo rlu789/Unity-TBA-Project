@@ -64,25 +64,25 @@ public class NetworkCommands : NetworkBehaviour
     [ClientRpc]
     public void RpcLobbyStartGame()
     {
-        Random.InitState(666);
+        //Random.InitState(666);
         SceneManager.LoadScene(1);
     }
     #endregion
     #region Unit move/action functions
     [Command]
-    public void CmdSendMove(int playerID, int startNodeID, int endNodeID)
+    public void CmdSendMove(int playerID, int startNodeID, int endNodeID, int cardIndex)
     {
         foreach (NetworkConnection target in NetworkServer.connections)
         {
             if (target.connectionId != playerID)    //if the target is not that player who sent the command, send the RPC
             {
-                TargetRpcSendMove(target, startNodeID, endNodeID);
+                TargetRpcSendMove(target, startNodeID, endNodeID, cardIndex);
             }
         }
     }
 
     [TargetRpc]
-    void TargetRpcSendMove(NetworkConnection target, int startNodeID, int endNodeID)
+    void TargetRpcSendMove(NetworkConnection target, int startNodeID, int endNodeID, int cardIndex)
     {
         Node startNode = null;
         Node endNode = null;
@@ -100,6 +100,8 @@ public class NetworkCommands : NetworkBehaviour
         }
         NodeManager.Instance.AssignPath(startNode, endNode);
         Unit theU = startNode.currentUnit;
+        theU.PrepareAction(cardIndex, true);
+        theU.SetAction(cardIndex, endNode);
         theU.MoveUnitClient();
 
         if (!theU.isEnemy) NodeManager.Instance.TurnEndHandler(theU);
@@ -132,15 +134,16 @@ public class NetworkCommands : NetworkBehaviour
             {
                 targetNode = n;
             }
-            if (startNode != null && targetNode != null) break;
+            if (startNode != null && targetNode != null) break; //found both nodes, we can stop looking
         }
         Unit theU = startNode.currentUnit;
+        theU.PrepareAction(actionID, true);
         theU.SetAction(actionID, targetNode);
         if (!theU.isEnemy) theU.PerformActionClient();
-        else theU.PerformActionDelayed(2f);
+        else theU.PerformAction();
 
         if (!theU.isEnemy) NodeManager.Instance.TurnEndHandler(theU);
-        else TurnHandler.Instance.EndEnemyTurn();
+        else TurnHandler.Instance.EndEnemyTurn(1f);
     }
 
     [Command]
@@ -189,6 +192,24 @@ public class NetworkCommands : NetworkBehaviour
                 return;
             }
         }
+    }
+
+    [Command]
+    public void CmdEndEnemyTurn(int playerID)   //if the enemy has no action, just end the turn
+    {
+        foreach (NetworkConnection target in NetworkServer.connections)
+        {
+            if (target.connectionId != playerID)
+            {
+                TargetRpcEndEnemyTurn(target);
+            }
+        }
+    }
+
+    [TargetRpc]
+    void TargetRpcEndEnemyTurn(NetworkConnection target)
+    {
+        TurnHandler.Instance.EndEnemyTurn(3f);
     }
     #endregion
 }

@@ -39,7 +39,6 @@ public class CardManager : MonoBehaviour
         string[] parts = line.Split(' ');
         for (int i = 0; i < parts.Length; i++)
         {
-            //Debug.Log(parts[i]);
             switch (parts[i].Trim())
             {
                 case "[Action]":

@@ -22,7 +22,7 @@ public class PlayerSetup : NetworkBehaviour
             return;
         }
         GetComponent<PlayerInfo>().playerID = (int)GetComponent<NetworkIdentity>().netId.Value;
-        GetComponent<PlayerInfo>().playerID -= 1;
+        GetComponent<PlayerInfo>().playerID -= 1;   //sync player ID with servers network ID
 
         FindObjectOfType<LobbyUI>().playerInfo = GetComponent<PlayerInfo>();
     }

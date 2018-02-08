@@ -43,13 +43,13 @@ public class UnitAction {
     {
         if (projectile == null)
         {
-            ActivateAction(targetNode.currentUnit);
+            ActivateAction(targetNode);
             return;
         }
         TurnHandler.Instance.waitingForAction++;
         GameObject projectileGO = Object.Instantiate(projectile, owner.FirePoint.position, Quaternion.identity);
-        if (targetNode.currentUnit == null) projectileGO.GetComponent<Projectile>().Setup(this, targetNode.transform, null); //if we dont find a target just fire at the node
-        else projectileGO.GetComponent<Projectile>().Setup(this, targetNode.currentUnit.FirePoint, targetNode.currentUnit);
+        if (targetNode.currentUnit == null) projectileGO.GetComponent<Projectile>().Setup(this, targetNode.transform, targetNode); //if we dont find a target just fire at the node
+        else projectileGO.GetComponent<Projectile>().Setup(this, targetNode.currentUnit.FirePoint, targetNode);
     }
 
     void ApplyDamageAndStatus(Unit target)
@@ -58,11 +58,12 @@ public class UnitAction {
         if (status != null && !status.IsEmpty()) target.ApplyStatus(status);
     }
 
-    public void ActivateAction(Unit target)    //only call from projectile
+    public void ActivateAction(Node target)    //only call from projectile
     {
         if (aoe > 0) //enemy aoe attack bugged as the nodesInAOE list is never used
         {
-            foreach (Node n in NodeManager.Instance.nodesInAOE)
+            List<Node> nodesInAOE = GetNodesInRange(target, true);
+            foreach (Node n in nodesInAOE)
             {
                 if (n.currentUnit != null)
                 {
@@ -72,8 +73,8 @@ public class UnitAction {
             NodeManager.Instance.ClearActionAOE();
             return;
         }
-        if (target == null) return;
-        ApplyDamageAndStatus(target);
+        if (target.currentUnit == null) return;
+        ApplyDamageAndStatus(target.currentUnit);
 
         //if (action.cooldown != 0) ;
         //check for current cooldown and decrease it each turn
@@ -91,8 +92,7 @@ public class UnitAction {
         {
             foreach (Node n in nodesInRange)
             {
-                foreach (Node m in n.neighbours)
-                    tempNodes.Add(m);
+                foreach (Node m in n.neighbours) tempNodes.Add(m);    
             }
             foreach (Node n in tempNodes)
             {

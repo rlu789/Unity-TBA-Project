@@ -3,7 +3,7 @@
 public class Projectile : MonoBehaviour
 {
     private Transform target;
-    private Unit targetUnit;
+    private Node targetNode;
 
     public float speed = 70f;
     public GameObject projectileGraphics;
@@ -16,11 +16,11 @@ public class Projectile : MonoBehaviour
     
     UnitAction action;
 
-    public void Setup(UnitAction _action, Transform _target, Unit _targetUnit)
+    public void Setup(UnitAction _action, Transform _target, Node _targetNode)
     {
         action = _action;
         target = _target;
-        targetUnit = _targetUnit;
+        targetNode = _targetNode;
     }
 
     private void Start()
@@ -70,7 +70,7 @@ public class Projectile : MonoBehaviour
 
         Destroy(effectIns, 5f);
 
-        action.ActivateAction(targetUnit);
+        action.ActivateAction(targetNode);
 
         Destroy(gameObject);
     }

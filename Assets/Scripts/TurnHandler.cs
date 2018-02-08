@@ -180,7 +180,7 @@ public class TurnHandler : MonoBehaviour
     {
         for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
         {
-            if (Map.Instance.unitDudeFriends[i].GetComponent<Unit>().isEnemy == false)
+            if (!Map.Instance.unitDudeFriends[i].GetComponent<Unit>().isEnemy)
             {
                 Map.Instance.unitDudeFriends[i].GetComponent<Unit>().DrawCards(3);
             }
@@ -202,11 +202,11 @@ public class TurnHandler : MonoBehaviour
         Invoke("NextState", 3f);
     }
 
-    public void EndEnemyTurn()
+    public void EndEnemyTurn(float delay)
     {
         orderedActions[orderedActions.Keys.First()].unitStateMachine.state = States.END;
         orderedActions.Remove(orderedActions.Keys.First());
-        Invoke("NextState", 3f);
+        Invoke("NextState", delay);
     }
 
     void HandleEnemyAct()
