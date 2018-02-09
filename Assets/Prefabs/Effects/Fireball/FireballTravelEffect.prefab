@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 199379322227802618}
   - component: {fileID: 198290898351037134}
   m_Layer: 0
-  m_Name: FireballTraveEffect
+  m_Name: FireballTravelEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

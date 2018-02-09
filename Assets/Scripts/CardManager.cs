@@ -170,7 +170,7 @@ public class CardManager : MonoBehaviour
                 tempEffect.strength = Int32.Parse(parts[1].Trim());
                 break;
             case "InitalEffect:":
-                tempEffect.initialEffect = bool.Parse( parts[1].Trim());
+                tempEffect.initialEffect = bool.Parse(parts[1].Trim());
                 eff.Add(tempEffect);
                 break;
             case "Duration:":
@@ -183,6 +183,7 @@ public class CardManager : MonoBehaviour
                 if (id >= 0)
                 {
                     tempStatus = new Status(statusName, eff.ToArray(), duration, null);
+                    Debug.Log(statusName + "." + eff.Count + "." + duration + ".");
                     allStatuses.Add(id, tempStatus);
                 }
                 else Debug.Log("empty status or negative id");

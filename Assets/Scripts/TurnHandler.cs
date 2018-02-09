@@ -116,7 +116,6 @@ public class TurnHandler : MonoBehaviour
                 //TODO: function to have enemy draw their cards
                 SetAllStates(States.START, States.DRAW);
                 currentState = TurnHandlerStates.ENEMYDRAW;
-                //HandleStatus();
                 NextState();
                 break;
             case TurnHandlerStates.PLAYERDRAW:
@@ -144,6 +143,7 @@ public class TurnHandler : MonoBehaviour
                 SetAllStates(States.END, States.END);
                 currentState = TurnHandlerStates.END;
                 NodeManager.Instance.Deselect();
+                HandleStatus();
                 NextState();
                 break;
         }
@@ -222,9 +222,13 @@ public class TurnHandler : MonoBehaviour
 
     void HandleStatus()
     {
-        foreach (GameObject unit in Map.Instance.unitDudeFriends)
+        for (int i = Map.Instance.unitDudeFriends.Count - 1; i >= 0; --i)
         {
-            StatusHelper.Instance.CheckStatus(unit.GetComponent<Unit>());
+            StatusHelper.Instance.CheckStatus(Map.Instance.unitDudeFriends[i].GetComponent<Unit>());
+        }
+        for (int i = Map.Instance.unitDudeEnemies.Count - 1; i >= 0; --i)
+        {
+            StatusHelper.Instance.CheckStatus(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
         }
     }
 

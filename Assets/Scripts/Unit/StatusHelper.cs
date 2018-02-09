@@ -62,6 +62,7 @@ public class StatusHelper : MonoBehaviour {
         //loop backwards so we can remove without affecting loop
         for (int i = unit.statuses.Count - 1; i >= 0; --i)
         {
+            if (unit.statuses == null) return; //we died
             if (unit.statuses[i].duration <= 0)
             {
                 RemoveStatus(unit, i);
@@ -79,6 +80,7 @@ public class StatusHelper : MonoBehaviour {
         }
         //reduce the effect duration
         status.duration--;
+        //TODO: want to do a visual effect here ?
     }
 
     public void ApplyInitialEffects(Status status, Unit unit)
@@ -88,6 +90,7 @@ public class StatusHelper : MonoBehaviour {
             if (!eff.initialEffect) continue;    //only initial effects are used
             UseEffect(eff, unit);
         }
+        //TODO: want to do a visual effect here ?
     }
 
     void UseEffect(Effect eff, Unit unit)

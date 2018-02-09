@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 23501479705093834}
   - component: {fileID: 64788161845348042}
   - component: {fileID: 64655768819160966}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: NodeWater
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 4327721289588800}
   - component: {fileID: 33796727315851004}
   - component: {fileID: 23057298663748696}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Rim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,7 +203,6 @@ MonoBehaviour:
   readyMaterial: {fileID: 2100000, guid: d1ba97b6ed4622a48a04f776867acc69, type: 2}
   currentUnitGO: {fileID: 0}
   currentUnit: {fileID: 0}
-  potentialUnit: {fileID: 0}
   nodeID: 0
   XY: {x: 0, y: 0}
   myRenderer: {fileID: 0}
