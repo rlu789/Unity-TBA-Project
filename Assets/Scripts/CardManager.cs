@@ -14,9 +14,9 @@ public class CardManager : MonoBehaviour
 
     //temp variables for status reader
     int id = -1;
-    string statusName = ""; int duration = 0;
+    string statusName = ""; int duration = 0; GameObject visual;
     List<Effect> eff = new List<Effect>();
-    Effect tempEffect = new Effect(StatusType.DOT, 0, false);
+    //Effect tempEffect = new Effect(StatusType.DOT, 0, false);
     //StatusType type; int strength; bool initialEffect;
 
     private void Awake()
@@ -159,31 +159,51 @@ public class CardManager : MonoBehaviour
                 }
                 break;
             case "EffectType:": //TODO account for more than one effect
-                switch (parts[1].Trim())
+                for (int i = 1; i < parts.Length; i++)
                 {
-                    case "DOT":
-                        tempEffect.type = StatusType.DOT;
-                        break;
+                    eff.Add(new Effect(StatusType.DOT, 0, false));
+                    switch (parts[i].Trim())
+                    {
+                        case "DOT":
+                            eff[i-1].type = StatusType.DOT;
+                            break;
+                        case "MoveSpeed":
+                            eff[i - 1].type = StatusType.MoveSpeed;
+                            break;
+                        case "Actions":
+                            eff[i - 1].type = StatusType.Actions;
+                            break;
+                        case "OutgoingDamage":
+                            eff[i - 1].type = StatusType.OutgoingDamage;
+                            break;
+                        case "IncomingDamage":
+                            eff[i - 1].type = StatusType.IncomingDamage;
+                            break;
+                    }
                 }
                 break;
             case "EffectStrength:":
-                tempEffect.strength = Int32.Parse(parts[1].Trim());
+                for (int i = 1; i < parts.Length; i++)
+                {
+                    eff[i - 1].strength = Int32.Parse(parts[i].Trim());
+                }
                 break;
-            case "InitalEffect:":
-                tempEffect.initialEffect = bool.Parse(parts[1].Trim());
-                eff.Add(tempEffect);
+            case "InitialEffect:":
+                for (int i = 1; i < parts.Length; i++)
+                {
+                    eff[i - 1].initialEffect = (Int32.Parse(parts[i].Trim()) == 0) ? false : true;
+                }
                 break;
             case "Duration:":
                 duration = Int32.Parse(parts[1].Trim());
                 break;
             case "Visuals:":
-                // TODO this
+                visual = PrefabHelper.Instance.statusVisuals[Int32.Parse(parts[1])];
                 break;
             case "[End]":
                 if (id >= 0)
                 {
-                    tempStatus = new Status(statusName, eff.ToArray(), duration, null);
-                    Debug.Log(statusName + "." + eff.Count + "." + duration + ".");
+                    tempStatus = new Status(statusName, eff.ToArray(), duration, visual);
                     allStatuses.Add(id, tempStatus);
                 }
                 else Debug.Log("empty status or negative id");

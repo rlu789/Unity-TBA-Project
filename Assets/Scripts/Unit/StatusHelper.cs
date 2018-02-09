@@ -62,7 +62,7 @@ public class StatusHelper : MonoBehaviour {
         //loop backwards so we can remove without affecting loop
         for (int i = unit.statuses.Count - 1; i >= 0; --i)
         {
-            if (unit.statuses == null) return; //we died
+            if (unit == null || unit.statuses == null) return; //we died
             if (unit.statuses[i].duration <= 0)
             {
                 RemoveStatus(unit, i);
