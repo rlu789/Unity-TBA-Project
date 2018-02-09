@@ -16,7 +16,7 @@ public class CardManager : MonoBehaviour
     int id = -1;
     string statusName = ""; int duration = 0;
     List<Effect> eff = new List<Effect>();
-    Effect tempEffect = new Effect(StatusType.DOT, 0, false);
+    //Effect tempEffect = new Effect(StatusType.DOT, 0, false);
     //StatusType type; int strength; bool initialEffect;
 
     private void Awake()
@@ -159,19 +159,40 @@ public class CardManager : MonoBehaviour
                 }
                 break;
             case "EffectType:": //TODO account for more than one effect
-                switch (parts[1].Trim())
+                for (int i = 1; i < parts.Length; i++)
                 {
-                    case "DOT":
-                        tempEffect.type = StatusType.DOT;
-                        break;
+                    eff.Add(new Effect(StatusType.DOT, 0, false));
+                    switch (parts[i].Trim())
+                    {
+                        case "DOT":
+                            eff[i-1].type = StatusType.DOT;
+                            break;
+                        case "MoveSpeed":
+                            eff[i - 1].type = StatusType.MoveSpeed;
+                            break;
+                        case "Actions":
+                            eff[i - 1].type = StatusType.Actions;
+                            break;
+                        case "OutgoingDamage":
+                            eff[i - 1].type = StatusType.OutgoingDamage;
+                            break;
+                        case "IncomingDamage":
+                            eff[i - 1].type = StatusType.IncomingDamage;
+                            break;
+                    }
                 }
                 break;
             case "EffectStrength:":
-                tempEffect.strength = Int32.Parse(parts[1].Trim());
+                for (int i = 1; i < parts.Length; i++)
+                {
+                    eff[i - 1].strength = Int32.Parse(parts[i].Trim());
+                }
                 break;
-            case "InitalEffect:":
-                tempEffect.initialEffect = bool.Parse( parts[1].Trim());
-                eff.Add(tempEffect);
+            case "InitialEffect:":
+                for (int i = 1; i < parts.Length; i++)
+                {
+                    eff[i - 1].initialEffect = (Int32.Parse(parts[i].Trim()) == 0) ? false : true;
+                }
                 break;
             case "Duration:":
                 duration = Int32.Parse(parts[1].Trim());
