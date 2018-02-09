@@ -5,5 +5,5 @@ EffectType: DOT IncomingDamage
 EffectStrength: 100 50
 InitialEffect: 0 1
 Duration: 100
-Visuals:
+Visuals: 0
 [End]

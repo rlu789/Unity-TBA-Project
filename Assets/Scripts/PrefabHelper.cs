@@ -5,6 +5,7 @@ public class PrefabHelper : MonoBehaviour {
     public static PrefabHelper Instance;
 
     public GameObject[] projectiles;
+    public GameObject[] statusVisuals;
     public GameObject[] units;
 
     private void Awake()

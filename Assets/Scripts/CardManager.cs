@@ -14,7 +14,7 @@ public class CardManager : MonoBehaviour
 
     //temp variables for status reader
     int id = -1;
-    string statusName = ""; int duration = 0;
+    string statusName = ""; int duration = 0; GameObject visual;
     List<Effect> eff = new List<Effect>();
     //Effect tempEffect = new Effect(StatusType.DOT, 0, false);
     //StatusType type; int strength; bool initialEffect;
@@ -198,12 +198,12 @@ public class CardManager : MonoBehaviour
                 duration = Int32.Parse(parts[1].Trim());
                 break;
             case "Visuals:":
-                // TODO this
+                visual = PrefabHelper.Instance.statusVisuals[Int32.Parse(parts[1])];
                 break;
             case "[End]":
                 if (id >= 0)
                 {
-                    tempStatus = new Status(statusName, eff.ToArray(), duration, null);
+                    tempStatus = new Status(statusName, eff.ToArray(), duration, visual);
                     allStatuses.Add(id, tempStatus);
                 }
                 else Debug.Log("empty status or negative id");

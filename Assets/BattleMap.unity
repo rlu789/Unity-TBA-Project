@@ -1094,6 +1094,8 @@ MonoBehaviour:
   - {fileID: 1583182739588176, guid: 9cc0d0df4084d4544a90c7d973070a77, type: 2}
   - {fileID: 1583182739588176, guid: db9c44a0c2b7ac54e8ec351b2583ca66, type: 2}
   - {fileID: 1583182739588176, guid: 68a572a8e5bdee14194756c8333bd6b3, type: 2}
+  statusVisuals:
+  - {fileID: 1583182739588176, guid: db9c44a0c2b7ac54e8ec351b2583ca66, type: 2}
   units:
   - {fileID: 1329816491546904, guid: 93c4d8213f03ca540a32a1062450a27c, type: 2}
   - {fileID: 1626122313977446, guid: e8677f963bc601940bf23937d77ef762, type: 2}
