@@ -15,7 +15,8 @@ public class Unit : MonoBehaviour {
 
     //Setup fields
     public GameObject graphics;
-    public Transform FirePoint;
+    public Transform firePoint;
+    public Transform statusPoint;
     [Header("For unity and debug, don't change")]
     public Vector2Int XY = new Vector2Int(0, 0);
     public int currentNodeID = -1;
@@ -317,7 +318,7 @@ public class Unit : MonoBehaviour {
     public void ApplyStatus(Status status)
     {
         Status s = new Status(status);
-        if (s.visual != null) s.visualIns = Instantiate(s.visual, transform);
+        if (s.visual != null) s.visualIns = Instantiate(s.visual, statusPoint.transform);
         StatusHelper.Instance.ApplyInitialEffects(s, this);
         statuses.Add(s);
     }

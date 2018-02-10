@@ -77,6 +77,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1478020082425328
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4704061957052698}
+  m_Layer: 0
+  m_Name: StatusPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1550765029516270
 GameObject:
   m_ObjectHideFlags: 1
@@ -261,6 +276,19 @@ Transform:
   m_Father: {fileID: 4106922300424780}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4704061957052698
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1478020082425328}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4761940430630074}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4761940430630074
 Transform:
   m_ObjectHideFlags: 1
@@ -268,10 +296,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1329816491546904}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.104762, y: 0.5, z: -6.036663}
+  m_LocalPosition: {x: 3.0055876, y: 0.5, z: -1.4465971}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4106922300424780}
+  - {fileID: 4704061957052698}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -630,7 +659,8 @@ MonoBehaviour:
     discardedActions: []
   isEnemy: 1
   graphics: {fileID: 1558556153736036}
-  FirePoint: {fileID: 4549278640386806}
+  firePoint: {fileID: 4549278640386806}
+  statusPoint: {fileID: 4704061957052698}
   XY: {x: 0, y: 0}
   currentNodeID: -1
   currentNode: {fileID: 0}
