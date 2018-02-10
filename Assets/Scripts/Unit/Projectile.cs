@@ -9,7 +9,7 @@ public class Projectile : MonoBehaviour
     public GameObject projectileGraphics;
     public GameObject impactEffect;
     public GameObject travelEffect;
-    private ParticleSystem travelEffectPS;
+    private ParticleSystem[] travelEffectPS;
     public GameObject spawnEffect;
     public float spawnEffectLife;
     public float fireDelay = 0f;
@@ -29,7 +29,8 @@ public class Projectile : MonoBehaviour
         if (travelEffect)
         {
             travelEffect = Instantiate(travelEffect);
-            travelEffectPS = travelEffect.GetComponent<ParticleSystem>();
+            travelEffectPS = travelEffect.GetComponentsInChildren<ParticleSystem>();
+            if (projectileGraphics != null && fireDelay > 0) travelEffect.SetActive(false);
         }
         if (spawnEffect != null) Destroy(Instantiate(spawnEffect, transform.position, Quaternion.identity), spawnEffectLife);
     }
@@ -41,7 +42,11 @@ public class Projectile : MonoBehaviour
             fireDelay -= Time.deltaTime;
             return;
         }
-        else if (projectileGraphics != null) projectileGraphics.SetActive(true);
+        else if (projectileGraphics != null)
+        {
+            projectileGraphics.SetActive(true);
+            if (travelEffect) travelEffect.SetActive(true);
+        }
 
         if (target == null)
         {
@@ -59,9 +64,11 @@ public class Projectile : MonoBehaviour
         }
         transform.Translate(dir.normalized * distanceThisFrame, Space.World);
         transform.LookAt(target);
+
         if (travelEffect)
         {
             travelEffect.transform.position = transform.position;
+            travelEffect.transform.LookAt(target);
         }
     }
     void HitTarget()
@@ -80,8 +87,9 @@ public class Projectile : MonoBehaviour
         TurnHandler.Instance.waitingForAction--;
         if (travelEffect)
         {
-            travelEffectPS.Stop();
-            Destroy(travelEffect, 1f);
+            foreach (ParticleSystem ps in travelEffectPS) ps.Stop();
+
+            Destroy(travelEffect, 2f);
         }
     }
 }
