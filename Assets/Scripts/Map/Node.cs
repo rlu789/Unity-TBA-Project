@@ -9,6 +9,7 @@ public class Node : MonoBehaviour {
     public Material selectedMaterial;
     public Material selectedMaterialBad;
     public Material readyMaterial;
+    public Transform firePoint;
 
     //Object fields, don't touch
     [Space(10)]

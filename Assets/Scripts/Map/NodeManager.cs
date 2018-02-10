@@ -82,6 +82,12 @@ public class NodeManager : MonoBehaviour {
 
     public void TurnEndHandler(Unit unit)   //for other players units
     {
+        if (unit.dead)
+        {
+            selectingCount = 0;
+            TurnHandler.Instance.NextState();
+            return;
+        }
         unit.unitStateMachine.state = States.B_SELECTING;
         if (selectingCount >= 1) //if the player has played two cards, goto next turn
         {
@@ -281,6 +287,7 @@ public class NodeManager : MonoBehaviour {
 
         if (selectedNode != null)
         {
+            if (selectedNode.currentUnit == null || selectedNode.currentUnit.dead) return;
             if (TurnHandler.Instance.currentState == TurnHandlerStates.PLAYERTURN && selectedNode.currentUnit.unitStateMachine.state == States.B_SELECTINGMOVE) ShowPath(selectedNode, node);    //show path if we are in the move turn
 
             if (selectedNode.currentUnit != null)

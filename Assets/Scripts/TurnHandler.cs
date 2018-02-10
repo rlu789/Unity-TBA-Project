@@ -92,7 +92,7 @@ public class TurnHandler : MonoBehaviour
         {
             return TurnHandlerStates.END;
         }
-        if (orderedActions[orderedActions.Keys.First()] == null)    //enemy was killed
+        if (orderedActions[orderedActions.Keys.First()] == null || orderedActions[orderedActions.Keys.First()].dead)    //enemy was killed
         {
             orderedActions.Remove(orderedActions.Keys.First());
             return DetermineTurn();

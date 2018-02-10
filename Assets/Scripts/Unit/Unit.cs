@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 //ALERT
 //OMEGA TODO:
 //I made a bunch of regions with very different descriptions that a lot of the functions in this class fit into. Classes should have a single use so all the functions in seperate regions should be moved to seperate classes.
@@ -13,6 +14,7 @@ public class Unit : MonoBehaviour {
     public bool isEnemy;
 
     //Setup fields
+    public GameObject graphics;
     public Transform FirePoint;
     [Header("For unity and debug, don't change")]
     public Vector2Int XY = new Vector2Int(0, 0);
@@ -30,6 +32,8 @@ public class Unit : MonoBehaviour {
     public UnitStateMachine unitStateMachine;
 
     public List<Status> statuses = new List<Status>();
+    [HideInInspector]
+    public bool dead = false;
     //Network fields
     public int ownerID;
 
@@ -312,21 +316,27 @@ public class Unit : MonoBehaviour {
 
     public void ApplyStatus(Status status)
     {
-        if (status.visual != null) status.visualIns = Instantiate(status.visual, transform.position, Quaternion.identity);
-        StatusHelper.Instance.ApplyInitialEffects(status, this);
-        statuses.Add(status);
+        Status s = new Status(status);
+        if (s.visual != null) s.visualIns = Instantiate(s.visual, transform);
+        StatusHelper.Instance.ApplyInitialEffects(s, this);
+        statuses.Add(s);
     }
 
     void Die()
     {
+        dead = true;
+        StatusHelper.Instance.RemoveAllStatuses(this);
         NodeManager.Instance.unitsWithAssignedPaths.Remove(this);
         Map.Instance.unitDudeEnemies.Remove(gameObject);
         Map.Instance.unitDudeFriends.Remove(gameObject);
         currentNode.SetHexReady(false);
         currentNode.currentUnit = null;
         currentNode.currentUnitGO = null;
-
-        Destroy(gameObject);
+        //its still this units turn, end it
+        if (TurnHandler.Instance.orderedActions.Count != 0 && TurnHandler.Instance.orderedActions[TurnHandler.Instance.orderedActions.Keys.First()] == this) NodeManager.Instance.TurnEndHandler(this);
+        //TODO: Play death animation
+        Destroy(graphics);
+        Destroy(gameObject, 2f);
     }
     #endregion
 

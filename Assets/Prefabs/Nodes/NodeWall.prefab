@@ -48,6 +48,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1740400997206656
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4417333303186680}
+  m_Layer: 8
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &4327721289588800
 Transform:
   m_ObjectHideFlags: 1
@@ -61,6 +76,19 @@ Transform:
   m_Father: {fileID: 4817994770153210}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4417333303186680
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1740400997206656}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4817994770153210}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4817994770153210
 Transform:
   m_ObjectHideFlags: 1
@@ -68,10 +96,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1326710624061332}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.5145454, y: 0.5, z: -16.788237}
+  m_LocalPosition: {x: 1.8843833, y: 0.5, z: 2.7313318}
   m_LocalScale: {x: 0.4, y: 3, z: 0.4}
   m_Children:
   - {fileID: 4327721289588800}
+  - {fileID: 4417333303186680}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -201,6 +230,7 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: c8bfc26087abb644ca6580e3bce93082, type: 2}
   selectedMaterialBad: {fileID: 2100000, guid: b0276a4d4f868d745ba3dd1ef94c4ecd, type: 2}
   readyMaterial: {fileID: 2100000, guid: 099e641bb87d4be4ab1c3a72f0f8ffcf, type: 2}
+  firePoint: {fileID: 4417333303186680}
   currentUnitGO: {fileID: 0}
   currentUnit: {fileID: 0}
   nodeID: 0

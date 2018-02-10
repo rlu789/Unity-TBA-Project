@@ -29,6 +29,14 @@ public class Status //need to change key value pair so it can be serialized
         visual = _visual;
     }
 
+    public Status(Status prevStatus)
+    {
+        name = prevStatus.name;
+        effects = prevStatus.effects;
+        duration = prevStatus.duration;
+        visual = prevStatus.visual;
+    }
+
     public string name;
     public Effect[] effects;
     public int duration;
@@ -60,14 +68,18 @@ public class StatusHelper : MonoBehaviour {
     public void CheckStatus(Unit unit)
     {
         //loop backwards so we can remove without affecting loop
+        if (unit == null || unit.dead) return;
         for (int i = unit.statuses.Count - 1; i >= 0; --i)
         {
-            if (unit == null || unit.statuses == null) return; //we died
+            if (unit == null || unit.statuses == null || unit.statuses.Count == 0 || unit.statuses[i] == null) return; //something weird happened
             if (unit.statuses[i].duration <= 0)
             {
                 RemoveStatus(unit, i);
+                continue;
             }
             else ApplyEffects(unit.statuses[i], unit);
+
+            //if (unit.statuses[i].duration <= 0) RemoveStatus(unit, i);
         }
     }
 
@@ -118,7 +130,21 @@ public class StatusHelper : MonoBehaviour {
 
     void RemoveStatus(Unit unit, int index)
     {
-        Destroy(unit.statuses[index].visualIns);
+        ParticleSystem[] psa = unit.statuses[index].visualIns.GetComponentsInChildren<ParticleSystem>();
+        foreach (ParticleSystem ps in psa)
+        {
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        Destroy((unit.statuses[index].visualIns), 2f);
         unit.statuses.RemoveAt(index);
+    }
+
+    public void RemoveAllStatuses(Unit unit)
+    {
+        for (int i = unit.statuses.Count - 1; i >= 0; --i)
+        {
+            RemoveStatus(unit, i);
+        }
     }
 }

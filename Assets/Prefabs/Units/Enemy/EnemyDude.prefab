@@ -325,11 +325,13 @@ MonoBehaviour:
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
-  availableActions: []
-  selectedActions: []
-  selectedActionIndexes: 
-  discardedActions: []
+  cards:
+    availableActions: []
+    selectedActions: []
+    selectedActionIndexes: 
+    discardedActions: []
   isEnemy: 1
+  graphics: {fileID: 1826394178188506}
   FirePoint: {fileID: 4644061398980554}
   XY: {x: 0, y: 0}
   currentNodeID: -1
@@ -358,6 +360,7 @@ MonoBehaviour:
   targetActionNode: {fileID: 0}
   unitStateMachine: {fileID: 0}
   statuses: []
+  dead: 0
   ownerID: 0
 --- !u!114 &114858001592289350
 MonoBehaviour:
