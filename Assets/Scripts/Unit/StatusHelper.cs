@@ -65,19 +65,25 @@ public class StatusHelper : MonoBehaviour {
         Instance = this;
     }
 
-    public void CheckStatus(Unit unit)
+    public void CheckStatuses(Unit unit)    //call at start of units turn
     {
-        //loop backwards so we can remove without affecting loop
-        if (unit == null || unit.dead) return;
+        if (unit == null || unit.dead || unit.statuses == null || unit.statuses.Count == 0) return;
         for (int i = unit.statuses.Count - 1; i >= 0; --i)
         {
-            if (unit == null || unit.statuses == null || unit.statuses.Count == 0 || unit.statuses[i] == null) return; //something weird happened
+            ApplyEffects(unit.statuses[i], unit);
+        }
+    }
+
+    public void ResolveStatuses(Unit unit)  //call at end of units turn
+    {
+        if (unit == null || unit.dead || unit.statuses == null || unit.statuses.Count == 0) return;
+        //loop backwards so we can remove without affecting loop
+        for (int i = unit.statuses.Count - 1; i >= 0; --i)
+        {
             if (unit.statuses[i].duration <= 0)
             {
                 RemoveStatus(unit, i);
-                continue;
             }
-            else ApplyEffects(unit.statuses[i], unit);
         }
     }
 

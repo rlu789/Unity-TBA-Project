@@ -72,6 +72,7 @@ public class NodeManager : MonoBehaviour {
             //BANDAID
             selectingCount = 0;
             selectedNode.currentUnit.cards.IEndMyEndTurnPegasus();
+            TurnHandler.Instance.orderedActions[TurnHandler.Instance.orderedActions.Keys.First()].GetComponent<Unit>().EndTurn();
             TurnHandler.Instance.orderedActions.Remove(TurnHandler.Instance.orderedActions.Keys.First());
             UIHelper.Instance.ToggleVisible(UIType.UnitActions, false);
             TurnHandler.Instance.NextState();

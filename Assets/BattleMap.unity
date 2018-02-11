@@ -1039,7 +1039,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Player Move
+  m_Text: 
 --- !u!222 &804334538
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1096,6 +1096,7 @@ MonoBehaviour:
   - {fileID: 1583182739588176, guid: 68a572a8e5bdee14194756c8333bd6b3, type: 2}
   statusVisuals:
   - {fileID: 1331461797786686, guid: 12e1909fe8e042e40990819bc06d5bca, type: 2}
+  - {fileID: 1751890007448496, guid: ab2f30789cbea7445ace019c8b0193b9, type: 2}
   units:
   - {fileID: 1329816491546904, guid: 93c4d8213f03ca540a32a1062450a27c, type: 2}
   - {fileID: 1626122313977446, guid: e8677f963bc601940bf23937d77ef762, type: 2}

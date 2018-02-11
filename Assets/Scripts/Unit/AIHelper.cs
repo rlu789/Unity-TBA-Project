@@ -192,12 +192,12 @@ public class AIHelper : MonoBehaviour {
 
         if ((possibleActions.Count == 0 || trueActions.Count == 0) && move) //just move towards a random enemy (or ally)
         {
-            if (!unit.stats.hugFriends)
+            if (!unit.stats.hugFriends && Map.Instance.unitDudeFriends.Count != 0)
             {
                 index = Random.Range(0, Map.Instance.unitDudeFriends.Count);
                 NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.unitDudeFriends[index].GetComponent<Unit>().currentNode);
             }
-            else
+            else if (Map.Instance.unitDudeEnemies.Count != 0)
             {
                 index = Random.Range(0, Map.Instance.unitDudeEnemies.Count);
                 NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.unitDudeEnemies[index].GetComponent<Unit>().currentNode);

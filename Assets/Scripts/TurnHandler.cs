@@ -33,6 +33,7 @@ public class TurnHandler : MonoBehaviour
     float haveYetToCrossTheBridge = 0.01f;
     [HideInInspector]
     public int waitingForAction = 0;
+    int sanityCheck;    //we need to know when a unit dies from a status effect at the top of their turn, so we check the count of actions before and after status effects are activated
 
     private void Awake()
     {
@@ -130,20 +131,25 @@ public class TurnHandler : MonoBehaviour
                 break;
             case TurnHandlerStates.PLAYERTURN:
                 currentState = TurnHandlerStates.PLAYERTURN;
-                orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().SetState(States.B_SELECTING);
-                orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().currentNode.SetHexReady(false);
-                NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().currentNode);
+
+                sanityCheck = orderedActions.Count;
+                orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().StartTurn();
+                if (sanityCheck == orderedActions.Count) NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().currentNode);
+
                 break;
             case TurnHandlerStates.ENEMYTURN:
                 currentState = TurnHandlerStates.ENEMYTURN;
-                orderedActions[orderedActions.Keys.First()].GetComponent<UnitStateMachine>().SetState(States.B_SELECTING);
-                HandleEnemyTurn();
+
+                sanityCheck = orderedActions.Count;
+                orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().StartTurn();
+                if (sanityCheck == orderedActions.Count) HandleEnemyTurn();
+                else NextState();
+
                 break;
             case TurnHandlerStates.END:
                 SetAllStates(States.END, States.END);
                 currentState = TurnHandlerStates.END;
                 NodeManager.Instance.Deselect();
-                HandleStatus();
                 NextState();
                 break;
         }
@@ -190,8 +196,14 @@ public class TurnHandler : MonoBehaviour
     void HandleEnemyTurn()
     {
         if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID != 0) return;   //only host should handle enemy turns
-        Unit enemy = orderedActions[orderedActions.Keys.First()];
 
+        if (orderedActions[orderedActions.Keys.First()] == null)
+        {
+            NextState();
+            return;
+        }
+
+        Unit enemy = orderedActions[orderedActions.Keys.First()];
         NodeManager.Instance.SetSelectedNode(enemy.currentNode);
         AIHelper.Instance.AIGetTurn(enemy);
         enemy.MoveUnit();
@@ -218,20 +230,20 @@ public class TurnHandler : MonoBehaviour
         }
     }
 
-    void HandleStatus()
+    void HandleStatus() //old and unused
     {
         Unit u;
         for (int i = Map.Instance.unitDudeFriends.Count - 1; i >= 0; --i)
         {
             u = Map.Instance.unitDudeFriends[i].GetComponent<Unit>();
             u.stats.ResetStats();
-            StatusHelper.Instance.CheckStatus(u);
+            StatusHelper.Instance.CheckStatuses(u);
         }
         for (int i = Map.Instance.unitDudeEnemies.Count - 1; i >= 0; --i)
         {
             u = Map.Instance.unitDudeEnemies[i].GetComponent<Unit>();
             u.stats.ResetStats();
-            StatusHelper.Instance.CheckStatus(u);
+            StatusHelper.Instance.CheckStatuses(u);
         }
     }
 

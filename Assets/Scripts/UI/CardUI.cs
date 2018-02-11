@@ -9,6 +9,7 @@ public class CardUI : MonoBehaviour {
     public Text damage;
     public Text aoe;
     public Text initiative;
+    public Text status;
 
     Unit unit;
     int index;
@@ -33,10 +34,16 @@ public class CardUI : MonoBehaviour {
 
         if (act.damage > 0) damage.text = "<color=red>" + act.damage + " Damage</color>";
         else if (act.damage < 0) damage.text = "<color=green>" + -act.damage + " Healing</color>";
+        else if (act.type == ActionType.MOVE) damage.text = "<color=yellow>Movement</color>";
         else damage.text = "No Damage";
 
-        aoe.text = act.aoe + " AOE";
+        if (act.aoe == 0) aoe.gameObject.SetActive(false);
+        else aoe.text = act.aoe + " AOE";
+
         initiative.text = "<color=yellow>" + act.initiative + " Initiative</color>";
+
+        if (act.status != null) status.text = "<color=green>" + act.status.name + "</color>";
+        else status.gameObject.SetActive(false);
         //Keep track of unit this card belongs to (at which index)
         unit = _unit;
         index = _index;

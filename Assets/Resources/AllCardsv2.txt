@@ -49,7 +49,7 @@ Range: 4
 Damage: 2
 AOE: 0
 Cooldown: 0
-Initiative: 2
+Initiative: 4
 Type: 1
 ActionClass: 2
 [End]
@@ -63,7 +63,7 @@ Range: 4
 Damage: 8
 AOE: 1
 Cooldown: 1
-Initiative: 0
+Initiative: 10
 Type: 1
 ActionClass: 2
 StatusId: 0
@@ -109,4 +109,19 @@ Cooldown: 0
 Initiative: 1
 Type: 1
 ActionClass: 4
+[End]
+
+[Action]
+Name: Speedy Recovery
+Prefab: 6 HolyDartProjectile.prefab
+Mana: 0
+Health: 0
+Range: 1
+Damage: 0
+AOE: 0
+Cooldown: 0
+Initiative: 2
+Type: 1
+ActionClass: 4
+StatusId: 1
 [End]

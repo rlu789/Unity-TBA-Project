@@ -349,6 +349,19 @@ public class Unit : MonoBehaviour {
         Destroy(graphics);
         Destroy(gameObject, 2f);
     }
+
+    public void StartTurn()
+    {
+        unitStateMachine.SetState(States.B_SELECTING);
+        currentNode.SetHexReady(false);
+        stats.ResetStats();
+        StatusHelper.Instance.CheckStatuses(this);
+    }
+
+    public void EndTurn()
+    {
+        StatusHelper.Instance.ResolveStatuses(this);
+    }
     #endregion
 
     string GenerateRandomNameOfPower()

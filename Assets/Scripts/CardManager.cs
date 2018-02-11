@@ -205,6 +205,8 @@ public class CardManager : MonoBehaviour
                 {
                     tempStatus = new Status(statusName, eff.ToArray(), duration, visual);
                     allStatuses.Add(id, tempStatus);
+                    eff.Clear();
+                    statusName = "";
                 }
                 else Debug.Log("empty status or negative id");
                 break;

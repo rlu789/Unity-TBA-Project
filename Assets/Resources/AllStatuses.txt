@@ -1,9 +1,19 @@
 [Status]
 Id: 0
-Name: Yeap
-EffectType: DOT 
-EffectStrength: 2
-InitialEffect: 0 
+Name: Burning
+EffectType: DOT DOT
+EffectStrength: 2 0
+InitialEffect: 0 1
 Duration: 2
 Visuals: 0
+[End]
+
+[Status]
+Id: 1
+Name: RecoveringSpeedily
+EffectType: DOT MoveSpeed MoveSpeed
+EffectStrength: -1 1 1
+InitialEffect: 0 0 1
+Duration: 2
+Visuals: 1
 [End]
