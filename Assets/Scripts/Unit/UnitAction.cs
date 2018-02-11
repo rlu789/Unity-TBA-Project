@@ -8,7 +8,8 @@ public enum ActionType
 }
 
 [System.Serializable]
-public class UnitAction {
+public class UnitAction
+{
     public GameObject projectile;
     public string name = "";
     public int manaCost = 0;
@@ -23,7 +24,7 @@ public class UnitAction {
     public Status status;
 
     [HideInInspector]
-    public int currentCooldown = 0;
+    public int bonusDamage;
 
     Node targetNode;
     Unit owner;
@@ -35,8 +36,8 @@ public class UnitAction {
 
         if (healthCost != 0) owner.TakeDamage(healthCost);
         if (manaCost != 0) owner.stats.currentMana -= manaCost;
-
-        SpawnProjectile();
+        bonusDamage = owner.stats.modOutDamage; //Since actions aren't cloned when used, the stats will be updated on all units that have this action.
+        SpawnProjectile();                      //So if a unit fires a shot with some bonus damage, then another before the first has landed without the bonus, both will not have the bonus.
     }
 
     void SpawnProjectile()
@@ -55,7 +56,7 @@ public class UnitAction {
     void ApplyDamageAndStatus(Unit target)
     {
         if (status != null && !status.IsEmpty()) target.ApplyStatus(status);
-        target.TakeDamage(damage);
+        target.TakeDamage(damage + bonusDamage);
     }
 
     public void ActivateAction(Node target)    //only call from projectile

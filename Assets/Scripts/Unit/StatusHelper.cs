@@ -78,8 +78,6 @@ public class StatusHelper : MonoBehaviour {
                 continue;
             }
             else ApplyEffects(unit.statuses[i], unit);
-
-            //if (unit.statuses[i].duration <= 0) RemoveStatus(unit, i);
         }
     }
 
@@ -115,15 +113,20 @@ public class StatusHelper : MonoBehaviour {
                 break;
             case StatusType.MoveSpeed:
                 Debug.Log("Speed change called.");
+                unit.stats.modMove += eff.strength;
+                unit.stats.moveSpeed += eff.strength;
                 break;
             case StatusType.Actions:
                 Debug.Log("Action amount change called.");
+                //reduce selecting actions variable on nodemanager (or probably change that variable to a variable on the unit instead)
                 break;
             case StatusType.OutgoingDamage:
                 Debug.Log("Out. Damage reduction called.");
+                unit.stats.modOutDamage += eff.strength;
                 break;
             case StatusType.IncomingDamage:
                 Debug.Log("Inc. Damage reduction called.");
+                unit.stats.modIncDamage += eff.strength;
                 break;
         }
     }

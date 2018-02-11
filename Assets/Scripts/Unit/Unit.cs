@@ -41,6 +41,7 @@ public class Unit : MonoBehaviour {
     private void Start()
     {
         stats.currentHealth = stats.maxHealth;
+        stats.moveSpeed = stats.baseMoveSpeed;
         stats.currentMovement = stats.moveSpeed;
         stats.currentMana = stats.maxMana;
         if (stats.displayName == "") stats.displayName = GenerateRandomNameOfPower();
@@ -109,20 +110,28 @@ public class Unit : MonoBehaviour {
     }
     #endregion
     #region Movement handling
-    //TODO: bug when trying to move to a new node while already moving to a node (i believe only when trying to move a shorter distance than the current movement distance?) will fix later
-    //ive only seen it happen with very smart guy
+    //TODO: bug when trying to move to a new node while already moving to a node (i believe only when trying to move a shorter distance than the current movement distance?)
+    //Make any action or movement wait until the last is finished before allowing a new one
     public void MoveUnit()    //moves unit on selected tile
     {
         List<Node> pathToFollow = currentPath;   //get the path to follow, based on the max distance the unit can move this turn
         movePath = currentPath;
-        foreach (GameObject haha in pathVisual)
-            Destroy(haha);
+
+        foreach (GameObject haha in pathVisual) Destroy(haha);  //clear visuals
         pathVisual.Clear();
-        if (pathToFollow == null)
+
+        if (pathToFollow == null || pathToFollow.Count == 0 || (pathToFollow[0] == currentNode && pathToFollow.Count == 1)) //if this path goes nowhere, use up the card and return
+        {
+            if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID == ownerID)
+            {
+                PlayerInfo.Instance.commands.CmdSendMove(PlayerInfo.Instance.playerID, currentNode.nodeID, currentNode.nodeID, readyActionIndex);
+            }
+            if (!isEnemy)
+            {
+                cards.ActionUsed(readyAction);
+            }
             return;
-        if (pathToFollow.Count == 0)
-            return;
-        if (pathToFollow[0] == currentNode && pathToFollow.Count == 1) return;
+        }
 
         Node _destNode = pathToFollow[pathToFollow.Count - 1];  //the destination is the furthest node we can reach
 
@@ -270,7 +279,7 @@ public class Unit : MonoBehaviour {
         else return readyAction.GetNodesInRange(currentNode);
     }
 
-    public void PrepareAction(int actionIndex, bool calledFromClient = false)
+    public void PrepareAction(int actionIndex, bool calledFromClient = false)   //Don't forget to call this before using a movement!
     {
         readyActionIndex = actionIndex;
         readyAction = cards.selectedActions[actionIndex];
@@ -278,7 +287,7 @@ public class Unit : MonoBehaviour {
         else
         {
             unitStateMachine.SetState(States.B_SELECTINGMOVE);
-            stats.moveSpeed = cards.selectedActions[actionIndex].range;
+            stats.moveSpeed = cards.selectedActions[actionIndex].range + stats.modMove;
         }
         if (!calledFromClient) NodeManager.Instance.SetSelectedNode(currentNode);
     }
@@ -305,7 +314,8 @@ public class Unit : MonoBehaviour {
     #region Stats and status functions
     public void TakeDamage(int amount)
     {
-        stats.currentHealth -= amount;
+        stats.currentHealth -= amount + stats.modIncDamage;
+        //TODO: display a damage number above the unit or in a log
         if (stats.currentHealth <= 0)
         {
             Debug.Log("Unit killed! " + stats.displayName + " is dead now... :(");

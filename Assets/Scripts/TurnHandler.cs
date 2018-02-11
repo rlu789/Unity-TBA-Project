@@ -214,21 +214,24 @@ public class TurnHandler : MonoBehaviour
         for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
         {
             Unit enemy = Map.Instance.unitDudeEnemies[i].GetComponent<Unit>();
-            //AIHelper.Instance.ConfirmBestAction(enemy);
-            //checking if action = null
             if (enemy.readyAction != null && !enemy.readyAction.IsEmpty()) actionQueue.Add(enemy);
         }
     }
 
     void HandleStatus()
     {
+        Unit u;
         for (int i = Map.Instance.unitDudeFriends.Count - 1; i >= 0; --i)
         {
-            StatusHelper.Instance.CheckStatus(Map.Instance.unitDudeFriends[i].GetComponent<Unit>());
+            u = Map.Instance.unitDudeFriends[i].GetComponent<Unit>();
+            u.stats.ResetStats();
+            StatusHelper.Instance.CheckStatus(u);
         }
         for (int i = Map.Instance.unitDudeEnemies.Count - 1; i >= 0; --i)
         {
-            StatusHelper.Instance.CheckStatus(Map.Instance.unitDudeEnemies[i].GetComponent<Unit>());
+            u = Map.Instance.unitDudeEnemies[i].GetComponent<Unit>();
+            u.stats.ResetStats();
+            StatusHelper.Instance.CheckStatus(u);
         }
     }
 

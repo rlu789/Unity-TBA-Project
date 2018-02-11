@@ -343,17 +343,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
     maxHealth: 16
-    moveSpeed: 3
+    baseMoveSpeed: 3
     displayName: 
     _class: 1
     maxMana: 3
     armor: 0
     baseInitiative: 4
-    idealRange: 1
-    hugFriends: 0
+    moveSpeed: 3
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
+    modMove: 0
+    modIncDamage: 0
+    modOutDamage: 0
+    idealRange: 1
+    hugFriends: 0
   cards:
     availableActions: []
     selectedActions: []
@@ -385,7 +389,7 @@ MonoBehaviour:
       duration: 0
       visual: {fileID: 0}
       visualIns: {fileID: 0}
-    currentCooldown: 0
+    bonusDamage: 0
   readyActionIndex: 0
   targetActionNode: {fileID: 0}
   unitStateMachine: {fileID: 0}

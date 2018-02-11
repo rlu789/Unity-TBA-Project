@@ -1,9 +1,9 @@
 [Status]
 Id: 0
 Name: Yeap
-EffectType: DOT IncomingDamage
-EffectStrength: 2 50
-InitialEffect: 0 1
+EffectType: DOT 
+EffectStrength: 2
+InitialEffect: 0 
 Duration: 2
 Visuals: 0
 [End]
