@@ -160,6 +160,17 @@ public class Map : MonoBehaviour
                         if (y > 0)
                             nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x, nodes[x, y].XY.y - 1]);
                     }
+                    else if (x == mapSizeX - 1)
+                    {
+                        if (y > 0)
+                        {
+                            nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x, nodes[x, y].XY.y - 1]);
+                        }
+                        if (y != mapSizeY - 1)
+                        {
+                            nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x, nodes[x, y].XY.y + 1]);
+                        }
+                    }
                     if (x > 0)
                     {
                         nodes[x, y].neighbours.Add(nodes[nodes[x, y].XY.x - 1, nodes[x, y].XY.y]);
