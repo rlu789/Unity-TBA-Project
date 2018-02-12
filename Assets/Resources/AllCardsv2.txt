@@ -113,7 +113,7 @@ ActionClass: 4
 
 [Action]
 Name: Speedy Recovery
-Prefab: 6 HolyDartProjectile.prefab
+Prefab: 7 SpeedHeal.prefab
 Mana: 0
 Health: 0
 Range: 1

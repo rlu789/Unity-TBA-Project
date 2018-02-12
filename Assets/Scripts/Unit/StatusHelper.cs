@@ -64,13 +64,15 @@ public class StatusHelper : MonoBehaviour {
         }
         Instance = this;
     }
-
+    //TODO: order statuses in least -> most damage with damage modifiers first. That way if you are healing and burning, the healing will save you
     public void CheckStatuses(Unit unit)    //call at start of units turn
     {
         if (unit == null || unit.dead || unit.statuses == null || unit.statuses.Count == 0) return;
         for (int i = unit.statuses.Count - 1; i >= 0; --i)
         {
-            ApplyEffects(unit.statuses[i], unit);
+            if (unit == null || unit.dead || unit.statuses == null || unit.statuses.Count == 0) return; //probably need to do this every loop in case we call Die(). :thinking: well designed code
+            ApplyEffects(unit.statuses[i], unit);                                                       //could change it to -> get damage for this effect, add it to list, at the end of all effects do the damage in succession
+                                                                                                        //this also helps order it so things that cant kill will happen first
         }
     }
 
@@ -80,6 +82,7 @@ public class StatusHelper : MonoBehaviour {
         //loop backwards so we can remove without affecting loop
         for (int i = unit.statuses.Count - 1; i >= 0; --i)
         {
+            if (unit == null || unit.dead || unit.statuses == null || unit.statuses.Count == 0) return;
             if (unit.statuses[i].duration <= 0)
             {
                 RemoveStatus(unit, i);
@@ -114,24 +117,19 @@ public class StatusHelper : MonoBehaviour {
         switch (eff.type)
         {
             case StatusType.DOT:
-                Debug.Log("Damage over time called.");
                 unit.TakeDamage(eff.strength);
                 break;
             case StatusType.MoveSpeed:
-                Debug.Log("Speed change called.");
                 unit.stats.modMove += eff.strength;
                 unit.stats.moveSpeed += eff.strength;
                 break;
             case StatusType.Actions:
-                Debug.Log("Action amount change called.");
                 //reduce selecting actions variable on nodemanager (or probably change that variable to a variable on the unit instead)
                 break;
             case StatusType.OutgoingDamage:
-                Debug.Log("Out. Damage reduction called.");
                 unit.stats.modOutDamage += eff.strength;
                 break;
             case StatusType.IncomingDamage:
-                Debug.Log("Inc. Damage reduction called.");
                 unit.stats.modIncDamage += eff.strength;
                 break;
         }

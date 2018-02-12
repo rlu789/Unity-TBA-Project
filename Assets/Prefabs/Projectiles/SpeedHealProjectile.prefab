@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4917275239828372}
   - component: {fileID: 114509827475585886}
   m_Layer: 0
-  m_Name: MeleePowerfulProjectile
+  m_Name: SpeedHealProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,10 +53,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 25
   projectileGraphics: {fileID: 0}
-  impactEffect: {fileID: 1308014991884216, guid: 765db71b81e5772479d3347c9c1f2f5e,
+  impactEffect: {fileID: 1751890007448496, guid: e6dc7fce671b1bb45ab0e27205e1ecd1,
     type: 2}
   travelEffect: {fileID: 0}
-  spawnEffect: {fileID: 1308014991884216, guid: 0b44cd5b1c04d8a4bad1bf60b56876a8,
+  spawnEffect: {fileID: 1751890007448496, guid: 71221f5d8794a43498bee12d897aa810,
     type: 2}
   spawnEffectLife: 2
   fireDelay: 0

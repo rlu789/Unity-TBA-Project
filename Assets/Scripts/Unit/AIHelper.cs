@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-//IF ERROR HERE REMEMBER SELECTED ACTIONS
 public class PossibleAction
 {
     public PossibleAction(List<Node> _path, UnitAction _action, Node _target, int _fitness)
@@ -23,38 +22,73 @@ public class PossibleAction
 
     public void DetermineFitness()
     {
-        if (action == null) {
-            fitness = 0;
-            return;
-        }
-        Unit targetUnit = target.currentUnit;
-        if (targetUnit == null)
+        List<Node> nodes = action.GetNodesInRange(target, true);
+        foreach (Node n in nodes)
         {
-            fitness = 0;  //for now ignore the fact that there could be AOE etc.
-            return;
+            fitness += DetermineNodeFitness(n);
         }
+        
+        if (fitness < 0) fitness = 0;
+    }
+
+    int DetermineNodeFitness(Node node)
+    {
+        int tempFitness = 0;
+        if (action == null) return 0;
+        Unit targetUnit = node.currentUnit;
+        if (targetUnit == null) return 0;
 
         if (!targetUnit.isEnemy)
         {
-            fitness += action.damage;
-            if (targetUnit.stats.currentHealth - action.damage <= 0) fitness += action.damage;  //if it will kill, double fitness
+            tempFitness += action.damage;
+            if (targetUnit.stats.currentHealth - action.damage <= 0) tempFitness += action.damage;  //if it will kill, double fitness
+            tempFitness += DetermineStatusFitness(false);
         }
         else
         {
-            fitness -= action.damage;   //negative damage is healing
-            if (targetUnit.stats.currentHealth <= (targetUnit.stats.maxHealth / 2)) fitness -= action.damage;    //if under 50% health, double the fitness gain
-            if (targetUnit.stats.currentHealth - action.damage > targetUnit.stats.maxHealth) fitness -= (targetUnit.stats.currentHealth - action.damage) - targetUnit.stats.maxHealth;  //only fitness for the actual health regained, not overheal
+            tempFitness -= action.damage;   //negative damage is healing
+            if (targetUnit.stats.currentHealth <= (targetUnit.stats.maxHealth / 2)) tempFitness -= action.damage;    //if under 50% health, double the fitness gain
+            if (targetUnit.stats.currentHealth - action.damage > targetUnit.stats.maxHealth) tempFitness -= (targetUnit.stats.currentHealth - action.damage) - targetUnit.stats.maxHealth;  //only fitness for the actual health regained, not overheal
+            tempFitness += DetermineStatusFitness(true);
         }
-        fitness -= action.healthCost;
-        fitness -= action.manaCost * 2;
-        if (fitness < 0) fitness = 0;
-}
+        tempFitness -= action.healthCost;
+        tempFitness -= action.manaCost * 2;
+        return tempFitness;
+    }
+
+    int DetermineStatusFitness(bool enemy)
+    {
+        if (action.status == null) return 0;
+
+        int e = (enemy) ? -1 : 1;   //treat normal fitness gain on an ally as opposite
+        int tempFitness;
+        int ret = 0;
+
+        foreach (Effect eff in action.status.effects)
+        {
+            tempFitness = 0;
+            if (eff.type == StatusType.DOT) tempFitness += eff.strength;
+            if (eff.type == StatusType.IncomingDamage) tempFitness += eff.strength * 2;
+            if (eff.type == StatusType.OutgoingDamage || eff.type == StatusType.MoveSpeed) tempFitness -= eff.strength * 2;
+            if (eff.type == StatusType.Actions) tempFitness -= eff.strength * 4;
+
+            if (!eff.initialEffect) tempFitness *= action.status.duration;  //multiply the fitness by how long it lasts
+
+            tempFitness *= e;   //what is good against an enemy is bad to a friend
+
+            tempFitness /= 3;   //need to flesh out the system more so for now just reducing it so its not spammed
+            ret += tempFitness;
+        }
+        return ret;
+    }
+
     public List<Node> path;
     public UnitAction action;
     public Node target;
     public int fitness;
 }
-
+//TODO: make this work for ally AI
+//      make AI consider running away
 public class AIHelper : MonoBehaviour {
 
     public static AIHelper Instance;
