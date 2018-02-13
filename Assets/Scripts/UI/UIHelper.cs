@@ -106,8 +106,14 @@ public class UIHelper : MonoBehaviour {
     }
 
     //Floating Text UI
-    public void SpawnFloatingText(Transform target, string text)
+    public void SpawnFloatingText(Transform target, string text, bool randomPos = true)    //TODO: take in values for longer display (need new animation), random position on/off, more colour control/damage type options, size control
     {
-        floatingTextHandler.SpawnFloatingText(target, text);
+        if (randomPos) floatingTextHandler.SpawnFloatingText(target, text);
+        else floatingTextHandler.SpawnFloatingText(target, text, false);
+    }
+
+    public void SpawnFloatingText(Transform target, int number)
+    {
+        floatingTextHandler.SpawnFloatingText(target, number);
     }
 }

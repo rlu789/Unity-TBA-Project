@@ -1,9 +1,9 @@
 [Status]
 Id: 0
 Name: Burning
-EffectType: DOT DOT
-EffectStrength: 2 0
-InitialEffect: 0 1
+EffectType: DOT
+EffectStrength: 2
+InitialEffect: 0
 Duration: 2
 Visuals: 0
 [End]

@@ -316,7 +316,7 @@ public class Unit : MonoBehaviour {
     {
         stats.currentHealth -= amount + stats.modIncDamage;
 
-        UIHelper.Instance.SpawnFloatingText(firePoint, amount + "");
+        UIHelper.Instance.SpawnFloatingText(firePoint, amount);
 
         if (stats.currentHealth <= 0)
         {
@@ -348,6 +348,7 @@ public class Unit : MonoBehaviour {
         //its still this units turn, end it
         if (TurnHandler.Instance.orderedActions.Count != 0 && TurnHandler.Instance.orderedActions[TurnHandler.Instance.orderedActions.Keys.First()] == this) NodeManager.Instance.TurnEndHandler(this);
         //TODO: Play death animation
+        UIHelper.Instance.SpawnFloatingText(firePoint, GenerateRandomPhraseOfPowerOhNo(), false);
         Destroy(graphics);
         Destroy(gameObject, 2f);
     }
@@ -358,6 +359,7 @@ public class Unit : MonoBehaviour {
         currentNode.SetHexReady(false);
         stats.ResetStats();
         StatusHelper.Instance.CheckStatuses(this);
+        UIHelper.Instance.SpawnFloatingText(firePoint, GenerateRandomPhraseOfPower(), false);
     }
 
     public void EndTurn()
@@ -380,6 +382,20 @@ public class Unit : MonoBehaviour {
             else name += letters[randIndex].ToUpper();
         }
         return name;
+    }
+
+    string GenerateRandomPhraseOfPower()
+    {
+        string[] phrases = { "My turn has begun.", "Here I go!", "Feeling VERY powerful", "xD", "ikuzo...!", "Документ", "日本語", ":thinking:", "(is ready)", "*sighs*... Rejoice, for you've made me unleash 10% of my full power. Now behold, your end is near. Here I come. You'd best be prepared.", "Forgive me sensei.. I'll have to go all out... Just this once..."};
+        int randIndex = Random.Range(0, phrases.Length);
+        return phrases[randIndex];
+    }
+
+    string GenerateRandomPhraseOfPowerOhNo()
+    {
+        string[] phrases = { "oh dear", "uh oh", "i have died", "I, " + stats.displayName + ", have died lol", ";("};
+        int randIndex = Random.Range(0, phrases.Length);
+        return phrases[randIndex];
     }
 }
 

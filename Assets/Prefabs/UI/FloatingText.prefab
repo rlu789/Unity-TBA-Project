@@ -91,6 +91,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeTime: 2
   text: {fileID: 114910369601433076}
+  outline: {fileID: 114086770858422364}
+  pos: {x: 0, y: 0, z: 0}
 --- !u!114 &114910369601433076
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -112,7 +114,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: f2de38e7e87668c43af0d9eec91374f9, type: 3}
-    m_FontSize: 20
+    m_FontSize: 22
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -146,8 +148,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -368.2, y: -145.5}
-  m_SizeDelta: {x: 96.76, y: 28.14}
+  m_AnchoredPosition: {x: -273.9, y: -99.33}
+  m_SizeDelta: {x: 285.37, y: 120.47}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224554019930371610
 RectTransform:
