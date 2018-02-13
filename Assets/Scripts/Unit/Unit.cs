@@ -315,7 +315,9 @@ public class Unit : MonoBehaviour {
     public void TakeDamage(int amount)
     {
         stats.currentHealth -= amount + stats.modIncDamage;
-        //TODO: display a damage number above the unit or in a log
+
+        UIHelper.Instance.SpawnFloatingText(firePoint, amount + "");
+
         if (stats.currentHealth <= 0)
         {
             Debug.Log("Unit killed! " + stats.displayName + " is dead now... :(");

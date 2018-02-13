@@ -11,6 +11,7 @@ public class UIHelper : MonoBehaviour {
     HandUI unitActions;
     public GameObject turnCanvas;
     TurnUI turnUI;
+    public FloatingTextHandler floatingTextHandler;
 
     private void Awake()
     {
@@ -102,5 +103,11 @@ public class UIHelper : MonoBehaviour {
     {
         if (turnUI == null) return;
         turnUI.SetValues(turn);
+    }
+
+    //Floating Text UI
+    public void SpawnFloatingText(Transform target, string text)
+    {
+        floatingTextHandler.SpawnFloatingText(target, text);
     }
 }
