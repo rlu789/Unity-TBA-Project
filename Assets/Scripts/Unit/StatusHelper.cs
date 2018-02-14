@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 //The actual things the status can do. Damage over time (each turn), increase movespeed, change action amount, reduce damage done, etc.
 public enum StatusType { DOT, MoveSpeed, Actions, OutgoingDamage, IncomingDamage }
@@ -19,7 +20,7 @@ public class Effect
 }
 
 [System.Serializable]
-public class Status //need to change key value pair so it can be serialized
+public class Status : IComparable<Status>//need to change key value pair so it can be serialized
 {
     public Status(string _name, Effect[] _effects, int _duration, GameObject _visual) //add bool for buffs or debuffs
     {
@@ -35,6 +36,8 @@ public class Status //need to change key value pair so it can be serialized
         effects = prevStatus.effects;
         duration = prevStatus.duration;
         visual = prevStatus.visual;
+
+        priority = GetPriority();
     }
 
     public string name;
@@ -42,11 +45,29 @@ public class Status //need to change key value pair so it can be serialized
     public int duration;
     public GameObject visual;
     public GameObject visualIns;    //instantiated visual effect
+    [HideInInspector]
+    public int priority;
 
     public bool IsEmpty()
     {
         if (name == "" || effects == null || effects.Length == 0) return true;
         return false;
+    }
+
+    public int GetPriority()    //returns the order this status should be used in. Ideal order is like so: Damage modifiers > Healing > Damage
+    {                           //currently if a status has a damage modifier and damage, the damage will be done before all the modifiers are applied. This is okay for healing since its not affected but...
+        int priority = 0;       //eg. +1 damage taken, +1 damage taken and 3 damage (becomes 5), +1 damage taken. Should have done 6 damage. So avoid this or fix it.
+        foreach (Effect eff in effects)
+        {
+            if (eff.type == StatusType.IncomingDamage) priority += 100;
+            if (eff.type == StatusType.DOT) priority -= eff.strength;
+        }
+        return priority; //list loops backwards for status checking so higher means it happens first
+    }
+
+    public int CompareTo(Status s)
+    {
+        return priority.CompareTo(s.priority);
     }
 }
 
@@ -68,6 +89,9 @@ public class StatusHelper : MonoBehaviour {
     public void CheckStatuses(Unit unit)    //called at start of units turn
     {
         if (unit == null || unit.dead || unit.statuses == null || unit.statuses.Count == 0) return;
+
+        unit.statuses.Sort();
+
         for (int i = unit.statuses.Count - 1; i >= 0; --i)
         {
             if (unit == null || unit.dead || unit.statuses == null || unit.statuses.Count == 0) return; //probably need to do this every loop in case we call Die(). :thinking: well designed code

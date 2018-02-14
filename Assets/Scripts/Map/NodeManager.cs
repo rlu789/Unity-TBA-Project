@@ -151,8 +151,9 @@ public class NodeManager : MonoBehaviour {
                 }
                 else
                 {
-                    Debug.Log("out of range");
+                    //Debug.Log("out of range");
                     selectedNode.currentUnit.GetComponent<Unit>().targetActionNode = null;
+                    UIHelper.Instance.SpawnFloatingText(selectedNode.currentUnit.GetComponent<Unit>().firePoint, "Out of range!", false);
                 }
             }
         }

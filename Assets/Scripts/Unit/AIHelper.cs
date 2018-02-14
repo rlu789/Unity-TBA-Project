@@ -70,17 +70,17 @@ public class PossibleAction
             tempFitness = 0;
             if (eff.type == StatusType.DOT) tempFitness += eff.strength;
             if (eff.type == StatusType.IncomingDamage) tempFitness += eff.strength * 2;
-            if (eff.type == StatusType.OutgoingDamage || eff.type == StatusType.MoveSpeed) tempFitness -= eff.strength * 2;
-            if (eff.type == StatusType.Actions) tempFitness -= eff.strength * 4;
+            if (eff.type == StatusType.OutgoingDamage || eff.type == StatusType.MoveSpeed) tempFitness -= eff.strength;
+            if (eff.type == StatusType.Actions) tempFitness -= eff.strength * 2;
 
             if (!eff.initialEffect) tempFitness *= action.status.duration;  //multiply the fitness by how long it lasts
+            else tempFitness = 0;   //AI don't value intitial effects for now
 
             tempFitness *= e;   //what is good against an enemy is bad to a friend
 
-            tempFitness /= 3;   //need to flesh out the system more so for now just reducing it so its not spammed
             ret += tempFitness;
         }
-        return ret;
+        return ret;   //need to flesh out the system more so for now just reducing it so its not spammed
     }
 
     public List<Node> path;

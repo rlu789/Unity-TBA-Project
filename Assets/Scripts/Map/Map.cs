@@ -92,11 +92,12 @@ public class Map : MonoBehaviour
             nodes[1, 0].SpawnUnit(PrefabHelper.Instance.units[2], false);
             nodes[2, 0].SpawnUnit(PrefabHelper.Instance.units[4], false);
             nodes[1, 1].SpawnUnit(PrefabHelper.Instance.units[6], false);
-            nodes[1, 2].SpawnUnit(PrefabHelper.Instance.units[8], false);
+            nodes[0, 1].SpawnUnit(PrefabHelper.Instance.units[8], false);
             nodes[6, 5].SpawnUnit(PrefabHelper.Instance.units[1], true);
             nodes[5, 5].SpawnUnit(PrefabHelper.Instance.units[3], true);
             nodes[7, 4].SpawnUnit(PrefabHelper.Instance.units[5], true);
             nodes[6, 4].SpawnUnit(PrefabHelper.Instance.units[7], true);
+            nodes[6, 3].SpawnUnit(PrefabHelper.Instance.units[9], true);
         }
         else
         {

@@ -1111,7 +1111,7 @@ MonoBehaviour:
   - {fileID: 1329816491546904, guid: 12680a5e339c76741ab5f85f371066e6, type: 2}
   - {fileID: 1329816491546904, guid: 09bbd669490156f4ea5d75f696c746d9, type: 2}
   - {fileID: 1329816491546904, guid: 9b96feb7a2fcb454a87b9cce59c8f3cd, type: 2}
-  - {fileID: 1329816491546904, guid: 9b96feb7a2fcb454a87b9cce59c8f3cd, type: 2}
+  - {fileID: 1329816491546904, guid: 184702577adfa0a45b40c2340c3da70c, type: 2}
 --- !u!1 &1018386895
 GameObject:
   m_ObjectHideFlags: 0
