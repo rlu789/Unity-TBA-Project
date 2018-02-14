@@ -69,6 +69,13 @@ public class NodeManager : MonoBehaviour {
         selectedNode.currentUnit.unitStateMachine.state = States.B_SELECTING;
         if (selectingCount >= 1) //if the player has played two cards, goto next turn
         {
+            if (TurnHandler.Instance.waitingForAction > 0)
+            {
+                UIHelper.Instance.ToggleVisible(UIType.UnitActions, false);
+                selectedNode.currentUnit.cards.IEndMyEndTurnPegasus();
+                Invoke("TurnEndHandler", 0.5f);
+                return;
+            }
             //BANDAID
             selectingCount = 0;
             selectedNode.currentUnit.cards.IEndMyEndTurnPegasus();

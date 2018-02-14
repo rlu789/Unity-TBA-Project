@@ -314,8 +314,11 @@ public class Unit : MonoBehaviour {
     #region Stats and status functions
     public void TakeDamage(int amount)
     {
-        stats.currentHealth -= amount + stats.modIncDamage;
+        if (amount >= 0 && (amount + stats.modIncDamage) < 0) amount = 0;    //if we are doing damage and its reduced to healing, negate it to 0
+        else if (amount <= 0) amount += 0;    //dont enhance healing with damage mod
+        else amount += stats.modIncDamage;
 
+        stats.currentHealth -= amount;
         UIHelper.Instance.SpawnFloatingText(firePoint, amount);
 
         if (stats.currentHealth <= 0)

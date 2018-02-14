@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public enum Class { GENERIC, Dude, VERYSmart, HealthyBoy, Pope }
+public enum Class { GENERIC, Dude, VERYSmart, HealthyBoy, Pope, Ninja }
 
 [System.Serializable]
 public class UnitStats
@@ -23,6 +23,7 @@ public class UnitStats
     public int currentMovement;
 
     //Modified stats from statuses
+    [Header("Status-modified stats")]
     public int modMove;
     public int modIncDamage;
     public int modOutDamage;

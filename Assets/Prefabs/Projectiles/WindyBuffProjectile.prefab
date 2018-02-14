@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4917275239828372}
   - component: {fileID: 114509827475585886}
   m_Layer: 0
-  m_Name: SpeedHealProjectile
+  m_Name: WindyBuffProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,13 +51,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2647319929a9c43bb482d4cbb56ee9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 25
+  speed: 10
   projectileGraphics: {fileID: 0}
-  impactEffect: {fileID: 1751890007448496, guid: e6dc7fce671b1bb45ab0e27205e1ecd1,
+  impactEffect: {fileID: 1267722965183100, guid: 9080f899cc90fe245ad51e8159973304,
     type: 2}
   travelEffect: {fileID: 0}
-  spawnEffect: {fileID: 1751890007448496, guid: 71221f5d8794a43498bee12d897aa810,
-    type: 2}
-  spawnEffectLife: 2
+  spawnEffect: {fileID: 0}
+  spawnEffectLife: 3
   fireDelay: 0
   hitEffectGrounded: 1

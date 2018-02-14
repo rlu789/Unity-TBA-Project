@@ -193,6 +193,7 @@ MonoBehaviour:
     type: 2}
   spawnEffectLife: 2
   fireDelay: 0
+  hitEffectGrounded: 0
 --- !u!198 &198628176461650972
 ParticleSystem:
   m_ObjectHideFlags: 1

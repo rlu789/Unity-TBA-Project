@@ -1096,9 +1096,11 @@ MonoBehaviour:
   - {fileID: 1583182739588176, guid: c6c07ebc87699e844b6b0ca67ee3a719, type: 2}
   - {fileID: 1583182739588176, guid: 68a572a8e5bdee14194756c8333bd6b3, type: 2}
   - {fileID: 1583182739588176, guid: d611fa2753adc904f9d6e9d21885d6cc, type: 2}
+  - {fileID: 1583182739588176, guid: 3b872eae728aec140b29de302e2c623b, type: 2}
   statusVisuals:
   - {fileID: 1331461797786686, guid: 12e1909fe8e042e40990819bc06d5bca, type: 2}
   - {fileID: 1751890007448496, guid: ab2f30789cbea7445ace019c8b0193b9, type: 2}
+  - {fileID: 1267722965183100, guid: 506d4f5e37238774ca3d77c442b42667, type: 2}
   units:
   - {fileID: 1329816491546904, guid: 93c4d8213f03ca540a32a1062450a27c, type: 2}
   - {fileID: 1626122313977446, guid: e8677f963bc601940bf23937d77ef762, type: 2}
@@ -1108,6 +1110,8 @@ MonoBehaviour:
   - {fileID: 1329816491546904, guid: 64b8072ba2a73274babc86d0d812d48c, type: 2}
   - {fileID: 1329816491546904, guid: 12680a5e339c76741ab5f85f371066e6, type: 2}
   - {fileID: 1329816491546904, guid: 09bbd669490156f4ea5d75f696c746d9, type: 2}
+  - {fileID: 1329816491546904, guid: 9b96feb7a2fcb454a87b9cce59c8f3cd, type: 2}
+  - {fileID: 1329816491546904, guid: 9b96feb7a2fcb454a87b9cce59c8f3cd, type: 2}
 --- !u!1 &1018386895
 GameObject:
   m_ObjectHideFlags: 0

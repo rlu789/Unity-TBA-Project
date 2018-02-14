@@ -65,7 +65,7 @@ public class StatusHelper : MonoBehaviour {
         Instance = this;
     }
     //TODO: order statuses in least -> most damage with damage modifiers first. That way if you are healing and burning, the healing will save you
-    public void CheckStatuses(Unit unit)    //call at start of units turn
+    public void CheckStatuses(Unit unit)    //called at start of units turn
     {
         if (unit == null || unit.dead || unit.statuses == null || unit.statuses.Count == 0) return;
         for (int i = unit.statuses.Count - 1; i >= 0; --i)
@@ -112,25 +112,25 @@ public class StatusHelper : MonoBehaviour {
         //TODO: want to do a visual effect here ?
     }
 
-    void UseEffect(Effect eff, Unit unit)
+    void UseEffect(Effect eff, Unit unit, int strengthMod = 1)
     {
         switch (eff.type)
         {
             case StatusType.DOT:
-                unit.TakeDamage(eff.strength);
+                unit.TakeDamage(eff.strength * strengthMod);
                 break;
             case StatusType.MoveSpeed:
-                unit.stats.modMove += eff.strength;
-                unit.stats.moveSpeed += eff.strength;
+                unit.stats.modMove += eff.strength * strengthMod;
+                if (unit.isEnemy) unit.stats.moveSpeed += eff.strength * strengthMod;
                 break;
             case StatusType.Actions:
                 //reduce selecting actions variable on nodemanager (or probably change that variable to a variable on the unit instead)
                 break;
             case StatusType.OutgoingDamage:
-                unit.stats.modOutDamage += eff.strength;
+                unit.stats.modOutDamage += eff.strength * strengthMod;
                 break;
             case StatusType.IncomingDamage:
-                unit.stats.modIncDamage += eff.strength;
+                unit.stats.modIncDamage += eff.strength * strengthMod;
                 break;
         }
     }
@@ -144,7 +144,19 @@ public class StatusHelper : MonoBehaviour {
         }
 
         Destroy((unit.statuses[index].visualIns), 2f);
+        UndoStatMod(unit, index);
         unit.statuses.RemoveAt(index);
+    }
+
+    void UndoStatMod(Unit unit, int index)
+    {
+        foreach (Effect eff in unit.statuses[index].effects)
+        {
+            if (eff.type == StatusType.IncomingDamage || eff.type == StatusType.OutgoingDamage || eff.type == StatusType.Actions || eff.type == StatusType.MoveSpeed)
+            {
+                if (!eff.initialEffect) UseEffect(eff, unit, -1);
+            }
+        }
     }
 
     public void RemoveAllStatuses(Unit unit)

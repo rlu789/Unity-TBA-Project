@@ -125,3 +125,32 @@ Type: 1
 ActionClass: 4
 StatusId: 1
 [End]
+
+[Action]
+Name: Wind Blessing
+Prefab: 8 WindyBuffProjectile.prefab
+Mana: 1
+Health: 0
+Range: 0
+Damage: 0
+AOE: 0
+Cooldown: 0
+Initiative: 1
+Type: 1
+ActionClass: 5
+StatusId: 2
+[End]
+
+[Action]
+Name: Throw Shuriken
+Prefab: 1 RockProjectile.prefab
+Mana: 0
+Health: 0
+Range: 2
+Damage: 3
+AOE: 0
+Cooldown: 0
+Initiative: 2
+Type: 1
+ActionClass: 5
+[End]

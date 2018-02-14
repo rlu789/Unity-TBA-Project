@@ -59,6 +59,7 @@ public class PossibleAction
     int DetermineStatusFitness(bool enemy)
     {
         if (action.status == null) return 0;
+        if (action.status.IsEmpty()) return 0;
 
         int e = (enemy) ? -1 : 1;   //treat normal fitness gain on an ally as opposite
         int tempFitness;

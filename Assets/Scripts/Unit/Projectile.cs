@@ -13,7 +13,8 @@ public class Projectile : MonoBehaviour
     public GameObject spawnEffect;
     public float spawnEffectLife;
     public float fireDelay = 0f;
-    
+    [Header("Spawn the hit effect from ground level?")]
+    public bool hitEffectGrounded = false;
     UnitAction action;
 
     public void Setup(UnitAction _action, Transform _target, Node _targetNode)
@@ -33,6 +34,7 @@ public class Projectile : MonoBehaviour
             if (projectileGraphics != null && fireDelay > 0) travelEffect.SetActive(false);
         }
         if (spawnEffect != null) Destroy(Instantiate(spawnEffect, transform.position, Quaternion.identity), spawnEffectLife);
+        //else if hiteffectgrounded spawn it on the ground (if i want the spawn effects to be grounded also)
     }
 
     void Update()
@@ -73,7 +75,9 @@ public class Projectile : MonoBehaviour
     }
     void HitTarget()
     {
-        GameObject effectIns = Instantiate(impactEffect, target.transform.position, transform.rotation);
+        GameObject effectIns;
+        if (!hitEffectGrounded) effectIns = Instantiate(impactEffect, target.transform.position, transform.rotation);
+        else effectIns = Instantiate(impactEffect, targetNode.firePoint.position, transform.rotation);
 
         Destroy(effectIns, 5f);
 

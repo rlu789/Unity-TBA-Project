@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4609289075876280}
   m_Layer: 0
-  m_Name: EvadingEffect
+  m_Name: WindyEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,13 +63,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1538011064991320}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.010000229}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4609289075876280}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &198045972252155916
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -127,10 +127,10 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 1
+  moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -178164018
+  randomSeed: 1227322280
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -220,7 +220,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 0.791}
+      maxColor: {r: 1, g: 1, b: 1, a: 0.241}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -282,8 +282,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 2.6
-      minScalar: 2.2
+      scalar: 3
+      minScalar: 2.6
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -578,9 +578,9 @@ ParticleSystem:
         m_RotationOrder: 4
   ShapeModule:
     serializedVersion: 5
-    enabled: 0
-    type: 0
-    angle: 25
+    enabled: 1
+    type: 4
+    angle: 2
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 0.1
@@ -601,7 +601,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.75
+      value: 0.05
       mode: 0
       spread: 0
       speed:
@@ -697,7 +697,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 15
-      minScalar: 8
+      minScalar: 10
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1050,10 +1050,10 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 0}
+        key0: {r: 1, g: 1, b: 1, a: 0.87058824}
         key1: {r: 1, g: 1, b: 1, a: 0.87058824}
-        key2: {r: 1, g: 1, b: 1, a: 0.87058824}
-        key3: {r: 0, g: 0, b: 0, a: 0.53333336}
+        key2: {r: 1, g: 1, b: 1, a: 0.53333336}
+        key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
@@ -1067,16 +1067,16 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 10987
-        atime2: 33153
-        atime3: 53199
+        atime1: 33153
+        atime2: 53199
+        atime3: 65535
         atime4: 65535
         atime5: 0
         atime6: 0
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 3
-        m_NumAlphaKeys: 5
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}

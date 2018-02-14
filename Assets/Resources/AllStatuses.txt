@@ -17,3 +17,13 @@ InitialEffect: 0 0 1
 Duration: 2
 Visuals: 1
 [End]
+
+[Status]
+Id: 2
+Name: WindBlessing
+EffectType: IncomingDamage IncomingDamage MoveSpeed MoveSpeed
+EffectStrength: -1 -1 2 2
+InitialEffect: 0 1 0 1
+Duration: 1
+Visuals: 2
+[End]
