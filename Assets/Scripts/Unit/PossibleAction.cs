@@ -23,13 +23,14 @@ public class PossibleAction : IComparable<PossibleAction>
 
     public void DetermineFitness()
     {
-        List<Node> nodes = action.GetNodesInRange(target, true);
+        List<Node> nodes = action.GetNodesInRange(target, true);    //get all nodes in AOE
         foreach (Node n in nodes)
         {
             fitness += DetermineNodeFitness(n);
         }
 
-        if (fitness < 0) fitness = 0;
+        if (fitness <= 0) fitness = 0;
+        else if (path[path.Count - 1].DistanceToEnemy() < path[0].DistanceToEnemy()) fitness++;  //if we are moving towards an enemy, increase the fitness.
     }
 
     int DetermineNodeFitness(Node node)

@@ -497,7 +497,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
     maxHealth: 16
-    baseMoveSpeed: 3
+    baseMoveSpeed: 2
     displayName: 
     _class: 5
     maxMana: 2

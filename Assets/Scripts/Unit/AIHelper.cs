@@ -78,29 +78,48 @@ public class AIHelper : MonoBehaviour {
     void AssignActions(Unit unit, Unit target, List<Node> path)
     {
         PossibleAction act;
+        //List<Node> nodesInAOE;
 
         for (int i = 0; i < unit.cards.selectedActions.Count; ++i)
         {
-            /*
             if (unit.cards.selectedActions[i].range == 0)
             {
                 act = new PossibleAction(path, unit.cards.selectedActions[i], unit.currentNode, 0);
                 act.DetermineFitness();
-                possibleActions.Add(act);
+                if (act.fitness > 0) possibleActions.Add(act);
                 continue;
             }
-            */
+
             List<Node> nodesInRange = unit.cards.selectedActions[i].GetNodesInRange(path[path.Count - 1]);
             if (!nodesInRange.Contains(target.currentNode)) continue;
 
             act = new PossibleAction(path, unit.cards.selectedActions[i], target.currentNode, 0);
             act.DetermineFitness();
-            possibleActions.Add(act);
+            if (act.fitness > 0) possibleActions.Add(act);
+
+            /*
+            if (unit.cards.selectedActions[i].aoe > 0)  //if action has an AOE, consider each node that could hit this target
+            {
+                nodesInAOE = unit.cards.selectedActions[i].GetNodesInRange(target.currentNode, true);
+                foreach (Node n in nodesInAOE)
+                {
+                    if (!nodesInRange.Contains(n)) continue;
+
+                    act = new PossibleAction(path, unit.cards.selectedActions[i], n, 0);
+                    act.DetermineFitness();
+                    possibleActions.Add(act);
+                }
+            }
+            //The above does check the nodes around each target so it works but its really slow because of all the fitness checking that takes place for every node.
+            //TODO: Should save the fitness of a node/action combo to save processing
+            */
         }
     }
 
     public void ConfirmBestAction(Unit unit)    //Call on enemy action turn
-    {                                           //currently only checking enemies, TODO: check allies (healing)
+    {
+        if (unit.targetActionNode != null && unit.targetActionNode.currentUnit != null) return;  //if we have a valid target, we can continue with the action we planned
+
         possibleActions.Clear();
 
         int maxActionRange = 0;
@@ -128,16 +147,10 @@ public class AIHelper : MonoBehaviour {
         int trimCount = GetMinActionCount(unit);
         possibleActions = TrimActionList(trimCount, unit);
 
-        foreach (PossibleAction act in possibleActions)
+        foreach (PossibleAction pAct in possibleActions)
         {
-            for (int i = 0; i < act.fitness; ++i) trueActions.Add(act); //add based on fitness 
+            for (int i = 0; i < pAct.fitness; ++i) trueActions.Add(pAct); //add based on fitness 
         }
-
-        //TODO:
-        //after getting the best action, check if action range is greater than my range to enemy, if so get all the nodes at one distance away and compare to the nodes i can reach from starting point,
-        //if i can move there, set the path there and loop the above line again
-
-        foreach (PossibleAction act in trueActions) act.DebugLogMe();
 
         int index = 0;
 
@@ -162,8 +175,55 @@ public class AIHelper : MonoBehaviour {
 
         index = Random.Range(0, trueActions.Count);
 
-        if (move) unit.SetUnitPath(trueActions[index].path);
-        unit.SetAction(trueActions[index].action, trueActions[index].target);
+        PossibleAction act = trueActions[index];
+
+        //Get a node at the this actions max range if possible
+        if (move && act.action.range != 0) FindBetterPath(ref act, unit);
+
+        if (move) unit.SetUnitPath(act.path);
+        unit.SetAction(act.action, act.target);
+    }
+
+    void FindBetterPath(ref PossibleAction act, Unit unit)
+    {
+        double currentRange = Pathfindingv2.EstimateXY(act.path[act.path.Count - 1], act.target);
+        List<Node> newPath = null;
+        bool updatingPath = true;
+
+        while (currentRange < act.action.range && updatingPath)
+        {
+            bool validNodeFound = false;
+            updatingPath = false;
+            newPath = null;
+
+            foreach (Node n in act.path[act.path.Count - 1].neighbours)
+            {
+                if (Pathfindingv2.Estimate(unit.currentNode, n) < unit.stats.moveSpeed)
+                {
+                    Path<Node> path = NodeManager.Instance.CheckPath(unit.currentNode, n, unit);
+                    if (path != null)
+                    {
+                        newPath = unit.GetValidPath(path.ToList());
+
+                        if (newPath[newPath.Count - 1].DistanceToEnemy() > act.path[act.path.Count - 1].DistanceToEnemy())
+                        {
+                            List<Node> nodesInRange = act.action.GetNodesInRange(newPath[newPath.Count - 1]);
+                            if (nodesInRange.Contains(act.target))
+                            {
+                                validNodeFound = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (validNodeFound)
+            {
+                act.path = newPath;
+                updatingPath = true;
+            }
+        }
+        //TODO: make this a function
     }
 
     List<PossibleAction> TrimActionList(int goal, Unit unit)
@@ -199,7 +259,7 @@ public class AIHelper : MonoBehaviour {
         foreach (UnitAction act in unit.cards.selectedActions)
         {
             count = GetActionCount(act);
-            if (count < min) min = count;
+            if (count != 0 && count < min) min = count;
             count = 0;
         }
         return min;

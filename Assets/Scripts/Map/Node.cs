@@ -62,6 +62,18 @@ public class Node : MonoBehaviour {
         unitComponent.currentNode = this;
     }
 
+    public double DistanceToEnemy()
+    {
+        double dist = int.MaxValue;
+        double est;
+        foreach (GameObject unitGO in Map.Instance.unitDudeFriends)
+        {
+            est = Pathfindingv2.Estimate(this, unitGO.GetComponent<Unit>().currentNode);
+            if (est < dist) dist = est;
+        }
+        return dist;
+    }
+
     public void SetHexReady(bool active)
     {
         if (active)
