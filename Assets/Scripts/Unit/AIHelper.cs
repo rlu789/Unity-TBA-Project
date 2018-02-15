@@ -1,93 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class PossibleAction
-{
-    public PossibleAction(List<Node> _path, UnitAction _action, Node _target, int _fitness)
-    {
-        path = _path;
-        action = _action;
-        target = _target;
-        fitness = _fitness;
-    }
-
-    public void DebugLogMe()
-    {
-        //Debug.Log("Path is from node (" + path[0].nodeID + ") to node (" + path[path.Count - 1].nodeID + ")");
-        //Debug.Log("Target is node (" + target.nodeID + ")");
-        Debug.Log("Action is (" + action.name + ")");
-        Debug.Log("Fitness score is (" + fitness + ")");
-        Debug.Log("Target is " + target.currentUnit);
-    }
-
-    public void DetermineFitness()
-    {
-        List<Node> nodes = action.GetNodesInRange(target, true);
-        foreach (Node n in nodes)
-        {
-            fitness += DetermineNodeFitness(n);
-        }
-        
-        if (fitness < 0) fitness = 0;
-    }
-
-    int DetermineNodeFitness(Node node)
-    {
-        int tempFitness = 0;
-        if (action == null) return 0;
-        Unit targetUnit = node.currentUnit;
-        if (targetUnit == null) return 0;
-
-        if (!targetUnit.isEnemy)
-        {
-            tempFitness += action.damage;
-            if (targetUnit.stats.currentHealth - action.damage <= 0) tempFitness += action.damage;  //if it will kill, double fitness
-            tempFitness += DetermineStatusFitness(false);
-        }
-        else
-        {
-            tempFitness -= action.damage;   //negative damage is healing
-            if (targetUnit.stats.currentHealth <= (targetUnit.stats.maxHealth / 2)) tempFitness -= action.damage;    //if under 50% health, double the fitness gain
-            if (targetUnit.stats.currentHealth - action.damage > targetUnit.stats.maxHealth) tempFitness -= (targetUnit.stats.currentHealth - action.damage) - targetUnit.stats.maxHealth;  //only fitness for the actual health regained, not overheal
-            tempFitness += DetermineStatusFitness(true);
-        }
-        tempFitness -= action.healthCost;
-        tempFitness -= action.manaCost * 2;
-        return tempFitness;
-    }
-
-    int DetermineStatusFitness(bool enemy)
-    {
-        if (action.status == null) return 0;
-        if (action.status.IsEmpty()) return 0;
-
-        int e = (enemy) ? -1 : 1;   //treat normal fitness gain on an ally as opposite
-        int tempFitness;
-        int ret = 0;
-
-        foreach (Effect eff in action.status.effects)
-        {
-            tempFitness = 0;
-            if (eff.type == StatusType.DOT) tempFitness += eff.strength;
-            if (eff.type == StatusType.IncomingDamage) tempFitness += eff.strength * 2;
-            if (eff.type == StatusType.OutgoingDamage || eff.type == StatusType.MoveSpeed) tempFitness -= eff.strength;
-            if (eff.type == StatusType.Actions) tempFitness -= eff.strength * 2;
-
-            if (!eff.initialEffect) tempFitness *= action.status.duration;  //multiply the fitness by how long it lasts
-            else tempFitness = 0;   //AI don't value intitial effects for now
-
-            tempFitness *= e;   //what is good against an enemy is bad to a friend
-
-            ret += tempFitness;
-        }
-        return ret;   //need to flesh out the system more so for now just reducing it so its not spammed
-    }
-
-    public List<Node> path;
-    public UnitAction action;
-    public Node target;
-    public int fitness;
-}
 //TODO: make this work for ally AI
 //      make AI consider running away
 public class AIHelper : MonoBehaviour {
@@ -115,15 +28,14 @@ public class AIHelper : MonoBehaviour {
         int maxActionRange = 0;
         int maxActionAndMoveRange = 0;
         UnitAction maxAction = new UnitAction();
-        List<Node> start = new List<Node>();    //Sometimes remaining where you are is the best movement
-        start.Add(unit.currentNode);
 
         maxAction = GetMaxRangeAction(unit, ref maxActionRange);
         maxActionAndMoveRange = maxActionRange + unit.stats.moveSpeed;   //the full distance the unit could move + its max attack range;
 
         possibleTargets = GetPossibleTargets(unit, maxActionAndMoveRange);  //get the targets 
 
-        foreach (Unit target in possibleTargets)
+        if (maxAction == null) Debug.Log("No actions available!");
+        else foreach (Unit target in possibleTargets)
         {
             List<Node> pathList = new List<Node>();
             Path<Node> path = NodeManager.Instance.CheckPath(unit.currentNode, target.currentNode, unit);    //find the closest node to the target we can get to
@@ -132,16 +44,9 @@ public class AIHelper : MonoBehaviour {
                 pathList.Add(unit.currentNode);
             }
             else pathList = unit.GetValidPath(path.ToList());
-            if (maxAction == null)
-            {
-                Debug.Log("No actions available!");
-                break;
-            }
+
             List<Node> nodesInRange = maxAction.GetNodesInRange(pathList[pathList.Count - 1]);  //is this enemy in range from the closest we can get
             if (nodesInRange.Contains(target.currentNode)) AssignActions(unit, target, pathList); //get possible actions for this path
-
-            nodesInRange = maxAction.GetNodesInRange(unit.currentNode);                     //is this enemy in range from the starting position
-            if (nodesInRange.Contains(target.currentNode)) AssignActions(unit, target, start); //get possible actions for starting node
         }
 
         HehIGuessItsTimeIMadeMyChoice(unit);
@@ -176,6 +81,7 @@ public class AIHelper : MonoBehaviour {
 
         for (int i = 0; i < unit.cards.selectedActions.Count; ++i)
         {
+            /*
             if (unit.cards.selectedActions[i].range == 0)
             {
                 act = new PossibleAction(path, unit.cards.selectedActions[i], unit.currentNode, 0);
@@ -183,6 +89,7 @@ public class AIHelper : MonoBehaviour {
                 possibleActions.Add(act);
                 continue;
             }
+            */
             List<Node> nodesInRange = unit.cards.selectedActions[i].GetNodesInRange(path[path.Count - 1]);
             if (!nodesInRange.Contains(target.currentNode)) continue;
 
@@ -217,11 +124,20 @@ public class AIHelper : MonoBehaviour {
     {
         List<PossibleAction> trueActions = new List<PossibleAction>();
 
+        possibleActions.Shuffle(new System.Random()); //shuffle list so we don't bias certain nodes when choosing equal fitness targets
+        int trimCount = GetMinActionCount(unit);
+        possibleActions = TrimActionList(trimCount, unit);
+
         foreach (PossibleAction act in possibleActions)
         {
-            for (int i = 0; i < act.fitness; ++i) trueActions.Add(act);
-            //act.DebugLogMe();
+            for (int i = 0; i < act.fitness; ++i) trueActions.Add(act); //add based on fitness 
         }
+
+        //TODO:
+        //after getting the best action, check if action range is greater than my range to enemy, if so get all the nodes at one distance away and compare to the nodes i can reach from starting point,
+        //if i can move there, set the path there and loop the above line again
+
+        foreach (PossibleAction act in trueActions) act.DebugLogMe();
 
         int index = 0;
 
@@ -248,6 +164,55 @@ public class AIHelper : MonoBehaviour {
 
         if (move) unit.SetUnitPath(trueActions[index].path);
         unit.SetAction(trueActions[index].action, trueActions[index].target);
+    }
+
+    List<PossibleAction> TrimActionList(int goal, Unit unit)
+    {
+        List<PossibleAction> possibleActionsTrimmed = new List<PossibleAction>();
+        List<PossibleAction> currentActionList = new List<PossibleAction>();
+
+        foreach (UnitAction act in unit.cards.selectedActions)
+        {
+            currentActionList = new List<PossibleAction>();
+
+            foreach (PossibleAction pAct in possibleActions)
+            {
+                if (pAct.action == act) currentActionList.Add(pAct);
+            }
+            if (currentActionList.Count == 0) continue;
+
+            currentActionList.Sort();   //sort by descending fitness (still random in the case of equal values since we randomised possible actions earlier)
+
+            for (int i = 0; i < goal; ++i)
+            {
+                possibleActionsTrimmed.Add(currentActionList[i]);
+            }
+        }
+
+        return possibleActionsTrimmed;
+    }
+
+    int GetMinActionCount(Unit unit)    //by balancing the action possibilities to the lowest count, we only value the fitness not how many possible targets we have available
+    {
+        int min = int.MaxValue;
+        int count;
+        foreach (UnitAction act in unit.cards.selectedActions)
+        {
+            count = GetActionCount(act);
+            if (count < min) min = count;
+            count = 0;
+        }
+        return min;
+    }
+
+    int GetActionCount(UnitAction action)   //how many times have we considered this action this round?
+    {
+        int count = 0;
+        foreach (PossibleAction pAct in possibleActions)
+        {
+            if (action == pAct.action) count++;
+        }
+        return count;
     }
 
     UnitAction GetMaxRangeAction(Unit unit, ref int maxActionRange) //returns highest range action of unit, sets maxActionRange to that actions range
