@@ -41,7 +41,7 @@ public class Node : MonoBehaviour {
         //List<Node> neighbours = new List<Node>();
     }
 
-    public void SpawnUnit(GameObject unitGO, bool isEnemy, int ownerID = 0)
+    public void SpawnUnit(GameObject unitGO, int team, bool playerControlled, int ownerID = 0)
     {
         if (currentUnitGO != null)
         {
@@ -49,24 +49,24 @@ public class Node : MonoBehaviour {
             return;
         }
         currentUnitGO = Instantiate(unitGO, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
-        if (isEnemy)
-            Map.Instance.unitDudeEnemies.Add(currentUnitGO);
+        if (team == 0)
+            Map.Instance.teamZero.Add(currentUnitGO);
         else
-            Map.Instance.unitDudeFriends.Add(currentUnitGO);
+            Map.Instance.teamOne.Add(currentUnitGO);
         Unit unitComponent = currentUnitGO.GetComponent<Unit>();
         currentUnit = unitComponent;
         unitComponent.XY = XY;
         unitComponent.currentNodeID = nodeID;
-        unitComponent.isEnemy = isEnemy;
         unitComponent.ownerID = ownerID;
         unitComponent.currentNode = this;
+        unitComponent.playerControlled = playerControlled;
     }
 
     public double DistanceToEnemy()
     {
         double dist = int.MaxValue;
         double est;
-        foreach (GameObject unitGO in Map.Instance.unitDudeFriends)
+        foreach (GameObject unitGO in Map.Instance.teamZero)
         {
             est = Pathfindingv2.Estimate(this, unitGO.GetComponent<Unit>().currentNode);
             if (est < dist) dist = est;

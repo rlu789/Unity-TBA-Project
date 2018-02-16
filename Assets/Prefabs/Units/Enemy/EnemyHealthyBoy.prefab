@@ -355,23 +355,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
     maxHealth: 24
-    moveSpeed: 2
+    baseMoveSpeed: 2
     displayName: 
     _class: 3
     maxMana: 2
     armor: 0
     baseInitiative: 6
-    idealRange: 1
-    hugFriends: 0
+    moveSpeed: 2
     currentHealth: 0
     currentMana: 0
     currentMovement: 0
+    modMove: 0
+    modIncDamage: 0
+    modOutDamage: 0
+    idealRange: 1
+    hugFriends: 0
   cards:
     availableActions: []
     selectedActions: []
     selectedActionIndexes: 
     discardedActions: []
-  isEnemy: 1
+  playerControlled: 0
+  team: 1
   graphics: {fileID: 1558556153736036}
   firePoint: {fileID: 4025879516756686}
   statusPoint: {fileID: 4986490191393914}
@@ -397,7 +402,8 @@ MonoBehaviour:
       duration: 0
       visual: {fileID: 0}
       visualIns: {fileID: 0}
-    currentCooldown: 0
+      priority: 0
+    bonusDamage: 0
   readyActionIndex: 0
   targetActionNode: {fileID: 0}
   unitStateMachine: {fileID: 0}

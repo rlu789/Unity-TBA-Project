@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class PossibleAction : IComparable<PossibleAction>
 {
-    public PossibleAction(List<Node> _path, UnitAction _action, Node _target, int _fitness)
+    public PossibleAction(List<Node> _path, UnitAction _action, Node _target, Unit _unit, int _fitness)
     {
         path = _path;
         action = _action;
         target = _target;
+        unit = _unit;
         fitness = _fitness;
     }
 
@@ -40,7 +41,7 @@ public class PossibleAction : IComparable<PossibleAction>
         Unit targetUnit = node.currentUnit;
         if (targetUnit == null) return 0;
 
-        if (!targetUnit.isEnemy)
+        if (targetUnit.team != unit.team)
         {
             tempFitness += action.damage;
             if (targetUnit.stats.currentHealth - action.damage <= 0) tempFitness += action.damage;  //if it will kill, double fitness
@@ -48,8 +49,10 @@ public class PossibleAction : IComparable<PossibleAction>
         }
         else
         {
+            //TODO: make this better. GetHealing fitness -> check how much can be healed, ifthey start at some health muliply the amount and then return it etc.
             tempFitness -= action.damage;   //negative damage is healing
             if (targetUnit.stats.currentHealth <= (targetUnit.stats.maxHealth / 2)) tempFitness -= action.damage;    //if under 50% health, double the fitness gain
+            if (targetUnit.stats.currentHealth <= (targetUnit.stats.maxHealth / 4)) tempFitness -= action.damage;    //if under 25% health, double the fitness gain (again)
             if (targetUnit.stats.currentHealth - action.damage > targetUnit.stats.maxHealth) tempFitness -= (targetUnit.stats.currentHealth - action.damage) - targetUnit.stats.maxHealth;  //only fitness for the actual health regained, not overheal
             tempFitness += DetermineStatusFitness(true);
         }
@@ -87,11 +90,12 @@ public class PossibleAction : IComparable<PossibleAction>
 
     public int CompareTo(PossibleAction p)
     {
-        return -1 * fitness.CompareTo(p.fitness);   //descending order because higher fitness values are better (this is bad practice, use linq and sort by descending manually when needed or loop backwards)
+        return -1 * fitness.CompareTo(p.fitness);   //descending order because higher fitness values are better (this is probably bad practice, use linq and sort by descending manually when needed or loop backwards)
     }
 
     public List<Node> path;
     public UnitAction action;
     public Node target;
+    public Unit unit;
     public int fitness;
 }

@@ -19,8 +19,8 @@ public class Map : MonoBehaviour
     public int mapSizeY = 8;
     public int nodeSize = 2;
     [Space(10)]
-    public List<GameObject> unitDudeFriends = new List<GameObject>();
-    public List<GameObject> unitDudeEnemies = new List<GameObject>();
+    public List<GameObject> teamZero = new List<GameObject>();
+    public List<GameObject> teamOne = new List<GameObject>();
 
     public GameObject map;
     private void Awake()
@@ -88,16 +88,16 @@ public class Map : MonoBehaviour
 
         if (p == null)  //no player found, just generate some hard coded dudes
         {
-            nodes[0, 0].SpawnUnit(PrefabHelper.Instance.units[0], false);
-            nodes[1, 0].SpawnUnit(PrefabHelper.Instance.units[2], false);
-            nodes[2, 0].SpawnUnit(PrefabHelper.Instance.units[4], false);
-            nodes[1, 1].SpawnUnit(PrefabHelper.Instance.units[6], false);
-            nodes[0, 1].SpawnUnit(PrefabHelper.Instance.units[8], false);
-            nodes[6, 5].SpawnUnit(PrefabHelper.Instance.units[1], true);
-            nodes[5, 5].SpawnUnit(PrefabHelper.Instance.units[3], true);
-            nodes[7, 4].SpawnUnit(PrefabHelper.Instance.units[5], true);
-            nodes[6, 4].SpawnUnit(PrefabHelper.Instance.units[7], true);
-            nodes[6, 3].SpawnUnit(PrefabHelper.Instance.units[9], true);
+            nodes[0, 0].SpawnUnit(PrefabHelper.Instance.units[0], 0, true);
+            nodes[1, 0].SpawnUnit(PrefabHelper.Instance.units[2], 0, true);
+            nodes[2, 0].SpawnUnit(PrefabHelper.Instance.units[4], 0, true);
+            nodes[1, 1].SpawnUnit(PrefabHelper.Instance.units[6], 0, true);
+            nodes[0, 1].SpawnUnit(PrefabHelper.Instance.units[8], 0, true);
+            nodes[6, 5].SpawnUnit(PrefabHelper.Instance.units[1], 1, false);
+            nodes[5, 5].SpawnUnit(PrefabHelper.Instance.units[3], 1, false);
+            nodes[7, 4].SpawnUnit(PrefabHelper.Instance.units[5], 1, false);
+            nodes[6, 4].SpawnUnit(PrefabHelper.Instance.units[7], 1, false);
+            nodes[6, 3].SpawnUnit(PrefabHelper.Instance.units[9], 1, false);
         }
         else
         {
@@ -107,11 +107,11 @@ public class Map : MonoBehaviour
                 {
                     continue;
                 }
-                nodes[0, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i].unitID], false, p.team[i].ownerID);
-                nodes[1, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i + 1].unitID], false, p.team[i].ownerID);
+                nodes[0, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i].unitID], 0, true, p.team[i].ownerID);
+                nodes[1, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i + 1].unitID], 0, true, p.team[i].ownerID);
                 //spawn enemy clones of chosen units
-                nodes[6, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i].unitID + 1], true);
-                nodes[7, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i + 1].unitID + 1], true);
+                nodes[6, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i].unitID + 1], 1, true);
+                nodes[7, i].SpawnUnit(PrefabHelper.Instance.units[p.team[i + 1].unitID + 1], 1, true);
             }
         }
     }

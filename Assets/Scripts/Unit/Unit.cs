@@ -11,7 +11,9 @@ public class Unit : MonoBehaviour {
     [Header("Stats")]
     public UnitStats stats;
     public UnitCards cards = new UnitCards();
-    public bool isEnemy;
+    //public bool isEnemy;
+    public bool playerControlled = true;
+    public int team = 0;
 
     //Setup fields
     public GameObject graphics;
@@ -49,7 +51,7 @@ public class Unit : MonoBehaviour {
         unitStateMachine = GetComponent<UnitStateMachine>();
 
         cards.InitDeck(this);
-        if (isEnemy) cards.CopySelectedActionsToDeck();
+        if (team != 0) cards.CopySelectedActionsToDeck();
         else cards.DrawCards(2);
     }
 
@@ -82,7 +84,7 @@ public class Unit : MonoBehaviour {
         }
 
         readyAction.UseAction(targetActionNode, this);
-        if (!isEnemy) cards.discardedActions.Add(readyAction);
+        if (team == 0) cards.discardedActions.Add(readyAction);
 
         cards.SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap();
     }
@@ -90,7 +92,7 @@ public class Unit : MonoBehaviour {
     public void PerformActionClient()   //doesn't try to send command to other players (can't use optional arguements in commands and rpcs)
     {
         readyAction.UseAction(targetActionNode, this);
-        if (!isEnemy) cards.discardedActions.Add(readyAction);
+        if (team == 0) cards.discardedActions.Add(readyAction);
 
         cards.SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap(true);
     }
@@ -126,7 +128,7 @@ public class Unit : MonoBehaviour {
             {
                 PlayerInfo.Instance.commands.CmdSendMove(PlayerInfo.Instance.playerID, currentNode.nodeID, currentNode.nodeID, readyActionIndex);
             }
-            if (!isEnemy)
+            if (team == 0)
             {
                 cards.ActionUsed(readyAction);
             }
@@ -154,7 +156,7 @@ public class Unit : MonoBehaviour {
         currentNode = _destNode;
 
         //BANDAID
-        if (!isEnemy)
+        if (team == 0)
         {
             cards.ActionUsed(readyAction);
         }
@@ -187,7 +189,7 @@ public class Unit : MonoBehaviour {
         currentNode = _destNode;
 
         //BANDAID
-        if (!isEnemy)
+        if (team == 0)
         {
             cards.ActionUsed(readyAction);
         }
@@ -343,8 +345,8 @@ public class Unit : MonoBehaviour {
         dead = true;
         StatusHelper.Instance.RemoveAllStatuses(this);
         NodeManager.Instance.unitsWithAssignedPaths.Remove(this);
-        Map.Instance.unitDudeEnemies.Remove(gameObject);
-        Map.Instance.unitDudeFriends.Remove(gameObject);
+        Map.Instance.teamOne.Remove(gameObject);
+        Map.Instance.teamZero.Remove(gameObject);
         currentNode.SetHexReady(false);
         currentNode.currentUnit = null;
         currentNode.currentUnitGO = null;
@@ -430,7 +432,7 @@ public class UnitCards
         unit = u;
         for (int i = 0; i < CardManager.Instance.allCards.Count; i++)
         {
-            if (CardManager.Instance.allCards[i].actionClass == u.stats._class || (CardManager.Instance.allCards[i].actionClass == Class.GENERIC && u.isEnemy == false))
+            if (CardManager.Instance.allCards[i].actionClass == u.stats._class || (CardManager.Instance.allCards[i].actionClass == Class.GENERIC && u.team == 0))
             {
                 deck.Add(CardManager.Instance.allCards[i]);
             }
@@ -520,7 +522,7 @@ public class UnitCards
         if (!calledFromClient) NodeManager.Instance.Deselect(); //don't deselect what the local player is doing if another player called this function
         unit.unitStateMachine.state = States.WAIT;
         unit.currentNode.SetHexReady(true);
-        foreach (GameObject u in Map.Instance.unitDudeFriends)
+        foreach (GameObject u in Map.Instance.teamZero)
         {
             if (u.GetComponent<Unit>().unitStateMachine.state != States.WAIT) return;
         }
@@ -529,7 +531,7 @@ public class UnitCards
 
     public void IEndMyEndTurnPegasus()
     {
-        if (!unit.isEnemy)
+        if (unit.team == 0)
         {
             foreach (UnitAction action in selectedActions)
             {
@@ -542,7 +544,7 @@ public class UnitCards
 
     public void SendActionToTheShadowRealm_BYMIKE_ActuallyNotByMikeRichardWroteThisSoYeap(bool calledFromClient = false)
     {
-        if (!unit.isEnemy) selectedActions.Remove(unit.readyAction);
+        if (unit.team == 0) selectedActions.Remove(unit.readyAction);
         unit.targetActionNode = null;
         unit.readyAction = null;
         if (!calledFromClient) UIHelper.Instance.SetUnitActions(unit);

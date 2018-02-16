@@ -21,7 +21,7 @@ public class NodeManager : MonoBehaviour {
     public List<Node> nodesInAOE = new List<Node>();
 
     //BANDAID
-    int selectingCount = 0;
+    public int selectingCount = 0;
     //
 
     private void Awake()
@@ -164,14 +164,14 @@ public class NodeManager : MonoBehaviour {
         if (PlayerInfo.Instance != null && node.currentUnit != null && node.currentUnit.ownerID != PlayerInfo.Instance.playerID) return;
         if (selectedNode == null)   //selecting a node with no other nodes selected
         {
-            if (node.currentUnit != null && node.currentUnit.isEnemy)   //cant select an enemy node without a reason
+            if (node.currentUnit != null && node.currentUnit.team != 0)   //cant select an enemy node without a reason
             {
                 return;
             }
             if (node.currentUnit != null && node.currentUnit.unitStateMachine.state == States.WAIT)
             {
-                Debug.Log("this unit already has cards selected");
-                return; // cant select unit when its in preform state
+                UIHelper.Instance.SpawnFloatingText(node.currentUnit.firePoint, "I already have cards!", false);
+                return; // cant select unit when its in perform state
             }
             Select(node);
             return;
@@ -185,7 +185,7 @@ public class NodeManager : MonoBehaviour {
         {
             if (selectedNode.currentUnitGO == null)
             {
-                if (node.currentUnit != null && node.currentUnit.isEnemy)    //cant switch to an enemy node
+                if (node.currentUnit != null && node.currentUnit.team != 0)    //cant switch to an enemy node
                 {
                     return;
                 }

@@ -145,7 +145,7 @@ public class StatusHelper : MonoBehaviour {
                 break;
             case StatusType.MoveSpeed:
                 unit.stats.modMove += eff.strength * strengthMod;
-                if (unit.isEnemy) unit.stats.moveSpeed += eff.strength * strengthMod;
+                if (!unit.playerControlled) unit.stats.moveSpeed += eff.strength * strengthMod; //TODO: currently enemies move with their speed ignoring bonus. Change it so its the same for both
                 break;
             case StatusType.Actions:
                 //reduce selecting actions variable on nodemanager (or probably change that variable to a variable on the unit instead)

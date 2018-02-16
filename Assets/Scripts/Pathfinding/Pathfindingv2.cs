@@ -52,16 +52,16 @@ public class Pathfindingv2 : MonoBehaviour
 
     static double Distance(Node nodeA, Node nodeB)  //distance to the next node is the cost it takes to move there
     {
-        if (!TurnHandler.Instance.orderedActions[TurnHandler.Instance.orderedActions.Keys.First()].isEnemy)
+        if (TurnHandler.Instance.orderedActions[TurnHandler.Instance.orderedActions.Keys.First()].team == 0)
         {
-            if (nodeB.currentUnit != null && nodeB.currentUnit.isEnemy)
+            if (nodeB.currentUnit != null && nodeB.currentUnit.team != 0)
             {
                 return Mathf.Infinity;
             }
         }
-        else
+        else if (TurnHandler.Instance.orderedActions[TurnHandler.Instance.orderedActions.Keys.First()].team ==1)
         {
-            if (nodeB.currentUnit != null && !nodeB.currentUnit.isEnemy)
+            if (nodeB.currentUnit != null && nodeB.currentUnit.team != 1)
             {
                 return Mathf.Infinity;
             }

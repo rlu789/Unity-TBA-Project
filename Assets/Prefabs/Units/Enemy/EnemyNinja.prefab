@@ -517,7 +517,8 @@ MonoBehaviour:
     selectedActions: []
     selectedActionIndexes: 
     discardedActions: []
-  isEnemy: 1
+  playerControlled: 0
+  team: 1
   graphics: {fileID: 1558556153736036}
   firePoint: {fileID: 4549278640386806}
   statusPoint: {fileID: 4857845455703332}

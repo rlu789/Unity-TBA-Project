@@ -1,16 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
-
-//public enum TurnHandlerStates2
-//{
-//    PLAYERMOVE,
-//    ENEMYMOVE,
-//    PLAYERACT,
-//    ENEMYACT,
-//    BATTLEACT
-//}
 
 public enum TurnHandlerStates
 {
@@ -98,7 +88,7 @@ public class TurnHandler : MonoBehaviour
             orderedActions.Remove(orderedActions.Keys.First());
             return DetermineTurn();
         }
-        if (!orderedActions[orderedActions.Keys.First()].isEnemy)
+        if (orderedActions[orderedActions.Keys.First()].team == 0)
         {
             return TurnHandlerStates.PLAYERTURN;
         }
@@ -135,7 +125,7 @@ public class TurnHandler : MonoBehaviour
                 sanityCheck = orderedActions.Count;
                 orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().StartTurn();
                 if (sanityCheck == orderedActions.Count) NodeManager.Instance.SetSelectedNode(orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().currentNode);
-
+                else Debug.Log("Sanity check failed");
                 break;
             case TurnHandlerStates.ENEMYTURN:
                 currentState = TurnHandlerStates.ENEMYTURN;
@@ -143,7 +133,8 @@ public class TurnHandler : MonoBehaviour
                 sanityCheck = orderedActions.Count;
                 orderedActions[orderedActions.Keys.First()].GetComponent<Unit>().StartTurn();
                 if (sanityCheck == orderedActions.Count) HandleEnemyTurn();
-                else NextState();
+                else Debug.Log("Sanity check failed");
+                //else NextState();
 
                 break;
             case TurnHandlerStates.END:
@@ -158,42 +149,28 @@ public class TurnHandler : MonoBehaviour
 
     void SetAllStates(States playerState, States enemyState)
     {
-        for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
+        for (int i = 0; i < Map.Instance.teamZero.Count; i++)
         {
-            Map.Instance.unitDudeFriends[i].GetComponent<UnitStateMachine>().SetState(playerState);
+            Map.Instance.teamZero[i].GetComponent<UnitStateMachine>().SetState(playerState);
         }
-        for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
+        for (int i = 0; i < Map.Instance.teamOne.Count; i++)
         {
-            Map.Instance.unitDudeEnemies[i].GetComponent<UnitStateMachine>().SetState(enemyState);
+            Map.Instance.teamOne[i].GetComponent<UnitStateMachine>().SetState(enemyState);
         }
-    }
-
-    public void MoveButton()
-    {
-        for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
-        {
-            if (Map.Instance.unitDudeFriends[i].GetComponent<Unit>().isEnemy == false)
-            {
-                Map.Instance.unitDudeFriends[i].GetComponent<Unit>().MoveUnit();
-            }
-        }
-        NextState();
-        if (NodeManager.Instance.selectedNode != null)
-            NodeManager.Instance.Deselect();
     }
 
     void DrawCards()
     {
-        for (int i = 0; i < Map.Instance.unitDudeFriends.Count; i++)
+        for (int i = 0; i < Map.Instance.teamZero.Count; i++)
         {
-            if (!Map.Instance.unitDudeFriends[i].GetComponent<Unit>().isEnemy)
+            if (Map.Instance.teamZero[i].GetComponent<Unit>().team == 0)
             {
-                Map.Instance.unitDudeFriends[i].GetComponent<Unit>().cards.DrawCards(3);
+                Map.Instance.teamZero[i].GetComponent<Unit>().cards.DrawCards(3);
             }
         }
     }
 
-    void HandleEnemyTurn()
+    public void HandleEnemyTurn()
     {
         if (PlayerInfo.Instance != null && PlayerInfo.Instance.playerID != 0) return;   //only host should handle enemy turns
 
@@ -204,13 +181,20 @@ public class TurnHandler : MonoBehaviour
         }
 
         Unit enemy = orderedActions[orderedActions.Keys.First()];
+        if (enemy.team == 0 && enemy.playerControlled == true)  //since i changed the enemy teams to numbers, theres a bug when an enemy dies from status then an ally takes a turn, it will end up here and have the AI control it.
+        {                                                       //TODO: figure out why instead of this bandaid code
+            NextState();
+            return;
+        }
         NodeManager.Instance.SetSelectedNode(enemy.currentNode);
         AIHelper.Instance.AIGetTurn(enemy);
         enemy.MoveUnit();
         AIHelper.Instance.ConfirmBestAction(enemy);
         enemy.PerformActionDelayed(2f);
         enemy.unitStateMachine.state = States.END;
+        enemy.EndTurn();
         orderedActions.Remove(orderedActions.Keys.First());
+
         Invoke("NextState", 3f);
     }
 
@@ -221,37 +205,11 @@ public class TurnHandler : MonoBehaviour
         Invoke("NextState", delay);
     }
 
-    void HandleEnemyAct()
-    {
-        for (int i = 0; i < Map.Instance.unitDudeEnemies.Count; i++)
-        {
-            Unit enemy = Map.Instance.unitDudeEnemies[i].GetComponent<Unit>();
-            if (enemy.readyAction != null && !enemy.readyAction.IsEmpty()) actionQueue.Add(enemy);
-        }
-    }
-
-    void HandleStatus() //old and unused
-    {
-        Unit u;
-        for (int i = Map.Instance.unitDudeFriends.Count - 1; i >= 0; --i)
-        {
-            u = Map.Instance.unitDudeFriends[i].GetComponent<Unit>();
-            u.stats.ResetStats();
-            StatusHelper.Instance.CheckStatuses(u);
-        }
-        for (int i = Map.Instance.unitDudeEnemies.Count - 1; i >= 0; --i)
-        {
-            u = Map.Instance.unitDudeEnemies[i].GetComponent<Unit>();
-            u.stats.ResetStats();
-            StatusHelper.Instance.CheckStatuses(u);
-        }
-    }
-
    public void DetermineTurnOrder()
     {
         haveYetToCrossTheBridge = 0.01f;
         //THIS IS COMPLETELY FUNCTIONAL REGARDLESS OF WHETHER THE COUNT IS ODD OR EVEN
-        foreach (GameObject u in Map.Instance.unitDudeFriends)
+        foreach (GameObject u in Map.Instance.teamZero)
         {
             List<int> hahagetonemike = new List<int>();
             foreach (UnitAction action in u.GetComponent<Unit>().cards.selectedActions)
@@ -267,7 +225,7 @@ public class TurnHandler : MonoBehaviour
                 orderedActions.Add(theF + haveYetToCrossTheBridge, u.GetComponent<Unit>());
             haveYetToCrossTheBridge += 0.01f;
         }
-        foreach (GameObject u in Map.Instance.unitDudeEnemies)
+        foreach (GameObject u in Map.Instance.teamOne)
         {
             float initiative = u.GetComponent<Unit>().stats.baseInitiative;
 

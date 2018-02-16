@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 //TODO: make this work for ally AI
-//      make AI consider running away
 public class AIHelper : MonoBehaviour {
 
     public static AIHelper Instance;
@@ -52,10 +51,10 @@ public class AIHelper : MonoBehaviour {
         HehIGuessItsTimeIMadeMyChoice(unit);
     }
 
-    List<Unit> GetPossibleTargets(Unit unit, int range)   //TODO: bool for target allies aswell (unit has healing?)
+    List<Unit> GetPossibleTargets(Unit unit, int range)
     {
         List<Unit> possibleTargets = new List<Unit>();
-        foreach (GameObject enemyGO in Map.Instance.unitDudeFriends)    //(friends means enemies for the enemies)
+        foreach (GameObject enemyGO in Map.Instance.teamZero)
         {
             Unit enemy = enemyGO.GetComponent<Unit>();
 
@@ -64,7 +63,7 @@ public class AIHelper : MonoBehaviour {
             possibleTargets.Add(enemy); //enemy within max possible range, going to pathfind towards it
         }
 
-        foreach (GameObject allyGO in Map.Instance.unitDudeEnemies) //get allies (for healing)
+        foreach (GameObject allyGO in Map.Instance.teamOne) //get allies (for healing)
         {
             Unit ally = allyGO.GetComponent<Unit>();
 
@@ -84,7 +83,7 @@ public class AIHelper : MonoBehaviour {
         {
             if (unit.cards.selectedActions[i].range == 0)
             {
-                act = new PossibleAction(path, unit.cards.selectedActions[i], unit.currentNode, 0);
+                act = new PossibleAction(path, unit.cards.selectedActions[i], unit.currentNode, unit, 0);
                 act.DetermineFitness();
                 if (act.fitness > 0) possibleActions.Add(act);
                 continue;
@@ -93,7 +92,7 @@ public class AIHelper : MonoBehaviour {
             List<Node> nodesInRange = unit.cards.selectedActions[i].GetNodesInRange(path[path.Count - 1]);
             if (!nodesInRange.Contains(target.currentNode)) continue;
 
-            act = new PossibleAction(path, unit.cards.selectedActions[i], target.currentNode, 0);
+            act = new PossibleAction(path, unit.cards.selectedActions[i], target.currentNode, unit, 0);
             act.DetermineFitness();
             if (act.fitness > 0) possibleActions.Add(act);
 
@@ -146,9 +145,14 @@ public class AIHelper : MonoBehaviour {
         possibleActions.Shuffle(new System.Random()); //shuffle list so we don't bias certain nodes when choosing equal fitness targets
         int trimCount = GetMinActionCount(unit);
         possibleActions = TrimActionList(trimCount, unit);
+        int highestFitness = 0;
+
+        foreach (PossibleAction pAct in possibleActions)
+            if (pAct.fitness > highestFitness) highestFitness = pAct.fitness;
 
         foreach (PossibleAction pAct in possibleActions)
         {
+            if (pAct.fitness <= highestFitness / 4) continue;   //skip actions that are far less optimal than the best action
             for (int i = 0; i < pAct.fitness; ++i) trueActions.Add(pAct); //add based on fitness 
         }
 
@@ -156,15 +160,25 @@ public class AIHelper : MonoBehaviour {
 
         if ((possibleActions.Count == 0 || trueActions.Count == 0) && move) //just move towards a random enemy (or ally)
         {
-            if (!unit.stats.hugFriends && Map.Instance.unitDudeFriends.Count != 0)
+            if (!unit.stats.hugFriends && Map.Instance.teamZero.Count != 0 && unit.team != 0)
             {
-                index = Random.Range(0, Map.Instance.unitDudeFriends.Count);
-                NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.unitDudeFriends[index].GetComponent<Unit>().currentNode);
+                index = Random.Range(0, Map.Instance.teamZero.Count);
+                NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.teamZero[index].GetComponent<Unit>().currentNode);
             }
-            else if (Map.Instance.unitDudeEnemies.Count != 0)
+            else if (!unit.stats.hugFriends && Map.Instance.teamOne.Count != 0 && unit.team == 0)
             {
-                index = Random.Range(0, Map.Instance.unitDudeEnemies.Count);
-                NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.unitDudeEnemies[index].GetComponent<Unit>().currentNode);
+                index = Random.Range(0, Map.Instance.teamOne.Count);
+                NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.teamOne[index].GetComponent<Unit>().currentNode);
+            }
+            else if (Map.Instance.teamOne.Count != 0 && unit.team != 0)
+            {
+                index = Random.Range(0, Map.Instance.teamOne.Count);
+                NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.teamOne[index].GetComponent<Unit>().currentNode);
+            }
+            else if (Map.Instance.teamZero.Count != 0 && unit.team == 0)
+            {
+                index = Random.Range(0, Map.Instance.teamZero.Count);
+                NodeManager.Instance.AssignPath(unit.currentNode, Map.Instance.teamZero[index].GetComponent<Unit>().currentNode);
             }
             return;
         }

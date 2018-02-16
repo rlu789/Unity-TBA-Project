@@ -104,7 +104,7 @@ public class NetworkCommands : NetworkBehaviour
         theU.SetAction(cardIndex, endNode);
         theU.MoveUnitClient();
 
-        if (!theU.isEnemy) NodeManager.Instance.TurnEndHandler(theU);
+        if (theU.team == 0) NodeManager.Instance.TurnEndHandler(theU);
     }
 
     [Command]
@@ -139,10 +139,10 @@ public class NetworkCommands : NetworkBehaviour
         Unit theU = startNode.currentUnit;
         theU.PrepareAction(actionID, true);
         theU.SetAction(actionID, targetNode);
-        if (!theU.isEnemy) theU.PerformActionClient();
+        if (theU.team == 0) theU.PerformActionClient();
         else theU.PerformAction();
 
-        if (!theU.isEnemy) NodeManager.Instance.TurnEndHandler(theU);
+        if (theU.team == 0) NodeManager.Instance.TurnEndHandler(theU);
         else TurnHandler.Instance.EndEnemyTurn(1f);
     }
 

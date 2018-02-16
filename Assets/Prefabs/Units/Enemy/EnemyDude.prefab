@@ -363,7 +363,8 @@ MonoBehaviour:
     selectedActions: []
     selectedActionIndexes: 
     discardedActions: []
-  isEnemy: 1
+  playerControlled: 0
+  team: 1
   graphics: {fileID: 1826394178188506}
   firePoint: {fileID: 4015204469460064}
   statusPoint: {fileID: 4644061398980554}
@@ -389,6 +390,7 @@ MonoBehaviour:
       duration: 0
       visual: {fileID: 0}
       visualIns: {fileID: 0}
+      priority: 0
     bonusDamage: 0
   readyActionIndex: 0
   targetActionNode: {fileID: 0}
