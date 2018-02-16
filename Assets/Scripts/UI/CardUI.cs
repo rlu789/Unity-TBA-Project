@@ -4,12 +4,15 @@ using UnityEngine.UI;
 public class CardUI : MonoBehaviour {
 
     public Text _name;
-    public Text cost;
     public Text range;
     public Text damage;
-    public Text aoe;
     public Text initiative;
-    public Text status;
+
+    public Text description; //Use sentences and += instead of = to form the description 
+
+    public GameObject damageCard;
+    public GameObject healingCard;
+    public GameObject moveCard;
 
     Unit unit;
     int index;
@@ -23,30 +26,44 @@ public class CardUI : MonoBehaviour {
 
     public void SetCardValues(UnitAction act, Unit _unit, int _index, bool drag)    //pass in index to access that action directly
     {
+        if (act.type == ActionType.MOVE)
+        {
+            damage.text = act.range + ""; ;
+            ChangeCardType(2);
+        }
+        else if (act.damage > 0)
+        {
+            damage.text = act.damage + "";
+            ChangeCardType(0);
+        }
+        else if (act.damage < 0)
+        {
+            damage.text = -act.damage + "";
+            ChangeCardType(1);
+        }
+
         //Fill text fields
         _name.text = act.name;
 
-        if (act.manaCost != 0) cost.text = "<color=cyan>" + act.manaCost + " Mana Cost</color>";
-        else if (act.healthCost != 0) cost.text = "<color=red>" + act.healthCost + " Health Cost</color>";
-        else cost.text = "No cost";
+        initiative.text = act.initiative + "";
 
-        range.text = act.range + " Range";
+        description.text = "";
 
-        if (act.damage > 0) damage.text = "<color=red>" + act.damage + " Damage</color>";
-        else if (act.damage < 0) damage.text = "<color=green>" + -act.damage + " Healing</color>";
-        else if (act.type == ActionType.MOVE) damage.text = "<color=yellow>Movement</color>";
-        else damage.text = "No Damage";
+        if (act.type == ActionType.ACTION) range.text = act.range + "";
 
-        if (act.aoe == 0) aoe.gameObject.SetActive(false);
-        else aoe.text = act.aoe + " AOE";
+        //Fill description
+        if (act.manaCost != 0) description.text += act.manaCost + " Mana cost. ";
+        else if (act.healthCost != 0) description.text += act.healthCost + " Health cost. ";
+        else description.text += "No cost. ";
 
-        initiative.text = "<color=yellow>" + act.initiative + " Initiative</color>";
+        if (act.aoe > 0) description.text += act.aoe + " Area of Effect. ";
 
-        if (act.status != null) status.text = "<color=green>" + act.status.name + "</color>";
-        else status.gameObject.SetActive(false);
+        if (act.status != null) description.text += "Applies " + act.status.name + ". ";
+
         //Keep track of unit this card belongs to (at which index)
         unit = _unit;
         index = _index;
+
         //For card use vs selection
         if (drag)
         {
@@ -57,6 +74,28 @@ public class CardUI : MonoBehaviour {
         {
             onClick.enabled = true;
             onDrag.enabled = false;
+        }
+    }
+
+    void ChangeCardType(int cardType)
+    {
+        switch(cardType)
+        {
+            case 0:
+                damageCard.SetActive(true);
+                healingCard.SetActive(false);
+                moveCard.SetActive(false);
+                break;
+            case 1:
+                damageCard.SetActive(false);
+                healingCard.SetActive(true);
+                moveCard.SetActive(false);
+                break;
+            case 2:
+                damageCard.SetActive(false);
+                healingCard.SetActive(false);
+                moveCard.SetActive(true);
+                break;
         }
     }
     

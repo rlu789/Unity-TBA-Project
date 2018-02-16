@@ -10,7 +10,7 @@ Visuals: 0
 
 [Status]
 Id: 1
-Name: RecoveringSpeedily
+Name: Recovering Speedily
 EffectType: DOT MoveSpeed MoveSpeed
 EffectStrength: -1 1 1
 InitialEffect: 0 0 1
@@ -20,7 +20,7 @@ Visuals: 1
 
 [Status]
 Id: 2
-Name: WindBlessing
+Name: Wind Blessing
 EffectType: IncomingDamage IncomingDamage MoveSpeed MoveSpeed
 EffectStrength: -1 -1 2 2
 InitialEffect: 0 1 0 1

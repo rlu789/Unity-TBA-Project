@@ -22,7 +22,6 @@ public class NodeManager : MonoBehaviour {
 
     //BANDAID
     public int selectingCount = 0;
-    //
 
     private void Awake()
     {

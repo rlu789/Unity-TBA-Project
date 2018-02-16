@@ -191,8 +191,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000022888, y: 264}
-  m_SizeDelta: {x: -197.1, y: 180}
+  m_AnchoredPosition: {x: -0.000022888, y: 274}
+  m_SizeDelta: {x: -197.1, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &223853320
 MonoBehaviour:
@@ -441,8 +441,8 @@ MonoBehaviour:
   mapSizeX: 10
   mapSizeY: 8
   nodeSize: 2
-  unitDudeFriends: []
-  unitDudeEnemies: []
+  teamZero: []
+  teamOne: []
   map: {fileID: 1116316388}
 --- !u!4 &457948780
 Transform:
@@ -821,8 +821,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0.0000076294, y: 100.5}
-  m_SizeDelta: {x: -371.3, y: 201}
+  m_AnchoredPosition: {x: 0.0000076294, y: 107.6}
+  m_SizeDelta: {x: -371.3, y: 215.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &696527473
 MonoBehaviour:
@@ -844,7 +844,7 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 130, y: 180}
-  m_Spacing: {x: 0, y: 0}
+  m_Spacing: {x: 10, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &696527474
@@ -1794,6 +1794,7 @@ MonoBehaviour:
   unitsWithAssignedPaths: []
   nodesInRange: []
   nodesInAOE: []
+  selectingCount: 0
 --- !u!1 &1494429423
 GameObject:
   m_ObjectHideFlags: 0
@@ -2566,7 +2567,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030518, y: -198.85}
+  m_AnchoredPosition: {x: -0.000030517, y: -218.85}
   m_SizeDelta: {x: -374.2, y: 37.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1939491372
