@@ -10,6 +10,8 @@ public class CardUI : MonoBehaviour {
 
     public Text description; //Use sentences and += instead of = to form the description 
 
+    public Image classImage;
+
     public GameObject damageCard;
     public GameObject healingCard;
     public GameObject moveCard;
@@ -36,7 +38,7 @@ public class CardUI : MonoBehaviour {
             damage.text = act.damage + "";
             ChangeCardType(0);
         }
-        else if (act.damage < 0)
+        else if (act.damage <= 0)
         {
             damage.text = -act.damage + "";
             ChangeCardType(1);
@@ -50,6 +52,7 @@ public class CardUI : MonoBehaviour {
         description.text = "";
 
         if (act.type == ActionType.ACTION) range.text = act.range + "";
+        else range.text = "";
 
         //Fill description
         if (act.manaCost != 0) description.text += act.manaCost + " Mana cost. ";
@@ -59,6 +62,8 @@ public class CardUI : MonoBehaviour {
         if (act.aoe > 0) description.text += act.aoe + " Area of Effect. ";
 
         if (act.status != null) description.text += "Applies " + act.status.name + ". ";
+
+        ChangeCardClass(act.actionClass);
 
         //Keep track of unit this card belongs to (at which index)
         unit = _unit;
@@ -79,7 +84,7 @@ public class CardUI : MonoBehaviour {
 
     void ChangeCardType(int cardType)
     {
-        switch(cardType)
+        switch (cardType)
         {
             case 0:
                 damageCard.SetActive(true);
@@ -95,6 +100,36 @@ public class CardUI : MonoBehaviour {
                 damageCard.SetActive(false);
                 healingCard.SetActive(false);
                 moveCard.SetActive(true);
+                break;
+        }
+    }
+
+    void ChangeCardClass(Class _class)
+    {
+        switch (_class)
+        {
+            case Class.Dude:
+                classImage.sprite = PrefabHelper.Instance.sprites[0];
+                classImage.color = new Color32(255, 255, 255, 75);
+                break;
+            case Class.HealthyBoy:
+                classImage.sprite = PrefabHelper.Instance.sprites[1];
+                classImage.color = new Color32(200, 200, 200, 75);
+                break;
+            case Class.VERYSmart:
+                classImage.sprite = PrefabHelper.Instance.sprites[2];
+                classImage.color = new Color32(255, 115, 30, 75);
+                break;
+            case Class.Pope:
+                classImage.sprite = PrefabHelper.Instance.sprites[3];
+                classImage.color = new Color32(255, 255, 150, 75);
+                break;
+            case Class.Ninja:
+                classImage.sprite = PrefabHelper.Instance.sprites[4];
+                classImage.color = new Color32(125, 220, 255, 75);
+                break;
+            case Class.GENERIC:
+                classImage.gameObject.SetActive(false);
                 break;
         }
     }

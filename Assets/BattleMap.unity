@@ -227,8 +227,8 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 130, y: 180}
   m_Spacing: {x: 0, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_Constraint: 2
+  m_ConstraintCount: 1
 --- !u!114 &223853322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -845,8 +845,8 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 130, y: 180}
   m_Spacing: {x: 10, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_Constraint: 2
+  m_ConstraintCount: 1
 --- !u!114 &696527474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1112,6 +1112,12 @@ MonoBehaviour:
   - {fileID: 1329816491546904, guid: 09bbd669490156f4ea5d75f696c746d9, type: 2}
   - {fileID: 1329816491546904, guid: 9b96feb7a2fcb454a87b9cce59c8f3cd, type: 2}
   - {fileID: 1329816491546904, guid: 184702577adfa0a45b40c2340c3da70c, type: 2}
+  sprites:
+  - {fileID: 21300000, guid: d71e89ed522e76545a4d1ea3936daddc, type: 3}
+  - {fileID: 21300000, guid: 5960f635a24e8564bb1c10077883e89d, type: 3}
+  - {fileID: 21300000, guid: cdeb92b9cbf8419449bab8cfe84f6671, type: 3}
+  - {fileID: 21300000, guid: 0f4de33aa3e89b042a1617b857d26466, type: 3}
+  - {fileID: 21300000, guid: f107b33f29e436b4cb9a23ffb8d8a713, type: 3}
 --- !u!1 &1018386895
 GameObject:
   m_ObjectHideFlags: 0
@@ -2565,10 +2571,10 @@ RectTransform:
   m_Father: {fileID: 223853319}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000030517, y: -218.85}
-  m_SizeDelta: {x: -374.2, y: 37.7}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.000030517578, y: -118.850006}
+  m_SizeDelta: {x: 169.79999, y: 37.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1939491372
 MonoBehaviour:
