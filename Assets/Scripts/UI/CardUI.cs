@@ -129,7 +129,9 @@ public class CardUI : MonoBehaviour {
                 classImage.color = new Color32(125, 220, 255, 75);
                 break;
             case Class.GENERIC:
-                classImage.gameObject.SetActive(false);
+                classImage.sprite = PrefabHelper.Instance.sprites[5];
+                classImage.color = new Color32(255, 200, 50, 75);
+                //classImage.gameObject.SetActive(false);
                 break;
         }
     }
